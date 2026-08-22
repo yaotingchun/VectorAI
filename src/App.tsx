@@ -12,6 +12,14 @@ import { ConfigurationPage } from './pages/ConfigurationPage';
 export const App: React.FC = () => {
   const [activeTab, setActiveTab] = useState<TabId>('dashboard');
   const [showIntro, setShowIntro] = useState<boolean>(true);
+  const [focusedMachineId, setFocusedMachineId] = useState<string | null>(null);
+
+  const handleNavigateTab = (tabId: string, contextId?: string) => {
+    setActiveTab(tabId as TabId);
+    if (contextId) {
+      setFocusedMachineId(contextId);
+    }
+  };
 
   const renderActivePage = () => {
     switch (activeTab) {
@@ -20,7 +28,12 @@ export const App: React.FC = () => {
       case 'vfactory':
         return <VFactoryPage />;
       case 'machines':
-        return <MachinesPage />;
+        return (
+          <MachinesPage
+            initialMachineId={focusedMachineId}
+            onNavigateTab={handleNavigateTab}
+          />
+        );
       case 'prediction':
         return <PredictionPage />;
       case 'maintenance':
