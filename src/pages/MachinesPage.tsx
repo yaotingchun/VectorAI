@@ -1,7 +1,13 @@
 import React from 'react';
+import { MachinesPage as MachinesFeaturePage } from '../features/machines';
 
-export const MachinesPage: React.FC = () => {
-  return <div className="page-content" />;
+interface MachinesPageProps {
+  initialMachineId?: string | null;
+  onNavigateTab?: (tabId: string, contextId?: string) => void;
+}
+
+export const MachinesPage: React.FC<MachinesPageProps> = (props) => {
+  return <MachinesFeaturePage {...props} />;
 };
 
 export default MachinesPage;
