@@ -4,7 +4,9 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
+    "predev": "python scripts/fetch_machines.py",
     "dev": "vite",
+    "prebuild": "python scripts/fetch_machines.py",
     "build": "tsc && vite build",
     "preview": "vite preview"
   },

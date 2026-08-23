@@ -8,6 +8,7 @@ import { MachinesPage } from './pages/MachinesPage';
 import { PredictionPage } from './pages/PredictionPage';
 import { MaintenancePage } from './pages/MaintenancePage';
 import { ConfigurationPage } from './pages/ConfigurationPage';
+import { FactoryProvider } from './context/FactoryContext';
 
 export const App: React.FC = () => {
   const [activeTab, setActiveTab] = useState<TabId>('dashboard');
@@ -33,7 +34,7 @@ export const App: React.FC = () => {
   };
 
   return (
-    <>
+    <FactoryProvider>
       {showIntro && (
         <IntroScreen onComplete={() => setShowIntro(false)} />
       )}
@@ -41,7 +42,7 @@ export const App: React.FC = () => {
       <AppLayout activeTab={activeTab} onSelectTab={setActiveTab}>
         {renderActivePage()}
       </AppLayout>
-    </>
+    </FactoryProvider>
   );
 };
 
