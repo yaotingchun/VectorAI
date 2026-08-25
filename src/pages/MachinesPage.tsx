@@ -1,8 +1,9 @@
 import React from 'react';
-import { MachinesPage as MachinesFeaturePage } from '../features/machines';
+import { MachinesPage as MachinesFeaturePage, DetailTab } from '../features/machines';
 
 interface MachinesPageProps {
   initialMachineId?: string | null;
+  initialDetailTab?: DetailTab;
   onNavigateTab?: (tabId: string, contextId?: string) => void;
 }
 

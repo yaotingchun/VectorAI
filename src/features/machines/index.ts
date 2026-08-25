@@ -15,4 +15,5 @@ export * from './components/MachineCard';
 export * from './components/MachineTableRow';
 export * from './components/MachineList';
 export * from './components/detail/MachineDetail';
+export * from './components/detail/MachinePrediction';
 export * from './pages/MachinesPage';

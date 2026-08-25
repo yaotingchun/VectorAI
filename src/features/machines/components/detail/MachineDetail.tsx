@@ -10,6 +10,7 @@ import { RULCard } from './RULCard';
 import { AnomalySummary } from './AnomalySummary';
 import { MaintenanceSummary } from './MaintenanceSummary';
 import { MachineDocuments } from './MachineDocuments';
+import { MachinePrediction } from './MachinePrediction';
 import { 
   ArrowLeft, 
   Factory, 
@@ -18,25 +19,34 @@ import {
   FileText, 
   ShieldAlert, 
   Radio,
-  Download
+  Download,
+  BrainCircuit
 } from 'lucide-react';
+
+export type DetailTab = 'overview' | 'sensors' | 'anomalies' | 'prediction' | 'maintenance' | 'documents';
 
 interface MachineDetailProps {
   machine: Machine;
+  initialTab?: DetailTab;
   onBack: () => void;
   onViewOnFactory?: (machineId: string) => void;
   onNavigateToMaintenance?: (workOrderId?: string) => void;
 }
 
-type DetailTab = 'overview' | 'sensors' | 'anomalies' | 'maintenance' | 'documents';
-
 export const MachineDetail: React.FC<MachineDetailProps> = ({
   machine,
+  initialTab = 'overview',
   onBack,
   onViewOnFactory,
   onNavigateToMaintenance
 }) => {
-  const [activeTab, setActiveTab] = useState<DetailTab>('overview');
+  const [activeTab, setActiveTab] = useState<DetailTab>(initialTab);
+
+  React.useEffect(() => {
+    if (initialTab) {
+      setActiveTab(initialTab);
+    }
+  }, [initialTab]);
 
   // Automatically scroll to the top of the viewport when opening a machine or switching tabs
   React.useEffect(() => {
@@ -68,6 +78,12 @@ export const MachineDetail: React.FC<MachineDetailProps> = ({
       label: 'ANOMALIES', 
       icon: <ShieldAlert size={13} />,
       badge: machine.anomalies.length > 0 ? machine.anomalies.length : undefined
+    },
+    { 
+      id: 'prediction', 
+      label: 'PREDICTION', 
+      icon: <BrainCircuit size={13} />,
+      badge: ['Accelerated Wear', 'Imminent Failure'].includes(machine.rul.degradationStage) ? 'RISK' : undefined
     },
     { id: 'maintenance', label: 'MAINTENANCE', icon: <Wrench size={13} /> },
     { id: 'documents', label: 'DOCUMENTS', icon: <FileText size={13} />, badge: machine.documents.length }
@@ -241,6 +257,15 @@ export const MachineDetail: React.FC<MachineDetailProps> = ({
           <AnomalySummary
             anomalies={machine.anomalies}
             onAcknowledge={(anoId) => console.log('Acknowledge anomaly:', anoId)}
+          />
+        )}
+
+        {/* Prediction Tab */}
+        {activeTab === 'prediction' && (
+          <MachinePrediction
+            machine={machine}
+            onNavigateToMaintenance={onNavigateToMaintenance}
+            onSelectTab={(tab) => setActiveTab(tab)}
           />
         )}
 

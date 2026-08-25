@@ -38,24 +38,17 @@ export const NAV_ITEMS: NavItem[] = [
     description: 'CNC clusters, sensor node telemetry, spindle vibration, and power monitoring.',
   },
   {
-    id: 'prediction',
-    label: 'Prediction',
-    code: 'AI // PRED',
-    num: '04',
-    description: 'Neural anomaly detection, predictive failure models, and remaining useful life (RUL).',
-  },
-  {
     id: 'maintenance',
     label: 'Maintenance',
     code: 'MNTN // SRVC',
-    num: '05',
+    num: '04',
     description: 'Work order automation, scheduled service matrix, and parts replacement registry.',
   },
   {
     id: 'configuration',
     label: 'Configuration',
     code: 'CONF // SYST',
-    num: '06',
+    num: '05',
     description: 'Edge node protocols (MQTT / OPC-UA), security tokens, and system calibration.',
   },
 ];
