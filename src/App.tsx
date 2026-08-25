@@ -22,10 +22,14 @@ export const App: React.FC = () => {
     }
   };
 
+  const handleNavigate = (tab: TabId, _machineId?: string) => {
+    setActiveTab(tab);
+  };
+
   const renderActivePage = () => {
     switch (activeTab) {
       case 'dashboard':
-        return <DashboardPage />;
+        return <DashboardPage onNavigate={handleNavigate} />;
       case 'vfactory':
         return <VFactoryPage />;
       case 'machines':
@@ -42,7 +46,7 @@ export const App: React.FC = () => {
       case 'configuration':
         return <ConfigurationPage />;
       default:
-        return <DashboardPage />;
+        return <DashboardPage onNavigate={handleNavigate} />;
     }
   };
 
