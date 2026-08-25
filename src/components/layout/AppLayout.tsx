@@ -30,7 +30,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
       <div className="main-wrapper">
         <Header activeTab={activeTab} />
         
-        <main className="content-viewport blueprint-grid">
+        <main className={`content-viewport blueprint-grid ${activeTab === 'vfactory' ? 'canvas-mode' : ''}`}>
           {children}
         </main>
       </div>

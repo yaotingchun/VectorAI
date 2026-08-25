@@ -1,7 +1,12 @@
 import React from 'react';
+import { VFactoryLiveView } from '../components/vfactory/VFactoryLiveView';
 
 export const VFactoryPage: React.FC = () => {
-  return <div className="page-content" />;
+  return (
+    <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column' }}>
+      <VFactoryLiveView />
+    </div>
+  );
 };
 
 export default VFactoryPage;

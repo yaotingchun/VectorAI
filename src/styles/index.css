@@ -451,3 +451,193 @@ html, body, #root {
   border-bottom: 1px solid var(--border-strong);
   opacity: 0.6;
 }
+
+/* ==========================================================================
+   V-FACTORY 2D CANVAS & MACHINE NODES DESIGN
+   ========================================================================== */
+
+.content-viewport.canvas-mode {
+  padding: 0;
+  overflow: hidden;
+}
+
+/* Machine Node Card (Image 2 Reference Style) */
+.machine-node-card {
+  background-color: var(--bg-card);
+  border: 1.5px solid var(--border-strong);
+  border-radius: 8px;
+  box-shadow: 2px 2px 0px rgba(18, 19, 21, 0.08);
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+.machine-node-card:hover,
+.machine-node-card.hovered {
+  border-color: var(--text-primary);
+  box-shadow: 4px 4px 0px rgba(18, 19, 21, 0.14);
+}
+
+.machine-node-card.selected {
+  border-color: var(--accent-amber);
+  border-width: 2px;
+  box-shadow: 0 0 0 2px rgba(217, 119, 6, 0.3), 4px 4px 0px rgba(18, 19, 21, 0.2);
+}
+
+.machine-node-card.node-warning {
+  border-color: #EF4444 !important;
+  background-color: #FEF2F2 !important;
+  box-shadow: 0 0 0 1.5px rgba(239, 68, 68, 0.35), 0 8px 24px rgba(239, 68, 68, 0.15) !important;
+}
+
+/* Animated SVG Flow Line */
+.animated-flow-line {
+  animation: flow-dash 1.6s linear infinite;
+}
+
+@keyframes flow-dash {
+  to {
+    stroke-dashoffset: -20;
+  }
+}
+
+/* Status Pulse Animation */
+@keyframes status-pulse {
+  0% {
+    transform: scale(0.95);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.6);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+}
+
+/* Tooltip Fade In Animation */
+@keyframes tooltip-fade-in {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -90%) translateY(-14px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -100%) translateY(-14px);
+  }
+}
+
+/* Drawer Slide In Animation */
+@keyframes drawer-slide-in {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0%);
+  }
+}
+
+/* Backdrop for Inspector Drawer */
+.inspector-drawer-backdrop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(18, 19, 21, 0.15);
+  backdrop-filter: blur(1.5px);
+  z-index: 90;
+}
+
+/* Telemetry Box Grid Item in Inspector */
+.telemetry-box {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-light);
+  border-radius: 5px;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.telemetry-box-label {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 9px;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  color: var(--text-muted);
+  letter-spacing: 0.05em;
+}
+
+.telemetry-box-val {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--text-primary);
+  letter-spacing: 0.02em;
+}
+
+/* Canvas Floating Control Buttons */
+.canvas-ctrl-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 8px;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.canvas-ctrl-btn:hover {
+  background-color: var(--bg-muted);
+  border-color: var(--border-strong);
+}
+
+.canvas-ctrl-btn:active {
+  background-color: var(--bg-dark);
+  color: var(--text-inverted);
+}
+
+/* Zone Quick Filter Buttons */
+.zone-btn {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  padding: 4px 8px;
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-light);
+  border-radius: 3px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.zone-btn:hover {
+  border-color: var(--border-strong);
+  color: var(--text-primary);
+  background-color: var(--bg-muted);
+}
+
+.zone-btn.active {
+  background-color: var(--bg-dark);
+  color: var(--text-inverted);
+  border-color: var(--border-strong);
+}
+
+/* Spin Animation */
+.spin-anim {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
