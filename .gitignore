@@ -39,3 +39,4 @@ dist-ssr
 
 # Credentials
 credentials*
+src/data*
