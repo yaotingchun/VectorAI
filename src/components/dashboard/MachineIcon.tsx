@@ -18,7 +18,6 @@ export const MachineIcon: React.FC<MachineIconProps> = ({
   const isDA = type === 'Die Attacher' || type === 'DA';
   const isWB = type === 'Wire Bonder' || type === 'WB';
   const isMD = type === 'Molding Machine' || type === 'MD';
-  const isTS = type === 'IC Tester & Sorter' || type === 'TS';
 
   if (isWD) {
     // Wafer Dicer: Circular Wafer Saw Blade with Cut Lines

@@ -33,9 +33,10 @@ def parse_firestore_fields(fields_dict):
     return {k: parse_firestore_value(v) for k, v in fields_dict.items()}
 
 def main():
-    workspace_dir = "c:/Users/nguxi/Downloads/VectorAI"
-    firebase_json_path = os.path.join(workspace_dir, "credentials/firebase.json")
-    output_dir = os.path.join(workspace_dir, "src/data")
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    workspace_dir = os.path.dirname(script_dir)
+    firebase_json_path = os.path.join(workspace_dir, "credentials", "firebase.json")
+    output_dir = os.path.join(workspace_dir, "src", "data")
     output_json_path = os.path.join(output_dir, "machines.json")
     
     if not os.path.exists(output_dir):
