@@ -131,7 +131,7 @@ export const PredictiveRiskOverview: React.FC<PredictiveRiskOverviewProps> = ({
               </div>
               <div className="horizon-window-title">Service Due Within Next 7 Days</div>
               <div className="horizon-window-sub">
-                Includes <strong>WB-04 (28h)</strong>, <strong>MD-03 (34h)</strong>, <strong>WD-02 (64h)</strong>, and <strong>WB-06 (88h)</strong>. Emergency work orders auto-dispatched.
+                Includes <strong>WB-04 (120h)</strong>. Capillary & transducer resonance work order queued.
               </div>
             </div>
 
@@ -143,7 +143,7 @@ export const PredictiveRiskOverview: React.FC<PredictiveRiskOverviewProps> = ({
               </div>
               <div className="horizon-window-title">Service Due Within 7 to 30 Days</div>
               <div className="horizon-window-sub">
-                Includes <strong>TS-03 (94h)</strong> and <strong>DA-01 (112h)</strong>. Scheduled for standard weekly preventive PM shift.
+                Includes <strong>DA-02</strong>, <strong>WB-07</strong>, and <strong>MP-02</strong>. Scheduled for routine shift PM window.
               </div>
             </div>
 
@@ -155,7 +155,7 @@ export const PredictiveRiskOverview: React.FC<PredictiveRiskOverviewProps> = ({
               </div>
               <div className="horizon-window-title">Stable Beyond 30 Days (&gt; 250h RUL)</div>
               <div className="horizon-window-sub">
-                14 units operating safely within sensor baseline drift tolerances. No scheduled outages required.
+                32 cleanroom units operating safely within sensor baseline drift tolerances. No unscheduled outages.
               </div>
             </div>
           </div>

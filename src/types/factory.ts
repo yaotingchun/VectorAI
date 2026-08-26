@@ -142,7 +142,9 @@ export type MachineType =
   | 'aoi-inspection'
   | 'x-ray-inspection'
   | 'laser-marking'
+  | 'test-handler'
   | 'tape-reel'
+  | 'stocker'
   | 'conveyor'
   | 'agv'
   | 'buffer-queue';

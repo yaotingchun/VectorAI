@@ -35,20 +35,33 @@ export const MachineHealthDistribution: React.FC<MachineHealthDistributionProps>
 }) => {
   const [hoveredSegment, setHoveredSegment] = useState<string | null>(null);
 
-  // Compute stats across the 5 semiconductor backend machine types
+  // Compute stats across semiconductor backend cleanroom machine types
   const machineTypes: MachineType[] = [
     'Wafer Dicing Machine',
+    'AMHS Stocker',
     'Die Attacher',
+    'RF Plasma Cleaner',
     'Wire Bonder',
     'Molding Machine',
-    'IC Tester & Sorter',
+    '3D Optical AOI',
+    'Microfocus X-Ray',
+    'Laser Marker',
+    'IC Test Handler',
+    'Tape & Reel Packaging',
   ];
 
   const shortCodeMap: Record<MachineType, string> = {
-    'Wafer Dicing Machine': 'WD',
+    'Wafer Dicing Machine': 'WS',
+    'AMHS Stocker': 'STK',
     'Die Attacher': 'DA',
+    'RF Plasma Cleaner': 'PC',
     'Wire Bonder': 'WB',
-    'Molding Machine': 'MD',
+    'Molding Machine': 'MP',
+    '3D Optical AOI': 'AOI',
+    'Microfocus X-Ray': 'XR',
+    'Laser Marker': 'LM',
+    'IC Test Handler': 'TH',
+    'Tape & Reel Packaging': 'TR',
     'IC Tester & Sorter': 'TS',
   };
 

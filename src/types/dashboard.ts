@@ -7,7 +7,30 @@ export type MachineType =
   | 'Die Attacher'
   | 'Wire Bonder'
   | 'Molding Machine'
-  | 'IC Tester & Sorter';
+  | 'IC Tester & Sorter'
+  | 'AMHS Stocker'
+  | 'RF Plasma Cleaner'
+  | '3D Optical AOI'
+  | 'Microfocus X-Ray'
+  | 'Laser Marker'
+  | 'IC Test Handler'
+  | 'Tape & Reel Packaging';
+
+export type MachineTypeShort =
+  | 'WS'
+  | 'STK'
+  | 'DA'
+  | 'PC'
+  | 'WB'
+  | 'MP'
+  | 'AOI'
+  | 'XR'
+  | 'LM'
+  | 'TH'
+  | 'TR'
+  | 'WD'
+  | 'MD'
+  | 'TS';
 
 export type RiskLevel = 'low' | 'moderate' | 'high' | 'critical';
 
@@ -35,8 +58,8 @@ export interface MachineNode {
   code: string;
   name: string;
   type: MachineType;
-  typeShort: 'WD' | 'DA' | 'WB' | 'MD' | 'TS';
-  bay: 'Bay A' | 'Bay B' | 'Bay C' | 'Bay D';
+  typeShort: MachineTypeShort;
+  bay: string;
   line: string;
   position: { x: number; y: number }; // Relative coordinates on the floor map grid
   status: MachineStatus;
@@ -55,19 +78,23 @@ export interface AlertItem {
   id: string;
   machineId: string;
   machineName: string;
-  machineType: MachineType;
-  bay: string;
-  line: string;
-  healthScore: number;
-  rulHours: number;
+  machineType: MachineType | string;
+  bay?: string;
+  line?: string;
+  healthScore?: number;
+  rulHours?: number;
   severity: 'critical' | 'warning';
-  riskLevel: RiskLevel;
-  issue: string;
-  component: string;
-  detectedTime: string;
-  productionImpact: string;
-  recommendedAction: string;
-  actionUrgency: string;
+  riskLevel?: RiskLevel;
+  issue?: string;
+  message?: string;
+  component?: string;
+  detectedTime?: string;
+  timestamp?: string;
+  productionImpact?: string;
+  impact?: string;
+  recommendedAction?: string;
+  actionUrgency?: string;
+  acknowledged?: boolean;
 }
 
 export interface ProductionLineStatus {
@@ -139,7 +166,7 @@ export interface PredictiveHorizonData {
 export interface TopRiskMachineSummary {
   id: string;
   name: string;
-  type: MachineType;
+  type: MachineType | string;
   healthScore: number;
   rulHours: number;
   status: MachineStatus;
@@ -167,17 +194,23 @@ export interface PredictiveRiskOverviewData {
 }
 
 export interface MaintenanceTask {
-  id: string;
+  id?: string;
+  taskId?: string;
   machineId: string;
-  machineType: MachineType;
-  location: string;
-  taskTitle: string;
-  category: 'Predictive Service' | 'Component Replacement' | 'Calibration' | 'Overhaul';
+  machineName?: string;
+  machineType?: MachineType | string;
+  type?: string;
+  location?: string;
+  taskTitle?: string;
+  category?: 'Predictive Service' | 'Component Replacement' | 'Calibration' | 'Overhaul';
   priority: 'urgent' | 'high' | 'medium' | 'low';
-  dueDate: string;
-  estimatedDuration: string;
+  dueDate?: string;
+  scheduledDate?: string;
+  estimatedDuration?: string;
+  estimatedDurationHours?: number;
   assignedTechnician?: string;
-  status: 'due_today' | 'due_week' | 'overdue' | 'in_progress' | 'completed';
+  partsRequired?: string[];
+  status: 'due_today' | 'due_week' | 'overdue' | 'in_progress' | 'completed' | 'scheduled';
 }
 
 export interface MaintenanceSummary {
@@ -192,7 +225,7 @@ export interface MaintenanceSummary {
 export interface FactoryOverviewKpiData {
   factoryHealthScore: number;
   healthScoreDelta: number; // e.g. +1.2%
-  factoryHealthStatus: 'GOOD' | 'STABLE' | 'ATTENTION' | 'CRITICAL';
+  factoryHealthStatus: 'GOOD' | 'STABLE' | 'ATTENTION' | 'CRITICAL' | 'OPTIMAL';
   
   // OEE Top KPI
   oeePercentage: number;

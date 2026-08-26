@@ -2,24 +2,90 @@ import { Machine } from '../types/machine';
 
 export const SEED_MACHINES: Machine[] = [
   {
+    "id": "WS-01",
+    "name": "300mm Precision Wafer Saw 01",
+    "machineType": "wafer-saw",
+    "processStage": "Bay 1: Wafer Dicing & Prep",
     "status": "healthy",
-    "lastTelemetryTimestamp": "2026-08-22T12:51:05Z",
-    "ipAddress": "10.24.114.1",
+    "healthScore": 98,
+    "operatingHours": 2400,
+    "installationDate": "2025-01-15",
+    "lastTelemetryTimestamp": "2026-08-26T15:30:00Z",
+    "firmwareVersion": "v4.1.8",
+    "ipAddress": "10.24.101.1",
+    "location": {
+      "facility": "Fab 2 Cleanroom",
+      "floor": "Level 1 - Front-End Cleanzone",
+      "area": "Bay 1: Wafer Dicing & Prep",
+      "line": "Saw Line 1",
+      "station": "Station WS-01",
+      "gridCoordinate": {
+        "x": 235,
+        "y": 109
+      }
+    },
+    "rul": {
+      "value": 2400,
+      "unit": "hours",
+      "confidence": 0.96,
+      "estimatedDays": 100,
+      "criticalThresholdHours": 100,
+      "degradationStage": "Normal"
+    },
+    "sensors": [
+      {
+        "sensorId": "vibration_spindle",
+        "name": "Spindle Vibration",
+        "value": 0.38,
+        "unit": "mm/s",
+        "status": "normal",
+        "lastUpdated": "3s ago"
+      },
+      {
+        "sensorId": "temperature_coolant",
+        "name": "Coolant Temp",
+        "value": 23.8,
+        "unit": "°C",
+        "status": "normal",
+        "lastUpdated": "3s ago"
+      },
+      {
+        "sensorId": "load_motor",
+        "name": "Spindle Motor Load",
+        "value": 52,
+        "unit": "%",
+        "status": "normal",
+        "lastUpdated": "3s ago"
+      }
+    ],
     "anomalies": [],
+    "maintenance": {
+      "lastMaintenanceDate": "2026-08-10",
+      "nextScheduledDate": "2026-09-10",
+      "status": "scheduled",
+      "type": "Preventive Inspection",
+      "technician": "Kenji Sato"
+    },
+    "documents": [
+      {
+        "id": "DOC-VAI-MAN-WS-001",
+        "title": "300mm Precision Wafer Dicing Saw Manual (PDF)",
+        "type": "PDF",
+        "category": "Manual",
+        "updatedAt": "2026-08-20",
+        "size": "42 KB",
+        "tags": [
+          "Wafer Saw",
+          "ISO 5"
+        ]
+      }
+    ],
+    "knowledgeBaseRef": "machine_knowledge/wafer_dicing",
+    "manualId": "VAI-MAN-DIC-001",
     "healthTrend": {
       "24h": [
         {
           "timestamp": "Now",
-          "health": 98
-        }
-      ],
-      "30d": [
-        {
-          "timestamp": "Wk 1",
-          "health": 99
-        },
-        {
-          "timestamp": "Wk 4",
           "health": 98
         }
       ],
@@ -32,234 +98,273 @@ export const SEED_MACHINES: Machine[] = [
           "timestamp": "Day 7",
           "health": 98
         }
+      ],
+      "30d": [
+        {
+          "timestamp": "Wk 1",
+          "health": 99
+        },
+        {
+          "timestamp": "Wk 4",
+          "health": 98
+        }
       ]
+    }
+  },
+  {
+    "id": "WS-02",
+    "name": "300mm Precision Wafer Saw 02",
+    "machineType": "wafer-saw",
+    "processStage": "Bay 1: Wafer Dicing & Prep",
+    "status": "healthy",
+    "healthScore": 96,
+    "operatingHours": 2180,
+    "firmwareVersion": "v4.1.8",
+    "ipAddress": "10.24.101.2",
+    "location": {
+      "facility": "Fab 2 Cleanroom",
+      "floor": "Level 1 - Front-End Cleanzone",
+      "area": "Bay 1: Wafer Dicing & Prep",
+      "line": "Saw Line 2",
+      "station": "Station WS-02",
+      "gridCoordinate": {
+        "x": 310,
+        "y": 109
+      }
     },
-    "firmwareVersion": "v8.1.0",
-    "machineType": "ic_tester",
-    "sensors": [
-      {
-        "sensorId": "vibration_handler",
-        "name": "Handler Vibration",
-        "value": 0.32,
-        "unit": "mm/s",
-        "status": "normal",
-        "lastUpdated": "5s ago"
-      },
-      {
-        "sensorId": "temperature_chamber",
-        "name": "Test Chamber Temp",
-        "value": 24.5,
-        "unit": "\u00b0C",
-        "status": "normal",
-        "lastUpdated": "5s ago"
-      },
-      {
-        "sensorId": "load_actuator",
-        "name": "Socket Actuator Load",
-        "value": 48,
-        "unit": "N",
-        "status": "normal",
-        "lastUpdated": "5s ago"
-      }
-    ],
-    "documents": [
-      {
-        "id": "DOC-VAI-MAN-ATE-001",
-        "title": "High-Speed Automated IC Tester & Pick-and-Place Sorter Technical Manual (PDF)",
-        "type": "PDF",
-        "category": "Manual",
-        "updatedAt": "2026-08-26",
-        "size": "36 KB",
-        "tags": [
-          "Tester",
-          "Sorter",
-          "Synthetic_Prototype",
-          "Manual"
-        ]
-      }
-    ],
     "rul": {
-      "degradationStage": "Normal",
-      "estimatedDays": 66.6,
+      "value": 2180,
       "unit": "hours",
       "confidence": 0.95,
-      "criticalThresholdHours": 50,
-      "value": 1600
+      "estimatedDays": 90.8,
+      "criticalThresholdHours": 100,
+      "degradationStage": "Normal"
     },
-    "knowledgeBaseRef": "machine_knowledge/ic_tester",
-    "location": {
-      "area": "ATE Cell Bay 1",
-      "line": "Test Line 1",
-      "station": "Station T-01",
-      "gridCoordinate": {
-        "x": 2,
-        "y": 17
+    "sensors": [
+      {
+        "sensorId": "vibration_spindle",
+        "name": "Spindle Vibration",
+        "value": 0.42,
+        "unit": "mm/s",
+        "status": "normal",
+        "lastUpdated": "4s ago"
       },
-      "floor": "Level 2 - Final Test Area",
-      "facility": "Fab 2 OSAT Hub"
-    },
-    "healthScore": 98,
-    "processStage": "Testing & Sort",
-    "installationDate": "2025-01-10",
-    "maintenance": {
-      "lastMaintenanceDate": "2026-08-15",
-      "technician": "Kenji Sato",
-      "nextScheduledDate": "2026-09-15",
-      "type": "Preventive Inspection",
-      "status": "scheduled"
-    },
-    "manualId": "VAI-MAN-ATE-001",
-    "operatingHours": 2900,
-    "name": "IC Test & Sort Cell 01",
-    "id": "ATE-001"
-  },
-  {
-    "operatingHours": 6850,
-    "healthScore": 74,
-    "name": "IC Test & Sort Cell 02",
-    "status": "warning",
-    "firmwareVersion": "v8.1.0",
-    "processStage": "Testing & Sort",
-    "installationDate": "2024-04-22",
-    "rul": {
-      "degradationStage": "Early Drift",
-      "estimatedDays": 8.7,
-      "unit": "hours",
-      "confidence": 0.86,
-      "criticalThresholdHours": 50,
-      "value": 210
-    },
-    "id": "ATE-002",
-    "lastTelemetryTimestamp": "2026-08-22T12:51:20Z",
-    "maintenance": {
-      "lastMaintenanceDate": "2026-07-20",
-      "technician": "Kenji Sato",
-      "nextScheduledDate": "2026-08-27",
-      "type": "Sensor Replacement",
-      "status": "scheduled"
-    },
-    "machineType": "ic_tester",
-    "location": {
-      "area": "ATE Cell Bay 1",
-      "line": "Test Line 1",
-      "station": "Station T-02",
-      "gridCoordinate": {
-        "x": 5,
-        "y": 17
+      {
+        "sensorId": "temperature_coolant",
+        "name": "Coolant Temp",
+        "value": 24.2,
+        "unit": "°C",
+        "status": "normal",
+        "lastUpdated": "4s ago"
       },
-      "floor": "Level 2 - Final Test Area",
-      "facility": "Fab 2 OSAT Hub"
+      {
+        "sensorId": "load_motor",
+        "name": "Spindle Motor Load",
+        "value": 55,
+        "unit": "%",
+        "status": "normal",
+        "lastUpdated": "4s ago"
+      }
+    ],
+    "anomalies": [],
+    "maintenance": {
+      "lastMaintenanceDate": "2026-08-12",
+      "nextScheduledDate": "2026-09-12",
+      "status": "scheduled",
+      "type": "Tool Calibration",
+      "technician": "Kenji Sato"
     },
+    "documents": [
+      {
+        "id": "DOC-VAI-MAN-WS-001",
+        "title": "300mm Precision Wafer Dicing Saw Manual (PDF)",
+        "type": "PDF",
+        "category": "Manual",
+        "updatedAt": "2026-08-20",
+        "size": "42 KB",
+        "tags": [
+          "Wafer Saw",
+          "ISO 5"
+        ]
+      }
+    ],
+    "knowledgeBaseRef": "machine_knowledge/wafer_dicing",
+    "manualId": "VAI-MAN-DIC-001",
     "healthTrend": {
       "24h": [
         {
-          "timestamp": "12h ago",
-          "health": 82
-        },
-        {
           "timestamp": "Now",
-          "health": 74
-        }
-      ],
-      "30d": [
-        {
-          "timestamp": "Wk 1",
-          "health": 93
-        },
-        {
-          "timestamp": "Wk 4",
-          "health": 74
+          "health": 96
         }
       ],
       "7d": [
         {
           "timestamp": "Day 1",
-          "health": 88
+          "health": 97
         },
         {
           "timestamp": "Day 7",
-          "health": 74
+          "health": 96
+        }
+      ],
+      "30d": [
+        {
+          "timestamp": "Wk 1",
+          "health": 98
+        },
+        {
+          "timestamp": "Wk 4",
+          "health": 96
         }
       ]
     },
+    "installationDate": "2025-02-15",
+    "lastTelemetryTimestamp": "2026-08-26T15:30:00Z"
+  },
+  {
+    "id": "STK-01",
+    "name": "AMHS Cleanroom FOUP Stocker 01",
+    "machineType": "stocker",
+    "processStage": "Bay 1: Wafer Dicing & Prep",
+    "status": "healthy",
+    "healthScore": 99,
+    "operatingHours": 4500,
+    "firmwareVersion": "v2.4.0",
+    "ipAddress": "10.24.101.99",
+    "location": {
+      "facility": "Fab 2 Cleanroom",
+      "floor": "Level 1 - Front-End Cleanzone",
+      "area": "Bay 1: Wafer Dicing & Prep",
+      "line": "AMHS Loop Alpha",
+      "station": "Stocker 01",
+      "gridCoordinate": {
+        "x": 385,
+        "y": 105
+      }
+    },
+    "rul": {
+      "value": 4500,
+      "unit": "hours",
+      "confidence": 0.98,
+      "estimatedDays": 187.5,
+      "criticalThresholdHours": 150,
+      "degradationStage": "Normal"
+    },
     "sensors": [
       {
-        "sensorId": "vibration_handler",
-        "name": "Handler Vibration",
-        "value": 0.95,
+        "sensorId": "vibration_crane",
+        "name": "Robotic Crane Vibration",
+        "value": 0.12,
         "unit": "mm/s",
-        "status": "warning",
-        "lastUpdated": "10s ago"
+        "status": "normal",
+        "lastUpdated": "2s ago"
       },
       {
-        "sensorId": "temperature_chamber",
-        "name": "Test Chamber Temp",
-        "value": 29.8,
-        "unit": "\u00b0C",
+        "sensorId": "pressure_n2",
+        "name": "N2 Purge Pressure",
+        "value": 52,
+        "unit": "kPa",
         "status": "normal",
-        "lastUpdated": "10s ago"
+        "lastUpdated": "2s ago"
       },
       {
-        "sensorId": "load_actuator",
-        "name": "Socket Actuator Load",
-        "value": 72,
-        "unit": "N",
+        "sensorId": "temp_stocker",
+        "name": "Internal Enclosure Temp",
+        "value": 21.2,
+        "unit": "°C",
         "status": "normal",
-        "lastUpdated": "10s ago"
+        "lastUpdated": "2s ago"
       }
     ],
+    "anomalies": [],
+    "maintenance": {
+      "lastMaintenanceDate": "2026-08-01",
+      "nextScheduledDate": "2026-11-01",
+      "status": "scheduled",
+      "type": "Preventive Inspection",
+      "technician": "Elena Vance"
+    },
     "documents": [
       {
-        "id": "DOC-VAI-MAN-ATE-001",
-        "title": "High-Speed Automated IC Tester & Pick-and-Place Sorter Technical Manual (PDF)",
+        "id": "DOC-VAI-MAN-STK-001",
+        "title": "Automated Cleanroom Stocker Technical Manual (PDF)",
         "type": "PDF",
         "category": "Manual",
-        "updatedAt": "2026-08-26",
-        "size": "36 KB",
+        "updatedAt": "2026-08-15",
+        "size": "28 KB",
         "tags": [
-          "Tester",
-          "Sorter",
-          "Synthetic_Prototype",
-          "Manual"
+          "AMHS",
+          "N2 Purge"
         ]
       }
     ],
-    "anomalies": [
-      {
-        "id": "ANO-ATE02-01",
-        "timestamp": "2026-08-22 07:44",
-        "type": "Carriage Track Alignment & Optical Jitter Drift",
-        "severity": "medium",
-        "description": "Optical alignment sensor tracking error and pneumatic carriage micro-chatter during high-speed device binning cycle.",
-        "sensor": "Optical Alignment Sensor",
-        "confidence": 0.68,
-        "status": "active",
-        "recommendedAction": "Inspect optical encoder strip, recalibrate pick position coordinates, and clean linear guide rails."
-      }
-    ],
-    "ipAddress": "10.24.114.2"
+    "knowledgeBaseRef": "machine_knowledge/wafer_dicing",
+    "manualId": "VAI-MAN-DIC-001",
+    "healthTrend": {
+      "24h": [
+        {
+          "timestamp": "Now",
+          "health": 99
+        }
+      ],
+      "7d": [
+        {
+          "timestamp": "Day 1",
+          "health": 99
+        },
+        {
+          "timestamp": "Day 7",
+          "health": 99
+        }
+      ],
+      "30d": [
+        {
+          "timestamp": "Wk 1",
+          "health": 100
+        },
+        {
+          "timestamp": "Wk 4",
+          "health": 99
+        }
+      ]
+    },
+    "installationDate": "2025-02-15",
+    "lastTelemetryTimestamp": "2026-08-26T15:30:00Z"
   },
   {
-    "installationDate": "2024-05-18",
-    "operatingHours": 5120,
-    "name": "Die Attacher 01",
-    "knowledgeBaseRef": "machine_knowledge/die_attacher",
-    "healthScore": 95,
-    "firmwareVersion": "v3.5.1",
+    "id": "DA-01",
+    "name": "High-Precision Die Bonder 01",
+    "machineType": "die-attach",
+    "processStage": "Bay 2: Die Attach & SMT",
     "status": "healthy",
-    "maintenance": {
-      "lastMaintenanceDate": "2026-07-28",
-      "technician": "Sarah Jenkins",
-      "nextScheduledDate": "2026-09-02",
-      "type": "Preventive Inspection",
-      "status": "scheduled"
+    "healthScore": 97,
+    "operatingHours": 1580,
+    "firmwareVersion": "v5.3.1",
+    "ipAddress": "10.24.102.1",
+    "location": {
+      "facility": "Fab 2 Cleanroom",
+      "floor": "Level 1 - Front-End Cleanzone",
+      "area": "Bay 2: Die Attach & SMT",
+      "line": "Die Attach Line 1",
+      "station": "Station DA-01",
+      "gridCoordinate": {
+        "x": 480,
+        "y": 109
+      }
     },
-    "processStage": "Die Attach",
+    "rul": {
+      "value": 1580,
+      "unit": "hours",
+      "confidence": 0.95,
+      "estimatedDays": 65.8,
+      "criticalThresholdHours": 80,
+      "degradationStage": "Normal"
+    },
     "sensors": [
       {
         "sensorId": "vibration_arm",
         "name": "Arm Vibration",
-        "value": 0.22,
+        "value": 0.38,
         "unit": "mm/s",
         "status": "normal",
         "lastUpdated": "4s ago"
@@ -267,7 +372,7 @@ export const SEED_MACHINES: Machine[] = [
       {
         "sensorId": "pressure_vacuum",
         "name": "Collet Vacuum Pressure",
-        "value": -82.4,
+        "value": -82,
         "unit": "kPa",
         "status": "normal",
         "lastUpdated": "4s ago"
@@ -276,892 +381,40 @@ export const SEED_MACHINES: Machine[] = [
         "sensorId": "temperature_heater",
         "name": "Heater Block Temp",
         "value": 165,
-        "unit": "\u00b0C",
+        "unit": "°C",
         "status": "normal",
         "lastUpdated": "4s ago"
       }
     ],
-    "healthTrend": {
-      "24h": [
-        {
-          "timestamp": "Now",
-          "health": 95
-        }
-      ],
-      "30d": [
-        {
-          "timestamp": "Wk 1",
-          "health": 97
-        },
-        {
-          "timestamp": "Wk 4",
-          "health": 95
-        }
-      ],
-      "7d": [
-        {
-          "timestamp": "Day 1",
-          "health": 96
-        },
-        {
-          "timestamp": "Day 7",
-          "health": 95
-        }
-      ]
-    },
-    "machineType": "die_attacher",
-    "location": {
-      "area": "Die Bond Bay A",
-      "line": "Line DA-1",
-      "station": "Station DA-01",
-      "gridCoordinate": {
-        "x": 2,
-        "y": 5
-      },
-      "floor": "Level 2 - Cleanroom ISO 5",
-      "facility": "Fab 2 OSAT Hub"
-    },
-    "rul": {
-      "degradationStage": "Normal",
-      "estimatedDays": 56.2,
-      "unit": "hours",
-      "confidence": 0.92,
-      "criticalThresholdHours": 40,
-      "value": 1350
-    },
-    "id": "DA-001",
-    "documents": [
-      {
-        "id": "DOC-VAI-MAN-DA-001",
-        "title": "Thermo-Compression Precision Die Attacher Technical Manual (PDF)",
-        "type": "PDF",
-        "category": "Manual",
-        "updatedAt": "2026-08-26",
-        "size": "36 KB",
-        "tags": [
-          "DieAttach",
-          "BondHead",
-          "Synthetic_Prototype",
-          "Manual"
-        ]
-      }
-    ],
-    "manualId": "VAI-MAN-DA-001",
-    "ipAddress": "10.24.111.1",
-    "lastTelemetryTimestamp": "2026-08-22T12:51:40Z",
-    "anomalies": []
-  },
-  {
-    "operatingHours": 9800,
-    "documents": [
-      {
-        "id": "DOC-VAI-MAN-DA-001",
-        "title": "Thermo-Compression Precision Die Attacher Technical Manual (PDF)",
-        "type": "PDF",
-        "category": "Manual",
-        "updatedAt": "2026-08-26",
-        "size": "36 KB",
-        "tags": [
-          "DieAttach",
-          "BondHead",
-          "Synthetic_Prototype",
-          "Manual"
-        ]
-      }
-    ],
-    "healthScore": 48,
-    "installationDate": "2023-12-01",
-    "ipAddress": "10.24.111.2",
-    "anomalies": [
-      {
-        "id": "ANO-DA02-01",
-        "timestamp": "2026-08-22 10:15",
-        "type": "Collet Vacuum Seal Leakage & Arm Jerk",
-        "severity": "critical",
-        "description": "Vacuum pressure dropped to -52 kPa causing 3 die misalignment drop events in 30 mins.",
-        "sensor": "Collet Vacuum Pressure",
-        "confidence": 0.95,
-        "status": "active",
-        "recommendedAction": "Halt line, replace silicone pickup tip, clean vacuum solenoid valve."
-      }
-    ],
-    "location": {
-      "area": "Die Bond Bay A",
-      "line": "Line DA-1",
-      "station": "Station DA-02",
-      "gridCoordinate": {
-        "x": 5,
-        "y": 5
-      },
-      "floor": "Level 2 - Cleanroom ISO 5",
-      "facility": "Fab 2 OSAT Hub"
-    },
-    "maintenance": {
-      "lastMaintenanceDate": "2026-06-25",
-      "technician": "Sarah Jenkins",
-      "nextScheduledDate": "2026-08-23",
-      "type": "Sensor Replacement",
-      "status": "scheduled"
-    },
-    "sensors": [
-      {
-        "sensorId": "vibration_arm",
-        "name": "Arm Vibration",
-        "value": 1.12,
-        "unit": "mm/s",
-        "status": "critical",
-        "lastUpdated": "2s ago"
-      },
-      {
-        "sensorId": "pressure_vacuum",
-        "name": "Collet Vacuum Pressure",
-        "value": -52,
-        "unit": "kPa",
-        "status": "critical",
-        "lastUpdated": "2s ago"
-      },
-      {
-        "sensorId": "temperature_heater",
-        "name": "Heater Block Temp",
-        "value": 172.5,
-        "unit": "\u00b0C",
-        "status": "normal",
-        "lastUpdated": "2s ago"
-      }
-    ],
-    "firmwareVersion": "v3.5.0",
-    "status": "critical",
-    "healthTrend": {
-      "24h": [
-        {
-          "timestamp": "12h ago",
-          "health": 70
-        },
-        {
-          "timestamp": "Now",
-          "health": 48
-        }
-      ],
-      "30d": [
-        {
-          "timestamp": "Wk 1",
-          "health": 90
-        },
-        {
-          "timestamp": "Wk 4",
-          "health": 48
-        }
-      ],
-      "7d": [
-        {
-          "timestamp": "Day 1",
-          "health": 82
-        },
-        {
-          "timestamp": "Day 7",
-          "health": 48
-        }
-      ]
-    },
-    "machineType": "die_attacher",
-    "processStage": "Die Attach",
-    "lastTelemetryTimestamp": "2026-08-22T12:51:55Z",
-    "name": "Die Attacher 02",
-    "rul": {
-      "degradationStage": "Imminent Failure",
-      "estimatedDays": 1.7,
-      "unit": "hours",
-      "confidence": 0.93,
-      "criticalThresholdHours": 40,
-      "value": 42
-    },
-    "id": "DA-002"
-  },
-  {
-    "healthScore": 94,
-    "knowledgeBaseRef": "machine_knowledge/wafer_dicing",
-    "ipAddress": "10.24.110.1",
     "anomalies": [],
-    "firmwareVersion": "v2.8.4",
-    "processStage": "Wafer Prep",
-    "documents": [
-      {
-        "id": "DOC-VAI-MAN-DIC-001",
-        "title": "High-Precision Wafer Dicing Saw Technical Manual (PDF)",
-        "type": "PDF",
-        "category": "Manual",
-        "updatedAt": "2026-08-26",
-        "size": "36 KB",
-        "tags": [
-          "Dicing",
-          "Spindle",
-          "Synthetic_Prototype",
-          "Manual"
-        ]
-      }
-    ],
-    "installationDate": "2024-11-12",
     "maintenance": {
       "lastMaintenanceDate": "2026-08-05",
-      "technician": "David Kim",
       "nextScheduledDate": "2026-09-05",
+      "status": "scheduled",
       "type": "Tool Calibration",
-      "status": "scheduled"
+      "technician": "Marcus Thorne"
     },
-    "sensors": [
+    "documents": [
       {
-        "sensorId": "vibration_spindle",
-        "name": "Spindle Vibration",
-        "value": 0.28,
-        "unit": "mm/s",
-        "status": "normal",
-        "lastUpdated": "8s ago"
-      },
-      {
-        "sensorId": "temperature_coolant",
-        "name": "Coolant Temperature",
-        "value": 20.4,
-        "unit": "\u00b0C",
-        "status": "normal",
-        "lastUpdated": "8s ago"
-      },
-      {
-        "sensorId": "load_motor",
-        "name": "Motor Spindle Load",
-        "value": 48,
-        "unit": "%",
-        "status": "normal",
-        "lastUpdated": "8s ago"
+        "id": "DOC-VAI-MAN-DA-001",
+        "title": "High-Precision Die Bonder Technical Manual (PDF)",
+        "type": "PDF",
+        "category": "Manual",
+        "updatedAt": "2026-08-18",
+        "size": "38 KB",
+        "tags": [
+          "Die Attach",
+          "Epoxy"
+        ]
       }
     ],
-    "location": {
-      "area": "Dicing Bay 1",
-      "line": "Line Prep-1",
-      "station": "Dicer-01",
-      "gridCoordinate": {
-        "x": 2,
-        "y": 2
-      },
-      "floor": "Level 1 - Front Prep",
-      "facility": "Fab 2 OSAT Hub"
-    },
-    "id": "DIC-001",
-    "machineType": "wafer_dicing",
+    "knowledgeBaseRef": "machine_knowledge/die_attacher",
+    "manualId": "VAI-MAN-DA-001",
     "healthTrend": {
       "24h": [
         {
           "timestamp": "Now",
-          "health": 94
-        }
-      ],
-      "30d": [
-        {
-          "timestamp": "Wk 1",
-          "health": 96
-        },
-        {
-          "timestamp": "Wk 4",
-          "health": 94
-        }
-      ],
-      "7d": [
-        {
-          "timestamp": "Day 1",
-          "health": 95
-        },
-        {
-          "timestamp": "Day 7",
-          "health": 94
-        }
-      ]
-    },
-    "status": "healthy",
-    "lastTelemetryTimestamp": "2026-08-22T12:51:15Z",
-    "operatingHours": 3210,
-    "manualId": "VAI-MAN-DIC-001",
-    "rul": {
-      "degradationStage": "Normal",
-      "estimatedDays": 37,
-      "unit": "hours",
-      "confidence": 0.89,
-      "criticalThresholdHours": 50,
-      "value": 890
-    },
-    "name": "Wafer Dicing Unit 01"
-  },
-  {
-    "healthScore": 68,
-    "name": "Wafer Dicing Unit 02",
-    "ipAddress": "10.24.110.2",
-    "anomalies": [
-      {
-        "id": "ANO-DIC02-01",
-        "timestamp": "2026-08-22 09:18",
-        "type": "Spindle Bearing Harmonic Anomaly",
-        "severity": "medium",
-        "description": "Vibration frequency analysis indicates micro-spalling on upper spindle ceramic bearings.",
-        "sensor": "Spindle Vibration",
-        "confidence": 0.88,
-        "status": "active",
-        "recommendedAction": "Schedule diamond blade re-truing and spindle lubrication flush."
-      }
-    ],
-    "documents": [
-      {
-        "id": "DOC-VAI-MAN-DIC-001",
-        "title": "High-Precision Wafer Dicing Saw Technical Manual (PDF)",
-        "type": "PDF",
-        "category": "Manual",
-        "updatedAt": "2026-08-26",
-        "size": "36 KB",
-        "tags": [
-          "Dicing",
-          "Spindle",
-          "Synthetic_Prototype",
-          "Manual"
-        ]
-      }
-    ],
-    "location": {
-      "area": "Dicing Bay 1",
-      "line": "Line Prep-1",
-      "station": "Dicer-02",
-      "gridCoordinate": {
-        "x": 5,
-        "y": 2
-      },
-      "floor": "Level 1 - Front Prep",
-      "facility": "Fab 2 OSAT Hub"
-    },
-    "sensors": [
-      {
-        "sensorId": "vibration_spindle",
-        "name": "Spindle Vibration",
-        "value": 0.89,
-        "unit": "mm/s",
-        "status": "warning",
-        "lastUpdated": "6s ago"
-      },
-      {
-        "sensorId": "temperature_coolant",
-        "name": "Coolant Temperature",
-        "value": 26.8,
-        "unit": "\u00b0C",
-        "status": "normal",
-        "lastUpdated": "6s ago"
-      },
-      {
-        "sensorId": "load_motor",
-        "name": "Motor Spindle Load",
-        "value": 78,
-        "unit": "%",
-        "status": "warning",
-        "lastUpdated": "6s ago"
-      }
-    ],
-    "maintenance": {
-      "lastMaintenanceDate": "2026-07-15",
-      "technician": "David Kim",
-      "nextScheduledDate": "2026-08-25",
-      "type": "Spindle Rebuild",
-      "status": "scheduled"
-    },
-    "processStage": "Wafer Prep",
-    "operatingHours": 7650,
-    "status": "warning",
-    "id": "DIC-002",
-    "machineType": "wafer_dicing",
-    "rul": {
-      "degradationStage": "Accelerated Wear",
-      "estimatedDays": 5.9,
-      "unit": "hours",
-      "confidence": 0.85,
-      "criticalThresholdHours": 50,
-      "value": 142
-    },
-    "healthTrend": {
-      "24h": [
-        {
-          "timestamp": "12h ago",
-          "health": 78
-        },
-        {
-          "timestamp": "Now",
-          "health": 68
-        }
-      ],
-      "30d": [
-        {
-          "timestamp": "Wk 1",
-          "health": 92
-        },
-        {
-          "timestamp": "Wk 4",
-          "health": 68
-        }
-      ],
-      "7d": [
-        {
-          "timestamp": "Day 1",
-          "health": 85
-        },
-        {
-          "timestamp": "Day 7",
-          "health": 68
-        }
-      ]
-    },
-    "installationDate": "2024-01-20",
-    "lastTelemetryTimestamp": "2026-08-22T12:51:25Z",
-    "firmwareVersion": "v2.8.4"
-  },
-  {
-    "maintenance": {
-      "lastMaintenanceDate": "2026-07-10",
-      "technician": "Facility Team",
-      "nextScheduledDate": "2026-08-24",
-      "type": "Preventive Inspection",
-      "status": "scheduled"
-    },
-    "installationDate": "2024-04-10",
-    "lastTelemetryTimestamp": "2026-08-20T04:12:00Z",
-    "healthScore": 0,
-    "id": "DIC-003",
-    "location": {
-      "area": "Dicing Bay 2",
-      "line": "Line Prep-2",
-      "station": "Dicer-03",
-      "gridCoordinate": {
-        "x": 8,
-        "y": 2
-      },
-      "floor": "Level 1 - Front Prep",
-      "facility": "Fab 2 OSAT Hub"
-    },
-    "processStage": "Wafer Prep",
-    "sensors": [
-      {
-        "sensorId": "vibration_spindle",
-        "name": "Spindle Vibration",
-        "value": 0,
-        "unit": "mm/s",
-        "status": "normal",
-        "lastUpdated": "2d ago"
-      },
-      {
-        "sensorId": "temperature_coolant",
-        "name": "Coolant Temperature",
-        "value": 0,
-        "unit": "\u00b0C",
-        "status": "normal",
-        "lastUpdated": "2d ago"
-      },
-      {
-        "sensorId": "load_motor",
-        "name": "Motor Spindle Load",
-        "value": 0,
-        "unit": "%",
-        "status": "normal",
-        "lastUpdated": "2d ago"
-      }
-    ],
-    "ipAddress": "10.24.110.3",
-    "rul": {
-      "degradationStage": "Normal",
-      "estimatedDays": 0,
-      "unit": "hours",
-      "confidence": 0,
-      "criticalThresholdHours": 50,
-      "value": 0
-    },
-    "anomalies": [
-      {
-        "id": "ANO-DIC03-01",
-        "timestamp": "2026-08-20 04:12",
-        "type": "Telemetry Connection Lost",
-        "severity": "medium",
-        "description": "Edge MQTT Gateway disconnected. Hardware power shut off for cleanroom facility electrical upgrade.",
-        "sensor": "System Gateway",
-        "confidence": 1,
-        "status": "acknowledged"
-      }
-    ],
-    "operatingHours": 6400,
-    "documents": [
-      {
-        "id": "DOC-VAI-MAN-DIC-001",
-        "title": "High-Precision Wafer Dicing Saw Technical Manual (PDF)",
-        "type": "PDF",
-        "category": "Manual",
-        "updatedAt": "2026-08-26",
-        "size": "36 KB",
-        "tags": [
-          "Dicing",
-          "Spindle",
-          "Synthetic_Prototype",
-          "Manual"
-        ]
-      }
-    ],
-    "status": "offline",
-    "name": "Wafer Dicing Unit 03",
-    "healthTrend": {
-      "24h": [
-        {
-          "timestamp": "Now",
-          "health": 0
-        }
-      ],
-      "30d": [
-        {
-          "timestamp": "Wk 1",
-          "health": 95
-        },
-        {
-          "timestamp": "Wk 4",
-          "health": 0
-        }
-      ],
-      "7d": [
-        {
-          "timestamp": "Day 1",
-          "health": 91
-        },
-        {
-          "timestamp": "Day 7",
-          "health": 0
-        }
-      ]
-    },
-    "firmwareVersion": "v2.8.2",
-    "machineType": "wafer_dicing"
-  },
-  {
-    "maintenance": {
-      "lastMaintenanceDate": "2026-08-08",
-      "technician": "Elena Rostova",
-      "nextScheduledDate": "2026-09-08",
-      "type": "Preventive Inspection",
-      "status": "scheduled"
-    },
-    "processStage": "Encapsulation",
-    "location": {
-      "area": "Molding Bay M1",
-      "line": "Line Mold-1",
-      "station": "Station M-01",
-      "gridCoordinate": {
-        "x": 2,
-        "y": 11
-      },
-      "floor": "Level 1 - Packaging Line",
-      "facility": "Fab 2 OSAT Hub"
-    },
-    "firmwareVersion": "v5.0.2",
-    "operatingHours": 6200,
-    "manualId": "VAI-MAN-MOLD-001",
-    "healthScore": 93,
-    "sensors": [
-      {
-        "sensorId": "temperature_mold",
-        "name": "Mold Chase Temp",
-        "value": 174.2,
-        "unit": "\u00b0C",
-        "status": "normal",
-        "lastUpdated": "15s ago"
-      },
-      {
-        "sensorId": "pressure_hydraulic",
-        "name": "Hydraulic Pressure",
-        "value": 138,
-        "unit": "bar",
-        "status": "normal",
-        "lastUpdated": "15s ago"
-      },
-      {
-        "sensorId": "load_plunger",
-        "name": "Plunger Force Load",
-        "value": 21.5,
-        "unit": "kN",
-        "status": "normal",
-        "lastUpdated": "15s ago"
-      }
-    ],
-    "documents": [
-      {
-        "id": "DOC-VAI-MAN-MOLD-001",
-        "title": "Multi-Plunger Transfer Molding Press Technical Manual (PDF)",
-        "type": "PDF",
-        "category": "Manual",
-        "updatedAt": "2026-08-26",
-        "size": "36 KB",
-        "tags": [
-          "Molding",
-          "Plunger",
-          "Synthetic_Prototype",
-          "Manual"
-        ]
-      }
-    ],
-    "name": "Auto Molding Press 01",
-    "installationDate": "2024-02-14",
-    "rul": {
-      "degradationStage": "Normal",
-      "estimatedDays": 50.8,
-      "unit": "hours",
-      "confidence": 0.9,
-      "criticalThresholdHours": 60,
-      "value": 1220
-    },
-    "knowledgeBaseRef": "machine_knowledge/molding",
-    "anomalies": [],
-    "ipAddress": "10.24.113.1",
-    "lastTelemetryTimestamp": "2026-08-22T12:51:10Z",
-    "healthTrend": {
-      "24h": [
-        {
-          "timestamp": "Now",
-          "health": 93
-        }
-      ],
-      "30d": [
-        {
-          "timestamp": "Wk 1",
-          "health": 96
-        },
-        {
-          "timestamp": "Wk 4",
-          "health": 93
-        }
-      ],
-      "7d": [
-        {
-          "timestamp": "Day 1",
-          "health": 94
-        },
-        {
-          "timestamp": "Day 7",
-          "health": 93
-        }
-      ]
-    },
-    "status": "healthy",
-    "machineType": "molding",
-    "id": "MOLD-001"
-  },
-  {
-    "maintenance": {
-      "lastMaintenanceDate": "2026-08-22",
-      "notes": "Active mold chase chemical cleaning and thermocouple recalibration in progress.",
-      "technician": "Elena Rostova",
-      "workOrderId": "WO-2026-8910",
-      "nextScheduledDate": "2026-09-22",
-      "type": "Tool Calibration",
-      "status": "in_progress"
-    },
-    "status": "maintenance",
-    "operatingHours": 7100,
-    "firmwareVersion": "v5.0.2",
-    "lastTelemetryTimestamp": "2026-08-22T11:30:00Z",
-    "processStage": "Encapsulation",
-    "healthScore": 85,
-    "name": "Auto Molding Press 02",
-    "id": "MOLD-002",
-    "installationDate": "2024-02-14",
-    "sensors": [
-      {
-        "sensorId": "temperature_mold",
-        "name": "Mold Chase Temp",
-        "value": 170,
-        "unit": "\u00b0C",
-        "status": "normal",
-        "lastUpdated": "1h ago"
-      },
-      {
-        "sensorId": "pressure_hydraulic",
-        "name": "Hydraulic Pressure",
-        "value": 142,
-        "unit": "bar",
-        "status": "normal",
-        "lastUpdated": "1h ago"
-      },
-      {
-        "sensorId": "load_plunger",
-        "name": "Plunger Force Load",
-        "value": 22,
-        "unit": "kN",
-        "status": "normal",
-        "lastUpdated": "1h ago"
-      }
-    ],
-    "ipAddress": "10.24.113.2",
-    "anomalies": [],
-    "healthTrend": {
-      "24h": [
-        {
-          "timestamp": "Now",
-          "health": 85
-        }
-      ],
-      "30d": [
-        {
-          "timestamp": "Wk 1",
-          "health": 91
-        },
-        {
-          "timestamp": "Wk 4",
-          "health": 85
-        }
-      ],
-      "7d": [
-        {
-          "timestamp": "Day 1",
-          "health": 88
-        },
-        {
-          "timestamp": "Day 7",
-          "health": 85
-        }
-      ]
-    },
-    "rul": {
-      "degradationStage": "Normal",
-      "estimatedDays": 39.5,
-      "unit": "hours",
-      "confidence": 0.85,
-      "criticalThresholdHours": 60,
-      "value": 950
-    },
-    "documents": [
-      {
-        "id": "DOC-VAI-MAN-MOLD-001",
-        "title": "Multi-Plunger Transfer Molding Press Technical Manual (PDF)",
-        "type": "PDF",
-        "category": "Manual",
-        "updatedAt": "2026-08-26",
-        "size": "36 KB",
-        "tags": [
-          "Molding",
-          "Plunger",
-          "Synthetic_Prototype",
-          "Manual"
-        ]
-      }
-    ],
-    "location": {
-      "area": "Molding Bay M1",
-      "line": "Line Mold-1",
-      "station": "Station M-02",
-      "gridCoordinate": {
-        "x": 5,
-        "y": 11
-      },
-      "floor": "Level 1 - Packaging Line",
-      "facility": "Fab 2 OSAT Hub"
-    },
-    "machineType": "molding"
-  },
-  {
-    "maintenance": {
-      "lastMaintenanceDate": "2026-08-01",
-      "technician": "Marcus Vance",
-      "workOrderId": "WO-2026-8712",
-      "nextScheduledDate": "2026-09-01",
-      "type": "Preventive Inspection",
-      "status": "scheduled"
-    },
-    "rul": {
-      "degradationStage": "Normal",
-      "estimatedDays": 59.1,
-      "unit": "hours",
-      "confidence": 0.94,
-      "criticalThresholdHours": 48,
-      "value": 1420
-    },
-    "location": {
-      "area": "Assembly Line A",
-      "line": "Line A",
-      "station": "Station 01",
-      "gridCoordinate": {
-        "x": 3,
-        "y": 8
-      },
-      "floor": "Level 2 - Cleanroom ISO 5",
-      "facility": "Fab 2 OSAT Hub"
-    },
-    "processStage": "Assembly",
-    "sensors": [
-      {
-        "sensorId": "vibration_ultrasonic",
-        "name": "Ultrasonic Vibration",
-        "value": 0.38,
-        "unit": "mm/s",
-        "status": "normal",
-        "lastUpdated": "5s ago"
-      },
-      {
-        "sensorId": "load_clamp",
-        "name": "Clamp Clamping Force",
-        "value": 66,
-        "unit": "N",
-        "status": "normal",
-        "lastUpdated": "5s ago"
-      },
-      {
-        "sensorId": "temperature_transducer",
-        "name": "Transducer Temp",
-        "value": 44.5,
-        "unit": "\u00b0C",
-        "status": "normal",
-        "lastUpdated": "5s ago"
-      }
-    ],
-    "operatingHours": 4120,
-    "lastTelemetryTimestamp": "2026-08-22T12:51:00Z",
-    "manualId": "VAI-MAN-WB-001",
-    "name": "Wire Bonder 01",
-    "ipAddress": "10.24.112.1",
-    "anomalies": [],
-    "healthScore": 96,
-    "documents": [
-      {
-        "id": "DOC-VAI-MAN-WB-001",
-        "title": "High-Speed Thermosonic Ball-Wedge Wire Bonder Technical Manual (PDF)",
-        "type": "PDF",
-        "category": "Manual",
-        "updatedAt": "2026-08-26",
-        "size": "36 KB",
-        "tags": [
-          "WireBonding",
-          "Transducer",
-          "Synthetic_Prototype",
-          "Manual"
-        ]
-      }
-    ],
-    "installationDate": "2024-09-10",
-    "status": "healthy",
-    "id": "WB-001",
-    "knowledgeBaseRef": "machine_knowledge/wire_bonder",
-    "firmwareVersion": "v4.12.8-RT",
-    "healthTrend": {
-      "24h": [
-        {
-          "timestamp": "12h ago",
           "health": 97
-        },
-        {
-          "timestamp": "Now",
-          "health": 96
-        }
-      ],
-      "30d": [
-        {
-          "timestamp": "Wk 1",
-          "health": 99
-        },
-        {
-          "timestamp": "Wk 4",
-          "health": 96
         }
       ],
       "7d": [
@@ -1171,286 +424,777 @@ export const SEED_MACHINES: Machine[] = [
         },
         {
           "timestamp": "Day 7",
+          "health": 97
+        }
+      ],
+      "30d": [
+        {
+          "timestamp": "Wk 1",
+          "health": 99
+        },
+        {
+          "timestamp": "Wk 4",
+          "health": 97
+        }
+      ]
+    },
+    "installationDate": "2025-02-15",
+    "lastTelemetryTimestamp": "2026-08-26T15:30:00Z"
+  },
+  {
+    "id": "DA-02",
+    "name": "High-Precision Die Bonder 02",
+    "machineType": "die-attach",
+    "processStage": "Bay 2: Die Attach & SMT",
+    "status": "healthy",
+    "healthScore": 95,
+    "operatingHours": 1420,
+    "firmwareVersion": "v5.3.1",
+    "ipAddress": "10.24.102.2",
+    "location": {
+      "facility": "Fab 2 Cleanroom",
+      "floor": "Level 1 - Front-End Cleanzone",
+      "area": "Bay 2: Die Attach & SMT",
+      "line": "Die Attach Line 1",
+      "station": "Station DA-02",
+      "gridCoordinate": {
+        "x": 555,
+        "y": 109
+      }
+    },
+    "rul": {
+      "value": 1420,
+      "unit": "hours",
+      "confidence": 0.94,
+      "estimatedDays": 59.1,
+      "criticalThresholdHours": 80,
+      "degradationStage": "Normal"
+    },
+    "sensors": [
+      {
+        "sensorId": "vibration_arm",
+        "name": "Arm Vibration",
+        "value": 0.4,
+        "unit": "mm/s",
+        "status": "normal",
+        "lastUpdated": "5s ago"
+      },
+      {
+        "sensorId": "pressure_vacuum",
+        "name": "Collet Vacuum Pressure",
+        "value": -80,
+        "unit": "kPa",
+        "status": "normal",
+        "lastUpdated": "5s ago"
+      },
+      {
+        "sensorId": "temperature_heater",
+        "name": "Heater Block Temp",
+        "value": 168,
+        "unit": "°C",
+        "status": "normal",
+        "lastUpdated": "5s ago"
+      }
+    ],
+    "anomalies": [],
+    "maintenance": {
+      "lastMaintenanceDate": "2026-08-08",
+      "nextScheduledDate": "2026-09-08",
+      "status": "scheduled",
+      "type": "Tool Calibration",
+      "technician": "Marcus Thorne"
+    },
+    "documents": [
+      {
+        "id": "DOC-VAI-MAN-DA-001",
+        "title": "High-Precision Die Bonder Technical Manual (PDF)",
+        "type": "PDF",
+        "category": "Manual",
+        "updatedAt": "2026-08-18",
+        "size": "38 KB",
+        "tags": [
+          "Die Attach",
+          "Epoxy"
+        ]
+      }
+    ],
+    "knowledgeBaseRef": "machine_knowledge/die_attacher",
+    "manualId": "VAI-MAN-DA-001",
+    "healthTrend": {
+      "24h": [
+        {
+          "timestamp": "Now",
+          "health": 95
+        }
+      ],
+      "7d": [
+        {
+          "timestamp": "Day 1",
+          "health": 96
+        },
+        {
+          "timestamp": "Day 7",
+          "health": 95
+        }
+      ],
+      "30d": [
+        {
+          "timestamp": "Wk 1",
+          "health": 98
+        },
+        {
+          "timestamp": "Wk 4",
+          "health": 95
+        }
+      ]
+    },
+    "installationDate": "2025-02-15",
+    "lastTelemetryTimestamp": "2026-08-26T15:30:00Z"
+  },
+  {
+    "id": "DA-03",
+    "name": "High-Precision Die Bonder 03",
+    "machineType": "die-attach",
+    "processStage": "Bay 2: Die Attach & SMT",
+    "status": "healthy",
+    "healthScore": 98,
+    "operatingHours": 1750,
+    "firmwareVersion": "v5.3.1",
+    "ipAddress": "10.24.102.3",
+    "location": {
+      "facility": "Fab 2 Cleanroom",
+      "floor": "Level 1 - Front-End Cleanzone",
+      "area": "Bay 2: Die Attach & SMT",
+      "line": "Die Attach Line 2",
+      "station": "Station DA-03",
+      "gridCoordinate": {
+        "x": 630,
+        "y": 109
+      }
+    },
+    "rul": {
+      "value": 1750,
+      "unit": "hours",
+      "confidence": 0.96,
+      "estimatedDays": 72.9,
+      "criticalThresholdHours": 80,
+      "degradationStage": "Normal"
+    },
+    "sensors": [
+      {
+        "sensorId": "vibration_arm",
+        "name": "Arm Vibration",
+        "value": 0.35,
+        "unit": "mm/s",
+        "status": "normal",
+        "lastUpdated": "3s ago"
+      },
+      {
+        "sensorId": "pressure_vacuum",
+        "name": "Collet Vacuum Pressure",
+        "value": -84,
+        "unit": "kPa",
+        "status": "normal",
+        "lastUpdated": "3s ago"
+      },
+      {
+        "sensorId": "temperature_heater",
+        "name": "Heater Block Temp",
+        "value": 164,
+        "unit": "°C",
+        "status": "normal",
+        "lastUpdated": "3s ago"
+      }
+    ],
+    "anomalies": [],
+    "maintenance": {
+      "lastMaintenanceDate": "2026-08-11",
+      "nextScheduledDate": "2026-09-11",
+      "status": "scheduled",
+      "type": "Preventive Inspection",
+      "technician": "Marcus Thorne"
+    },
+    "documents": [
+      {
+        "id": "DOC-VAI-MAN-DA-001",
+        "title": "High-Precision Die Bonder Technical Manual (PDF)",
+        "type": "PDF",
+        "category": "Manual",
+        "updatedAt": "2026-08-18",
+        "size": "38 KB",
+        "tags": [
+          "Die Attach",
+          "Epoxy"
+        ]
+      }
+    ],
+    "knowledgeBaseRef": "machine_knowledge/die_attacher",
+    "manualId": "VAI-MAN-DA-001",
+    "healthTrend": {
+      "24h": [
+        {
+          "timestamp": "Now",
+          "health": 98
+        }
+      ],
+      "7d": [
+        {
+          "timestamp": "Day 1",
+          "health": 99
+        },
+        {
+          "timestamp": "Day 7",
+          "health": 98
+        }
+      ],
+      "30d": [
+        {
+          "timestamp": "Wk 1",
+          "health": 99
+        },
+        {
+          "timestamp": "Wk 4",
+          "health": 98
+        }
+      ]
+    },
+    "installationDate": "2025-02-15",
+    "lastTelemetryTimestamp": "2026-08-26T15:30:00Z"
+  },
+  {
+    "id": "DA-04",
+    "name": "High-Precision Die Bonder 04",
+    "machineType": "die-attach",
+    "processStage": "Bay 2: Die Attach & SMT",
+    "status": "healthy",
+    "healthScore": 96,
+    "operatingHours": 1600,
+    "firmwareVersion": "v5.3.1",
+    "ipAddress": "10.24.102.4",
+    "location": {
+      "facility": "Fab 2 Cleanroom",
+      "floor": "Level 1 - Front-End Cleanzone",
+      "area": "Bay 2: Die Attach & SMT",
+      "line": "Die Attach Line 2",
+      "station": "Station DA-04",
+      "gridCoordinate": {
+        "x": 705,
+        "y": 109
+      }
+    },
+    "rul": {
+      "value": 1600,
+      "unit": "hours",
+      "confidence": 0.95,
+      "estimatedDays": 66.7,
+      "criticalThresholdHours": 80,
+      "degradationStage": "Normal"
+    },
+    "sensors": [
+      {
+        "sensorId": "vibration_arm",
+        "name": "Arm Vibration",
+        "value": 0.37,
+        "unit": "mm/s",
+        "status": "normal",
+        "lastUpdated": "6s ago"
+      },
+      {
+        "sensorId": "pressure_vacuum",
+        "name": "Collet Vacuum Pressure",
+        "value": -82,
+        "unit": "kPa",
+        "status": "normal",
+        "lastUpdated": "6s ago"
+      },
+      {
+        "sensorId": "temperature_heater",
+        "name": "Heater Block Temp",
+        "value": 166,
+        "unit": "°C",
+        "status": "normal",
+        "lastUpdated": "6s ago"
+      }
+    ],
+    "anomalies": [],
+    "maintenance": {
+      "lastMaintenanceDate": "2026-08-14",
+      "nextScheduledDate": "2026-09-14",
+      "status": "scheduled",
+      "type": "Preventive Inspection",
+      "technician": "Marcus Thorne"
+    },
+    "documents": [
+      {
+        "id": "DOC-VAI-MAN-DA-001",
+        "title": "High-Precision Die Bonder Technical Manual (PDF)",
+        "type": "PDF",
+        "category": "Manual",
+        "updatedAt": "2026-08-18",
+        "size": "38 KB",
+        "tags": [
+          "Die Attach",
+          "Epoxy"
+        ]
+      }
+    ],
+    "knowledgeBaseRef": "machine_knowledge/die_attacher",
+    "manualId": "VAI-MAN-DA-001",
+    "healthTrend": {
+      "24h": [
+        {
+          "timestamp": "Now",
+          "health": 96
+        }
+      ],
+      "7d": [
+        {
+          "timestamp": "Day 1",
+          "health": 97
+        },
+        {
+          "timestamp": "Day 7",
+          "health": 96
+        }
+      ],
+      "30d": [
+        {
+          "timestamp": "Wk 1",
+          "health": 98
+        },
+        {
+          "timestamp": "Wk 4",
           "health": 96
         }
       ]
     },
-    "machineType": "wire_bonder"
+    "installationDate": "2025-02-15",
+    "lastTelemetryTimestamp": "2026-08-26T15:30:00Z"
   },
   {
-    "healthScore": 91,
-    "id": "WB-002",
-    "maintenance": {
-      "lastMaintenanceDate": "2026-07-20",
-      "technician": "Marcus Vance",
-      "workOrderId": "WO-2026-8550",
-      "nextScheduledDate": "2026-09-10",
-      "type": "Tool Calibration",
-      "status": "scheduled"
+    "id": "PC-01",
+    "name": "RF Argon Plasma Surface Cleaner 01",
+    "machineType": "plasma-cleaner",
+    "processStage": "Bay 3A: Plasma Activation",
+    "status": "healthy",
+    "healthScore": 97,
+    "operatingHours": 2800,
+    "firmwareVersion": "v3.2.0",
+    "ipAddress": "10.24.103.1",
+    "location": {
+      "facility": "Fab 2 Cleanroom",
+      "floor": "Level 1 - Front-End Cleanzone",
+      "area": "Bay 3A: Plasma Activation",
+      "line": "Plasma Line 1",
+      "station": "Station PC-01",
+      "gridCoordinate": {
+        "x": 65,
+        "y": 319
+      }
     },
-    "lastTelemetryTimestamp": "2026-08-22T12:51:30Z",
+    "rul": {
+      "value": 2800,
+      "unit": "hours",
+      "confidence": 0.95,
+      "estimatedDays": 116.6,
+      "criticalThresholdHours": 120,
+      "degradationStage": "Normal"
+    },
     "sensors": [
       {
-        "sensorId": "vibration_ultrasonic",
-        "name": "Ultrasonic Vibration",
-        "value": 0.42,
+        "sensorId": "vibration_vacuum_pump",
+        "name": "Vacuum Pump Vibration",
+        "value": 0.18,
         "unit": "mm/s",
         "status": "normal",
-        "lastUpdated": "12s ago"
+        "lastUpdated": "3s ago"
       },
       {
-        "sensorId": "load_clamp",
-        "name": "Clamp Clamping Force",
-        "value": 68.5,
-        "unit": "N",
+        "sensorId": "chamber_pressure",
+        "name": "Chamber Pressure",
+        "value": 85,
+        "unit": "kPa",
         "status": "normal",
-        "lastUpdated": "12s ago"
+        "lastUpdated": "3s ago"
       },
       {
-        "sensorId": "temperature_transducer",
-        "name": "Transducer Temp",
-        "value": 45.2,
-        "unit": "\u00b0C",
+        "sensorId": "rf_reflected_power",
+        "name": "RF Reflected Power",
+        "value": 18,
+        "unit": "W",
         "status": "normal",
-        "lastUpdated": "12s ago"
+        "lastUpdated": "3s ago"
       }
     ],
+    "anomalies": [],
+    "maintenance": {
+      "lastMaintenanceDate": "2026-08-02",
+      "nextScheduledDate": "2026-10-02",
+      "status": "scheduled",
+      "type": "Preventive Inspection",
+      "technician": "Elena Vance"
+    },
+    "documents": [
+      {
+        "id": "DOC-VAI-MAN-PC-001",
+        "title": "RF Plasma Surface Treatment Chamber Technical Manual (PDF)",
+        "type": "PDF",
+        "category": "Manual",
+        "updatedAt": "2026-08-10",
+        "size": "32 KB",
+        "tags": [
+          "RF Plasma",
+          "Vacuum"
+        ]
+      }
+    ],
+    "knowledgeBaseRef": "machine_knowledge/die_attacher",
+    "manualId": "VAI-MAN-DA-001",
     "healthTrend": {
       "24h": [
         {
           "timestamp": "Now",
-          "health": 91
+          "health": 97
+        }
+      ],
+      "7d": [
+        {
+          "timestamp": "Day 1",
+          "health": 98
+        },
+        {
+          "timestamp": "Day 7",
+          "health": 97
         }
       ],
       "30d": [
         {
           "timestamp": "Wk 1",
+          "health": 99
+        },
+        {
+          "timestamp": "Wk 4",
+          "health": 97
+        }
+      ]
+    },
+    "installationDate": "2025-02-15",
+    "lastTelemetryTimestamp": "2026-08-26T15:30:00Z"
+  },
+  {
+    "id": "PC-02",
+    "name": "RF Argon Plasma Surface Cleaner 02",
+    "machineType": "plasma-cleaner",
+    "processStage": "Bay 3A: Plasma Activation",
+    "status": "healthy",
+    "healthScore": 96,
+    "operatingHours": 2650,
+    "firmwareVersion": "v3.2.0",
+    "ipAddress": "10.24.103.2",
+    "location": {
+      "facility": "Fab 2 Cleanroom",
+      "floor": "Level 1 - Front-End Cleanzone",
+      "area": "Bay 3A: Plasma Activation",
+      "line": "Plasma Line 2",
+      "station": "Station PC-02",
+      "gridCoordinate": {
+        "x": 145,
+        "y": 319
+      }
+    },
+    "rul": {
+      "value": 2650,
+      "unit": "hours",
+      "confidence": 0.94,
+      "estimatedDays": 110.4,
+      "criticalThresholdHours": 120,
+      "degradationStage": "Normal"
+    },
+    "sensors": [
+      {
+        "sensorId": "vibration_vacuum_pump",
+        "name": "Vacuum Pump Vibration",
+        "value": 0.19,
+        "unit": "mm/s",
+        "status": "normal",
+        "lastUpdated": "4s ago"
+      },
+      {
+        "sensorId": "chamber_pressure",
+        "name": "Chamber Pressure",
+        "value": 82,
+        "unit": "kPa",
+        "status": "normal",
+        "lastUpdated": "4s ago"
+      },
+      {
+        "sensorId": "rf_reflected_power",
+        "name": "RF Reflected Power",
+        "value": 19,
+        "unit": "W",
+        "status": "normal",
+        "lastUpdated": "4s ago"
+      }
+    ],
+    "anomalies": [],
+    "maintenance": {
+      "lastMaintenanceDate": "2026-08-04",
+      "nextScheduledDate": "2026-10-04",
+      "status": "scheduled",
+      "type": "Preventive Inspection",
+      "technician": "Elena Vance"
+    },
+    "documents": [
+      {
+        "id": "DOC-VAI-MAN-PC-001",
+        "title": "RF Plasma Surface Treatment Chamber Technical Manual (PDF)",
+        "type": "PDF",
+        "category": "Manual",
+        "updatedAt": "2026-08-10",
+        "size": "32 KB",
+        "tags": [
+          "RF Plasma",
+          "Vacuum"
+        ]
+      }
+    ],
+    "knowledgeBaseRef": "machine_knowledge/die_attacher",
+    "manualId": "VAI-MAN-DA-001",
+    "healthTrend": {
+      "24h": [
+        {
+          "timestamp": "Now",
+          "health": 96
+        }
+      ],
+      "7d": [
+        {
+          "timestamp": "Day 1",
+          "health": 97
+        },
+        {
+          "timestamp": "Day 7",
+          "health": 96
+        }
+      ],
+      "30d": [
+        {
+          "timestamp": "Wk 1",
+          "health": 98
+        },
+        {
+          "timestamp": "Wk 4",
+          "health": 96
+        }
+      ]
+    },
+    "installationDate": "2025-02-15",
+    "lastTelemetryTimestamp": "2026-08-26T15:30:00Z"
+  },
+  {
+    "id": "WB-01",
+    "name": "Thermosonic Ball Bonder 01",
+    "machineType": "wire-bonding",
+    "processStage": "Bay 3B: Wire Bonding Cleanroom",
+    "status": "healthy",
+    "healthScore": 95,
+    "operatingHours": 1650,
+    "firmwareVersion": "v7.4.2",
+    "ipAddress": "10.24.104.1",
+    "location": {
+      "facility": "Fab 2 Cleanroom",
+      "floor": "Level 1 - Front-End Cleanzone",
+      "area": "Bay 3B: Wire Bonding Cleanroom",
+      "line": "Bonding Cell 1",
+      "station": "Station WB-01",
+      "gridCoordinate": {
+        "x": 270,
+        "y": 319
+      }
+    },
+    "rul": {
+      "value": 1650,
+      "unit": "hours",
+      "confidence": 0.95,
+      "estimatedDays": 68.7,
+      "criticalThresholdHours": 80,
+      "degradationStage": "Normal"
+    },
+    "sensors": [
+      {
+        "sensorId": "vibration_ultrasonic",
+        "name": "Ultrasonic Vibration",
+        "value": 0.45,
+        "unit": "mm/s",
+        "status": "normal",
+        "lastUpdated": "2s ago"
+      },
+      {
+        "sensorId": "load_clamp",
+        "name": "Clamping Force",
+        "value": 68,
+        "unit": "N",
+        "status": "normal",
+        "lastUpdated": "2s ago"
+      },
+      {
+        "sensorId": "temperature_transducer",
+        "name": "Transducer Temp",
+        "value": 46,
+        "unit": "°C",
+        "status": "normal",
+        "lastUpdated": "2s ago"
+      }
+    ],
+    "anomalies": [],
+    "maintenance": {
+      "lastMaintenanceDate": "2026-08-11",
+      "nextScheduledDate": "2026-09-11",
+      "status": "scheduled",
+      "type": "Tool Calibration",
+      "technician": "Kenji Sato"
+    },
+    "documents": [
+      {
+        "id": "DOC-VAI-MAN-WB-001",
+        "title": "High-Speed Thermosonic Ball Bonder Manual (PDF)",
+        "type": "PDF",
+        "category": "Manual",
+        "updatedAt": "2026-08-15",
+        "size": "45 KB",
+        "tags": [
+          "Wire Bonder",
+          "Au Wire"
+        ]
+      }
+    ],
+    "knowledgeBaseRef": "machine_knowledge/wire_bonder",
+    "manualId": "VAI-MAN-WB-001",
+    "healthTrend": {
+      "24h": [
+        {
+          "timestamp": "Now",
+          "health": 95
+        }
+      ],
+      "7d": [
+        {
+          "timestamp": "Day 1",
+          "health": 96
+        },
+        {
+          "timestamp": "Day 7",
+          "health": 95
+        }
+      ],
+      "30d": [
+        {
+          "timestamp": "Wk 1",
+          "health": 98
+        },
+        {
+          "timestamp": "Wk 4",
+          "health": 95
+        }
+      ]
+    },
+    "installationDate": "2025-02-15",
+    "lastTelemetryTimestamp": "2026-08-26T15:30:00Z"
+  },
+  {
+    "id": "WB-02",
+    "name": "Thermosonic Ball Bonder 02",
+    "machineType": "wire-bonding",
+    "processStage": "Bay 3B: Wire Bonding Cleanroom",
+    "status": "healthy",
+    "healthScore": 94,
+    "operatingHours": 1520,
+    "firmwareVersion": "v7.4.2",
+    "ipAddress": "10.24.104.2",
+    "location": {
+      "facility": "Fab 2 Cleanroom",
+      "floor": "Level 1 - Front-End Cleanzone",
+      "area": "Bay 3B: Wire Bonding Cleanroom",
+      "line": "Bonding Cell 1",
+      "station": "Station WB-02",
+      "gridCoordinate": {
+        "x": 325,
+        "y": 319
+      }
+    },
+    "rul": {
+      "value": 1520,
+      "unit": "hours",
+      "confidence": 0.94,
+      "estimatedDays": 63.3,
+      "criticalThresholdHours": 80,
+      "degradationStage": "Normal"
+    },
+    "sensors": [
+      {
+        "sensorId": "vibration_ultrasonic",
+        "name": "Ultrasonic Vibration",
+        "value": 0.48,
+        "unit": "mm/s",
+        "status": "normal",
+        "lastUpdated": "3s ago"
+      },
+      {
+        "sensorId": "load_clamp",
+        "name": "Clamping Force",
+        "value": 69,
+        "unit": "N",
+        "status": "normal",
+        "lastUpdated": "3s ago"
+      },
+      {
+        "sensorId": "temperature_transducer",
+        "name": "Transducer Temp",
+        "value": 47.2,
+        "unit": "°C",
+        "status": "normal",
+        "lastUpdated": "3s ago"
+      }
+    ],
+    "anomalies": [],
+    "maintenance": {
+      "lastMaintenanceDate": "2026-08-08",
+      "nextScheduledDate": "2026-09-08",
+      "status": "scheduled",
+      "type": "Tool Calibration",
+      "technician": "Kenji Sato"
+    },
+    "documents": [
+      {
+        "id": "DOC-VAI-MAN-WB-001",
+        "title": "High-Speed Thermosonic Ball Bonder Manual (PDF)",
+        "type": "PDF",
+        "category": "Manual",
+        "updatedAt": "2026-08-15",
+        "size": "45 KB",
+        "tags": [
+          "Wire Bonder",
+          "Au Wire"
+        ]
+      }
+    ],
+    "knowledgeBaseRef": "machine_knowledge/wire_bonder",
+    "manualId": "VAI-MAN-WB-001",
+    "healthTrend": {
+      "24h": [
+        {
+          "timestamp": "Now",
+          "health": 94
+        }
+      ],
+      "7d": [
+        {
+          "timestamp": "Day 1",
           "health": 95
         },
         {
-          "timestamp": "Wk 4",
-          "health": 91
-        }
-      ],
-      "7d": [
-        {
-          "timestamp": "Day 1",
-          "health": 93
-        },
-        {
           "timestamp": "Day 7",
-          "health": 91
-        }
-      ]
-    },
-    "firmwareVersion": "v4.12.8-RT",
-    "status": "healthy",
-    "machineType": "wire_bonder",
-    "operatingHours": 5890,
-    "name": "Wire Bonder 02",
-    "installationDate": "2024-06-20",
-    "location": {
-      "area": "Assembly Line A",
-      "line": "Line A",
-      "station": "Station 02",
-      "gridCoordinate": {
-        "x": 6,
-        "y": 8
-      },
-      "floor": "Level 2 - Cleanroom ISO 5",
-      "facility": "Fab 2 OSAT Hub"
-    },
-    "processStage": "Assembly",
-    "ipAddress": "10.24.112.2",
-    "anomalies": [],
-    "rul": {
-      "degradationStage": "Normal",
-      "estimatedDays": 49.1,
-      "unit": "hours",
-      "confidence": 0.88,
-      "criticalThresholdHours": 48,
-      "value": 1180
-    },
-    "documents": [
-      {
-        "id": "DOC-VAI-MAN-WB-001",
-        "title": "High-Speed Thermosonic Ball-Wedge Wire Bonder Technical Manual (PDF)",
-        "type": "PDF",
-        "category": "Manual",
-        "updatedAt": "2026-08-26",
-        "size": "36 KB",
-        "tags": [
-          "WireBonding",
-          "Transducer",
-          "Synthetic_Prototype",
-          "Manual"
-        ]
-      }
-    ]
-  },
-  {
-    "ipAddress": "10.24.112.3",
-    "installationDate": "2023-11-05",
-    "anomalies": [
-      {
-        "id": "ANO-WB03-99",
-        "timestamp": "2026-08-22 12:10",
-        "type": "Piezo Transducer Thermal Runaway",
-        "severity": "critical",
-        "description": "Transducer temperature surpassed critical limit (69.4\u00b0C). Ultrasonic vibration resonance decoupling.",
-        "sensor": "Transducer Temp",
-        "confidence": 0.97,
-        "status": "active",
-        "recommendedAction": "Immediate emergency halt & reroute lots to WB-001 / WB-002."
-      }
-    ],
-    "location": {
-      "area": "Assembly Line B",
-      "line": "Line B",
-      "station": "Station 01",
-      "gridCoordinate": {
-        "x": 3,
-        "y": 14
-      },
-      "floor": "Level 2 - Cleanroom ISO 5",
-      "facility": "Fab 2 OSAT Hub"
-    },
-    "documents": [
-      {
-        "id": "DOC-VAI-MAN-WB-001",
-        "title": "High-Speed Thermosonic Ball-Wedge Wire Bonder Technical Manual (PDF)",
-        "type": "PDF",
-        "category": "Manual",
-        "updatedAt": "2026-08-26",
-        "size": "36 KB",
-        "tags": [
-          "WireBonding",
-          "Transducer",
-          "Synthetic_Prototype",
-          "Manual"
-        ]
-      }
-    ],
-    "healthTrend": {
-      "24h": [
-        {
-          "timestamp": "12h ago",
-          "health": 65
-        },
-        {
-          "timestamp": "Now",
-          "health": 41
-        }
-      ],
-      "30d": [
-        {
-          "timestamp": "Wk 1",
-          "health": 88
-        },
-        {
-          "timestamp": "Wk 4",
-          "health": 41
-        }
-      ],
-      "7d": [
-        {
-          "timestamp": "Day 1",
-          "health": 80
-        },
-        {
-          "timestamp": "Day 7",
-          "health": 41
-        }
-      ]
-    },
-    "machineType": "wire_bonder",
-    "firmwareVersion": "v4.11.2-RT",
-    "maintenance": {
-      "lastMaintenanceDate": "2026-06-15",
-      "technician": "Carlos Mendez",
-      "workOrderId": "WO-2026-9001",
-      "nextScheduledDate": "2026-08-22",
-      "type": "Spindle Rebuild",
-      "status": "overdue"
-    },
-    "processStage": "Assembly",
-    "name": "Wire Bonder 03",
-    "status": "critical",
-    "sensors": [
-      {
-        "sensorId": "vibration_ultrasonic",
-        "name": "Ultrasonic Vibration",
-        "value": 1.25,
-        "unit": "mm/s",
-        "status": "critical",
-        "lastUpdated": "3s ago"
-      },
-      {
-        "sensorId": "load_clamp",
-        "name": "Clamp Clamping Force",
-        "value": 98.2,
-        "unit": "N",
-        "status": "critical",
-        "lastUpdated": "3s ago"
-      },
-      {
-        "sensorId": "temperature_transducer",
-        "name": "Transducer Temp",
-        "value": 69.4,
-        "unit": "\u00b0C",
-        "status": "critical",
-        "lastUpdated": "3s ago"
-      }
-    ],
-    "operatingHours": 12450,
-    "lastTelemetryTimestamp": "2026-08-22T12:51:50Z",
-    "id": "WB-003",
-    "rul": {
-      "degradationStage": "Imminent Failure",
-      "estimatedDays": 1.1,
-      "unit": "hours",
-      "confidence": 0.96,
-      "criticalThresholdHours": 48,
-      "value": 28
-    },
-    "healthScore": 41
-  },
-  {
-    "installationDate": "2024-03-15",
-    "operatingHours": 8426,
-    "machineType": "wire_bonder",
-    "status": "warning",
-    "id": "WB-024",
-    "processStage": "Assembly",
-    "healthTrend": {
-      "24h": [
-        {
-          "timestamp": "12h ago",
-          "health": 88
-        },
-        {
-          "timestamp": "10h ago",
-          "health": 85
-        },
-        {
-          "timestamp": "8h ago",
-          "health": 82
-        },
-        {
-          "timestamp": "6h ago",
-          "health": 79
-        },
-        {
-          "timestamp": "4h ago",
-          "health": 75
-        },
-        {
-          "timestamp": "2h ago",
-          "health": 73
-        },
-        {
-          "timestamp": "Now",
-          "health": 72
+          "health": 94
         }
       ],
       "30d": [
@@ -1459,240 +1203,2885 @@ export const SEED_MACHINES: Machine[] = [
           "health": 97
         },
         {
-          "timestamp": "Wk 2",
-          "health": 94
-        },
-        {
-          "timestamp": "Wk 3",
-          "health": 88
-        },
-        {
           "timestamp": "Wk 4",
-          "health": 72
-        }
-      ],
-      "7d": [
-        {
-          "timestamp": "Day 1",
           "health": 94
-        },
-        {
-          "timestamp": "Day 2",
-          "health": 92
-        },
-        {
-          "timestamp": "Day 3",
-          "health": 89
-        },
-        {
-          "timestamp": "Day 4",
-          "health": 85
-        },
-        {
-          "timestamp": "Day 5",
-          "health": 80
-        },
-        {
-          "timestamp": "Day 6",
-          "health": 75
-        },
-        {
-          "timestamp": "Day 7",
-          "health": 72
         }
       ]
     },
-    "lastTelemetryTimestamp": "2026-08-22T12:50:00Z",
-    "firmwareVersion": "v4.12.8-RT",
-    "healthScore": 72,
-    "anomalies": [
-      {
-        "id": "ANO-WB24-001",
-        "timestamp": "2026-08-22 11:42",
-        "type": "Ultrasonic Harmonics Drift",
-        "severity": "medium",
-        "description": "Ultrasonic vibration trend increasing beyond 0.85 mm/s. Horn resonance damping indicated.",
-        "sensor": "Ultrasonic Vibration",
-        "confidence": 0.91,
-        "status": "active",
-        "recommendedAction": "Inspect piezo-electric transducer horn for micro-fissures or recalibrate bond force."
-      },
-      {
-        "id": "ANO-WB24-002",
-        "timestamp": "2026-08-21 14:32",
-        "type": "Clamp Load Elevation",
-        "severity": "medium",
-        "description": "Leadframe clamping force sustained at 84N (+18% above nominal mean).",
-        "sensor": "Clamp Clamping Force",
-        "confidence": 0.84,
-        "status": "acknowledged",
-        "recommendedAction": "Check pneumatic pressure regulator on station clamp cylinder."
-      },
-      {
-        "id": "ANO-WB24-003",
-        "timestamp": "2026-08-18 08:15",
-        "type": "Minor Frequency Shift",
-        "severity": "low",
-        "description": "Transient 138kHz resonance frequency flutter during high-density BGA wire cycle.",
-        "sensor": "Ultrasonic Vibration",
-        "confidence": 0.76,
-        "status": "resolved",
-        "recommendedAction": "Clean capillary tip with ultrasonic bath."
-      }
-    ],
-    "ipAddress": "10.24.112.24",
-    "rul": {
-      "degradationStage": "Accelerated Wear",
-      "estimatedDays": 7.8,
-      "unit": "hours",
-      "confidence": 0.91,
-      "criticalThresholdHours": 48,
-      "value": 186
-    },
-    "documents": [
-      {
-        "id": "DOC-VAI-MAN-WB-001",
-        "title": "High-Speed Thermosonic Ball-Wedge Wire Bonder Technical Manual (PDF)",
-        "type": "PDF",
-        "category": "Manual",
-        "updatedAt": "2026-08-26",
-        "size": "36 KB",
-        "tags": [
-          "WireBonding",
-          "Transducer",
-          "Synthetic_Prototype",
-          "Manual"
-        ]
-      }
-    ],
+    "installationDate": "2025-02-15",
+    "lastTelemetryTimestamp": "2026-08-26T15:30:00Z"
+  },
+  {
+    "id": "WB-03",
+    "name": "Thermosonic Ball Bonder 03",
+    "machineType": "wire-bonding",
+    "processStage": "Bay 3B: Wire Bonding Cleanroom",
+    "status": "healthy",
+    "healthScore": 96,
+    "operatingHours": 1720,
+    "firmwareVersion": "v7.4.2",
+    "ipAddress": "10.24.104.3",
     "location": {
-      "area": "Assembly Line A",
-      "line": "Line A",
-      "station": "Station 04",
+      "facility": "Fab 2 Cleanroom",
+      "floor": "Level 1 - Front-End Cleanzone",
+      "area": "Bay 3B: Wire Bonding Cleanroom",
+      "line": "Bonding Cell 1",
+      "station": "Station WB-03",
       "gridCoordinate": {
-        "x": 12,
-        "y": 8
-      },
-      "floor": "Level 2 - Cleanroom ISO 5",
-      "facility": "Fab 2 OSAT Hub"
-    },
-    "name": "Wire Bonder 24",
-    "maintenance": {
-      "lastMaintenanceDate": "2026-08-12",
-      "notes": "Scheduled for 8,500-hour bond head overhaul and piezo stack impedance tuning.",
-      "technician": "Marcus Vance (ID: TECH-48)",
-      "workOrderId": "WO-2026-8841",
-      "nextScheduledDate": "2026-08-28",
-      "type": "Preventive Inspection",
-      "status": "scheduled",
-      "checklistCount": {
-        "total": 12,
-        "completed": 8
+        "x": 380,
+        "y": 319
       }
+    },
+    "rul": {
+      "value": 1720,
+      "unit": "hours",
+      "confidence": 0.96,
+      "estimatedDays": 71.6,
+      "criticalThresholdHours": 80,
+      "degradationStage": "Normal"
     },
     "sensors": [
       {
         "sensorId": "vibration_ultrasonic",
         "name": "Ultrasonic Vibration",
-        "value": 0.88,
+        "value": 0.44,
         "unit": "mm/s",
-        "status": "warning",
-        "lastUpdated": "10s ago",
-        "history": [
-          {
-            "timestamp": "12:00",
-            "value": 0.52
-          },
-          {
-            "timestamp": "12:10",
-            "value": 0.61
-          },
-          {
-            "timestamp": "12:20",
-            "value": 0.73
-          },
-          {
-            "timestamp": "12:30",
-            "value": 0.79
-          },
-          {
-            "timestamp": "12:40",
-            "value": 0.84
-          },
-          {
-            "timestamp": "12:50",
-            "value": 0.88
-          }
-        ]
+        "status": "normal",
+        "lastUpdated": "4s ago"
       },
       {
         "sensorId": "load_clamp",
-        "name": "Clamp Clamping Force",
-        "value": 84,
+        "name": "Clamping Force",
+        "value": 67,
         "unit": "N",
-        "status": "warning",
-        "lastUpdated": "10s ago",
-        "history": [
-          {
-            "timestamp": "12:00",
-            "value": 68
-          },
-          {
-            "timestamp": "12:10",
-            "value": 72.5
-          },
-          {
-            "timestamp": "12:20",
-            "value": 77
-          },
-          {
-            "timestamp": "12:30",
-            "value": 81.2
-          },
-          {
-            "timestamp": "12:40",
-            "value": 83.5
-          },
-          {
-            "timestamp": "12:50",
-            "value": 84
-          }
-        ]
+        "status": "normal",
+        "lastUpdated": "4s ago"
       },
       {
         "sensorId": "temperature_transducer",
         "name": "Transducer Temp",
-        "value": 48.1,
-        "unit": "\u00b0C",
+        "value": 45.8,
+        "unit": "°C",
         "status": "normal",
-        "lastUpdated": "10s ago",
-        "history": [
-          {
-            "timestamp": "12:00",
-            "value": 46.2
-          },
-          {
-            "timestamp": "12:10",
-            "value": 46.8
-          },
-          {
-            "timestamp": "12:20",
-            "value": 47.4
-          },
-          {
-            "timestamp": "12:30",
-            "value": 47.9
-          },
-          {
-            "timestamp": "12:40",
-            "value": 48
-          },
-          {
-            "timestamp": "12:50",
-            "value": 48.1
-          }
+        "lastUpdated": "4s ago"
+      }
+    ],
+    "anomalies": [],
+    "maintenance": {
+      "lastMaintenanceDate": "2026-08-10",
+      "nextScheduledDate": "2026-09-10",
+      "status": "scheduled",
+      "type": "Tool Calibration",
+      "technician": "Kenji Sato"
+    },
+    "documents": [
+      {
+        "id": "DOC-VAI-MAN-WB-001",
+        "title": "High-Speed Thermosonic Ball Bonder Manual (PDF)",
+        "type": "PDF",
+        "category": "Manual",
+        "updatedAt": "2026-08-15",
+        "size": "45 KB",
+        "tags": [
+          "Wire Bonder",
+          "Au Wire"
         ]
       }
-    ]
+    ],
+    "knowledgeBaseRef": "machine_knowledge/wire_bonder",
+    "manualId": "VAI-MAN-WB-001",
+    "healthTrend": {
+      "24h": [
+        {
+          "timestamp": "Now",
+          "health": 96
+        }
+      ],
+      "7d": [
+        {
+          "timestamp": "Day 1",
+          "health": 97
+        },
+        {
+          "timestamp": "Day 7",
+          "health": 96
+        }
+      ],
+      "30d": [
+        {
+          "timestamp": "Wk 1",
+          "health": 98
+        },
+        {
+          "timestamp": "Wk 4",
+          "health": 96
+        }
+      ]
+    },
+    "installationDate": "2025-02-15",
+    "lastTelemetryTimestamp": "2026-08-26T15:30:00Z"
+  },
+  {
+    "id": "WB-04",
+    "name": "Thermosonic Ball Bonder 04",
+    "machineType": "wire-bonding",
+    "processStage": "Bay 3B: Wire Bonding Cleanroom",
+    "status": "warning",
+    "healthScore": 68,
+    "operatingHours": 3200,
+    "firmwareVersion": "v7.4.2",
+    "ipAddress": "10.24.104.4",
+    "location": {
+      "facility": "Fab 2 Cleanroom",
+      "floor": "Level 1 - Front-End Cleanzone",
+      "area": "Bay 3B: Wire Bonding Cleanroom",
+      "line": "Bonding Cell 1",
+      "station": "Station WB-04",
+      "gridCoordinate": {
+        "x": 435,
+        "y": 319
+      }
+    },
+    "rul": {
+      "value": 120,
+      "unit": "hours",
+      "confidence": 0.91,
+      "estimatedDays": 5,
+      "criticalThresholdHours": 80,
+      "degradationStage": "Accelerated Wear"
+    },
+    "sensors": [
+      {
+        "sensorId": "vibration_ultrasonic",
+        "name": "Ultrasonic Vibration",
+        "value": 2.85,
+        "unit": "mm/s",
+        "status": "warning",
+        "lastUpdated": "1s ago"
+      },
+      {
+        "sensorId": "load_clamp",
+        "name": "Clamping Force",
+        "value": 84,
+        "unit": "N",
+        "status": "warning",
+        "lastUpdated": "1s ago"
+      },
+      {
+        "sensorId": "temperature_transducer",
+        "name": "Transducer Temp",
+        "value": 64.8,
+        "unit": "°C",
+        "status": "warning",
+        "lastUpdated": "1s ago"
+      }
+    ],
+    "anomalies": [
+      {
+        "id": "ANO-WB04-01",
+        "timestamp": "2026-08-26 08:15",
+        "type": "Ultrasonic Transducer Resonance Drift",
+        "severity": "high",
+        "description": "PZT piezo resonance deviation (+4.2 kHz) causing non-stick on pad (NSOP) risk during 18µm Cu bonding.",
+        "sensor": "Ultrasonic Vibration",
+        "confidence": 0.94,
+        "status": "active",
+        "recommendedAction": "Replace capillary tool & recalibrate transducer resonance frequency."
+      }
+    ],
+    "maintenance": {
+      "lastMaintenanceDate": "2026-07-20",
+      "nextScheduledDate": "2026-08-27",
+      "status": "overdue",
+      "type": "Spindle Rebuild",
+      "technician": "Kenji Sato"
+    },
+    "documents": [
+      {
+        "id": "DOC-VAI-MAN-WB-001",
+        "title": "High-Speed Thermosonic Ball Bonder Manual (PDF)",
+        "type": "PDF",
+        "category": "Manual",
+        "updatedAt": "2026-08-15",
+        "size": "45 KB",
+        "tags": [
+          "Wire Bonder",
+          "Cu Wire",
+          "Priority Alert"
+        ]
+      }
+    ],
+    "knowledgeBaseRef": "machine_knowledge/wire_bonder",
+    "manualId": "VAI-MAN-WB-001",
+    "healthTrend": {
+      "24h": [
+        {
+          "timestamp": "12h ago",
+          "health": 76
+        },
+        {
+          "timestamp": "Now",
+          "health": 68
+        }
+      ],
+      "7d": [
+        {
+          "timestamp": "Day 1",
+          "health": 85
+        },
+        {
+          "timestamp": "Day 7",
+          "health": 68
+        }
+      ],
+      "30d": [
+        {
+          "timestamp": "Wk 1",
+          "health": 94
+        },
+        {
+          "timestamp": "Wk 4",
+          "health": 68
+        }
+      ]
+    },
+    "installationDate": "2025-02-15",
+    "lastTelemetryTimestamp": "2026-08-26T15:30:00Z"
+  },
+  {
+    "id": "WB-05",
+    "name": "Thermosonic Ball Bonder 05",
+    "machineType": "wire-bonding",
+    "processStage": "Bay 3B: Wire Bonding Cleanroom",
+    "status": "healthy",
+    "healthScore": 94,
+    "operatingHours": 1550,
+    "firmwareVersion": "v7.4.2",
+    "ipAddress": "10.24.104.5",
+    "location": {
+      "facility": "Fab 2 Cleanroom",
+      "floor": "Level 1 - Front-End Cleanzone",
+      "area": "Bay 3B: Wire Bonding Cleanroom",
+      "line": "Bonding Cell 2",
+      "station": "Station WB-05",
+      "gridCoordinate": {
+        "x": 490,
+        "y": 319
+      }
+    },
+    "rul": {
+      "value": 1550,
+      "unit": "hours",
+      "confidence": 0.94,
+      "estimatedDays": 64.5,
+      "criticalThresholdHours": 80,
+      "degradationStage": "Normal"
+    },
+    "sensors": [
+      {
+        "sensorId": "vibration_ultrasonic",
+        "name": "Ultrasonic Vibration",
+        "value": 0.46,
+        "unit": "mm/s",
+        "status": "normal",
+        "lastUpdated": "3s ago"
+      },
+      {
+        "sensorId": "load_clamp",
+        "name": "Clamping Force",
+        "value": 68,
+        "unit": "N",
+        "status": "normal",
+        "lastUpdated": "3s ago"
+      },
+      {
+        "sensorId": "temperature_transducer",
+        "name": "Transducer Temp",
+        "value": 46.5,
+        "unit": "°C",
+        "status": "normal",
+        "lastUpdated": "3s ago"
+      }
+    ],
+    "anomalies": [],
+    "maintenance": {
+      "lastMaintenanceDate": "2026-08-12",
+      "nextScheduledDate": "2026-09-12",
+      "status": "scheduled",
+      "type": "Tool Calibration",
+      "technician": "Kenji Sato"
+    },
+    "documents": [
+      {
+        "id": "DOC-VAI-MAN-WB-001",
+        "title": "High-Speed Thermosonic Ball Bonder Manual (PDF)",
+        "type": "PDF",
+        "category": "Manual",
+        "updatedAt": "2026-08-15",
+        "size": "45 KB",
+        "tags": [
+          "Wire Bonder"
+        ]
+      }
+    ],
+    "knowledgeBaseRef": "machine_knowledge/wire_bonder",
+    "manualId": "VAI-MAN-WB-001",
+    "healthTrend": {
+      "24h": [
+        {
+          "timestamp": "Now",
+          "health": 94
+        }
+      ],
+      "7d": [
+        {
+          "timestamp": "Day 1",
+          "health": 95
+        },
+        {
+          "timestamp": "Day 7",
+          "health": 94
+        }
+      ],
+      "30d": [
+        {
+          "timestamp": "Wk 1",
+          "health": 97
+        },
+        {
+          "timestamp": "Wk 4",
+          "health": 94
+        }
+      ]
+    },
+    "installationDate": "2025-02-15",
+    "lastTelemetryTimestamp": "2026-08-26T15:30:00Z"
+  },
+  {
+    "id": "WB-06",
+    "name": "Thermosonic Ball Bonder 06",
+    "machineType": "wire-bonding",
+    "processStage": "Bay 3B: Wire Bonding Cleanroom",
+    "status": "healthy",
+    "healthScore": 96,
+    "operatingHours": 1680,
+    "firmwareVersion": "v7.4.2",
+    "ipAddress": "10.24.104.6",
+    "location": {
+      "facility": "Fab 2 Cleanroom",
+      "floor": "Level 1 - Front-End Cleanzone",
+      "area": "Bay 3B: Wire Bonding Cleanroom",
+      "line": "Bonding Cell 2",
+      "station": "Station WB-06",
+      "gridCoordinate": {
+        "x": 545,
+        "y": 319
+      }
+    },
+    "rul": {
+      "value": 1680,
+      "unit": "hours",
+      "confidence": 0.95,
+      "estimatedDays": 70,
+      "criticalThresholdHours": 80,
+      "degradationStage": "Normal"
+    },
+    "sensors": [
+      {
+        "sensorId": "vibration_ultrasonic",
+        "name": "Ultrasonic Vibration",
+        "value": 0.42,
+        "unit": "mm/s",
+        "status": "normal",
+        "lastUpdated": "4s ago"
+      },
+      {
+        "sensorId": "load_clamp",
+        "name": "Clamping Force",
+        "value": 67,
+        "unit": "N",
+        "status": "normal",
+        "lastUpdated": "4s ago"
+      },
+      {
+        "sensorId": "temperature_transducer",
+        "name": "Transducer Temp",
+        "value": 45.4,
+        "unit": "°C",
+        "status": "normal",
+        "lastUpdated": "4s ago"
+      }
+    ],
+    "anomalies": [],
+    "maintenance": {
+      "lastMaintenanceDate": "2026-08-14",
+      "nextScheduledDate": "2026-09-14",
+      "status": "scheduled",
+      "type": "Tool Calibration",
+      "technician": "Kenji Sato"
+    },
+    "documents": [
+      {
+        "id": "DOC-VAI-MAN-WB-001",
+        "title": "High-Speed Thermosonic Ball Bonder Manual (PDF)",
+        "type": "PDF",
+        "category": "Manual",
+        "updatedAt": "2026-08-15",
+        "size": "45 KB",
+        "tags": [
+          "Wire Bonder"
+        ]
+      }
+    ],
+    "knowledgeBaseRef": "machine_knowledge/wire_bonder",
+    "manualId": "VAI-MAN-WB-001",
+    "healthTrend": {
+      "24h": [
+        {
+          "timestamp": "Now",
+          "health": 96
+        }
+      ],
+      "7d": [
+        {
+          "timestamp": "Day 1",
+          "health": 97
+        },
+        {
+          "timestamp": "Day 7",
+          "health": 96
+        }
+      ],
+      "30d": [
+        {
+          "timestamp": "Wk 1",
+          "health": 98
+        },
+        {
+          "timestamp": "Wk 4",
+          "health": 96
+        }
+      ]
+    },
+    "installationDate": "2025-02-15",
+    "lastTelemetryTimestamp": "2026-08-26T15:30:00Z"
+  },
+  {
+    "id": "WB-07",
+    "name": "Thermosonic Ball Bonder 07",
+    "machineType": "wire-bonding",
+    "processStage": "Bay 3B: Wire Bonding Cleanroom",
+    "status": "healthy",
+    "healthScore": 93,
+    "operatingHours": 1480,
+    "firmwareVersion": "v7.4.2",
+    "ipAddress": "10.24.104.7",
+    "location": {
+      "facility": "Fab 2 Cleanroom",
+      "floor": "Level 1 - Front-End Cleanzone",
+      "area": "Bay 3B: Wire Bonding Cleanroom",
+      "line": "Bonding Cell 2",
+      "station": "Station WB-07",
+      "gridCoordinate": {
+        "x": 600,
+        "y": 319
+      }
+    },
+    "rul": {
+      "value": 1480,
+      "unit": "hours",
+      "confidence": 0.93,
+      "estimatedDays": 61.6,
+      "criticalThresholdHours": 80,
+      "degradationStage": "Normal"
+    },
+    "sensors": [
+      {
+        "sensorId": "vibration_ultrasonic",
+        "name": "Ultrasonic Vibration",
+        "value": 0.5,
+        "unit": "mm/s",
+        "status": "normal",
+        "lastUpdated": "5s ago"
+      },
+      {
+        "sensorId": "load_clamp",
+        "name": "Clamping Force",
+        "value": 70,
+        "unit": "N",
+        "status": "normal",
+        "lastUpdated": "5s ago"
+      },
+      {
+        "sensorId": "temperature_transducer",
+        "name": "Transducer Temp",
+        "value": 48,
+        "unit": "°C",
+        "status": "normal",
+        "lastUpdated": "5s ago"
+      }
+    ],
+    "anomalies": [],
+    "maintenance": {
+      "lastMaintenanceDate": "2026-08-05",
+      "nextScheduledDate": "2026-09-05",
+      "status": "scheduled",
+      "type": "Tool Calibration",
+      "technician": "Kenji Sato"
+    },
+    "documents": [
+      {
+        "id": "DOC-VAI-MAN-WB-001",
+        "title": "High-Speed Thermosonic Ball Bonder Manual (PDF)",
+        "type": "PDF",
+        "category": "Manual",
+        "updatedAt": "2026-08-15",
+        "size": "45 KB",
+        "tags": [
+          "Wire Bonder"
+        ]
+      }
+    ],
+    "knowledgeBaseRef": "machine_knowledge/wire_bonder",
+    "manualId": "VAI-MAN-WB-001",
+    "healthTrend": {
+      "24h": [
+        {
+          "timestamp": "Now",
+          "health": 93
+        }
+      ],
+      "7d": [
+        {
+          "timestamp": "Day 1",
+          "health": 95
+        },
+        {
+          "timestamp": "Day 7",
+          "health": 93
+        }
+      ],
+      "30d": [
+        {
+          "timestamp": "Wk 1",
+          "health": 97
+        },
+        {
+          "timestamp": "Wk 4",
+          "health": 93
+        }
+      ]
+    },
+    "installationDate": "2025-02-15",
+    "lastTelemetryTimestamp": "2026-08-26T15:30:00Z"
+  },
+  {
+    "id": "WB-08",
+    "name": "Thermosonic Ball Bonder 08",
+    "machineType": "wire-bonding",
+    "processStage": "Bay 3B: Wire Bonding Cleanroom",
+    "status": "healthy",
+    "healthScore": 95,
+    "operatingHours": 1600,
+    "firmwareVersion": "v7.4.2",
+    "ipAddress": "10.24.104.8",
+    "location": {
+      "facility": "Fab 2 Cleanroom",
+      "floor": "Level 1 - Front-End Cleanzone",
+      "area": "Bay 3B: Wire Bonding Cleanroom",
+      "line": "Bonding Cell 2",
+      "station": "Station WB-08",
+      "gridCoordinate": {
+        "x": 655,
+        "y": 319
+      }
+    },
+    "rul": {
+      "value": 1600,
+      "unit": "hours",
+      "confidence": 0.95,
+      "estimatedDays": 66.7,
+      "criticalThresholdHours": 80,
+      "degradationStage": "Normal"
+    },
+    "sensors": [
+      {
+        "sensorId": "vibration_ultrasonic",
+        "name": "Ultrasonic Vibration",
+        "value": 0.44,
+        "unit": "mm/s",
+        "status": "normal",
+        "lastUpdated": "4s ago"
+      },
+      {
+        "sensorId": "load_clamp",
+        "name": "Clamping Force",
+        "value": 68,
+        "unit": "N",
+        "status": "normal",
+        "lastUpdated": "4s ago"
+      },
+      {
+        "sensorId": "temperature_transducer",
+        "name": "Transducer Temp",
+        "value": 46.8,
+        "unit": "°C",
+        "status": "normal",
+        "lastUpdated": "4s ago"
+      }
+    ],
+    "anomalies": [],
+    "maintenance": {
+      "lastMaintenanceDate": "2026-08-10",
+      "nextScheduledDate": "2026-09-10",
+      "status": "scheduled",
+      "type": "Tool Calibration",
+      "technician": "Kenji Sato"
+    },
+    "documents": [
+      {
+        "id": "DOC-VAI-MAN-WB-001",
+        "title": "High-Speed Thermosonic Ball Bonder Manual (PDF)",
+        "type": "PDF",
+        "category": "Manual",
+        "updatedAt": "2026-08-15",
+        "size": "45 KB",
+        "tags": [
+          "Wire Bonder"
+        ]
+      }
+    ],
+    "knowledgeBaseRef": "machine_knowledge/wire_bonder",
+    "manualId": "VAI-MAN-WB-001",
+    "healthTrend": {
+      "24h": [
+        {
+          "timestamp": "Now",
+          "health": 95
+        }
+      ],
+      "7d": [
+        {
+          "timestamp": "Day 1",
+          "health": 96
+        },
+        {
+          "timestamp": "Day 7",
+          "health": 95
+        }
+      ],
+      "30d": [
+        {
+          "timestamp": "Wk 1",
+          "health": 98
+        },
+        {
+          "timestamp": "Wk 4",
+          "health": 95
+        }
+      ]
+    },
+    "installationDate": "2025-02-15",
+    "lastTelemetryTimestamp": "2026-08-26T15:30:00Z"
+  },
+  {
+    "id": "MP-01",
+    "name": "Auto Molding Press 01 (Multi-Cavity)",
+    "machineType": "molding-press",
+    "processStage": "Bay 4: Encapsulation & Mold Chase",
+    "status": "healthy",
+    "healthScore": 94,
+    "operatingHours": 1980,
+    "firmwareVersion": "v6.1.4",
+    "ipAddress": "10.24.105.1",
+    "location": {
+      "facility": "Fab 2 Cleanroom",
+      "floor": "Level 1 - Front-End Cleanzone",
+      "area": "Bay 4: Encapsulation & Mold Chase",
+      "line": "Molding Line 1",
+      "station": "Press MP-01",
+      "gridCoordinate": {
+        "x": 745,
+        "y": 316
+      }
+    },
+    "rul": {
+      "value": 1980,
+      "unit": "hours",
+      "confidence": 0.94,
+      "estimatedDays": 82.5,
+      "criticalThresholdHours": 100,
+      "degradationStage": "Normal"
+    },
+    "sensors": [
+      {
+        "sensorId": "temperature_mold",
+        "name": "Mold Chase Temp",
+        "value": 175.4,
+        "unit": "°C",
+        "status": "normal",
+        "lastUpdated": "5s ago"
+      },
+      {
+        "sensorId": "pressure_hydraulic",
+        "name": "Hydraulic Pressure",
+        "value": 135,
+        "unit": "bar",
+        "status": "normal",
+        "lastUpdated": "5s ago"
+      },
+      {
+        "sensorId": "load_plunger",
+        "name": "Plunger Load",
+        "value": 22.4,
+        "unit": "kN",
+        "status": "normal",
+        "lastUpdated": "5s ago"
+      }
+    ],
+    "anomalies": [],
+    "maintenance": {
+      "lastMaintenanceDate": "2026-08-01",
+      "nextScheduledDate": "2026-09-01",
+      "status": "scheduled",
+      "type": "Preventive Inspection",
+      "technician": "Marcus Thorne"
+    },
+    "documents": [
+      {
+        "id": "DOC-VAI-MAN-MP-001",
+        "title": "Multi-Cavity Auto Molding Press Manual (PDF)",
+        "type": "PDF",
+        "category": "Manual",
+        "updatedAt": "2026-08-12",
+        "size": "52 KB",
+        "tags": [
+          "Molding",
+          "EMC"
+        ]
+      }
+    ],
+    "knowledgeBaseRef": "machine_knowledge/molding",
+    "manualId": "VAI-MAN-MOLD-001",
+    "healthTrend": {
+      "24h": [
+        {
+          "timestamp": "Now",
+          "health": 94
+        }
+      ],
+      "7d": [
+        {
+          "timestamp": "Day 1",
+          "health": 95
+        },
+        {
+          "timestamp": "Day 7",
+          "health": 94
+        }
+      ],
+      "30d": [
+        {
+          "timestamp": "Wk 1",
+          "health": 97
+        },
+        {
+          "timestamp": "Wk 4",
+          "health": 94
+        }
+      ]
+    },
+    "installationDate": "2025-02-15",
+    "lastTelemetryTimestamp": "2026-08-26T15:30:00Z"
+  },
+  {
+    "id": "MP-02",
+    "name": "Auto Molding Press 02 (Multi-Cavity)",
+    "machineType": "molding-press",
+    "processStage": "Bay 4: Encapsulation & Mold Chase",
+    "status": "healthy",
+    "healthScore": 93,
+    "operatingHours": 1850,
+    "firmwareVersion": "v6.1.4",
+    "ipAddress": "10.24.105.2",
+    "location": {
+      "facility": "Fab 2 Cleanroom",
+      "floor": "Level 1 - Front-End Cleanzone",
+      "area": "Bay 4: Encapsulation & Mold Chase",
+      "line": "Molding Line 1",
+      "station": "Press MP-02",
+      "gridCoordinate": {
+        "x": 830,
+        "y": 316
+      }
+    },
+    "rul": {
+      "value": 1850,
+      "unit": "hours",
+      "confidence": 0.93,
+      "estimatedDays": 77.1,
+      "criticalThresholdHours": 100,
+      "degradationStage": "Normal"
+    },
+    "sensors": [
+      {
+        "sensorId": "temperature_mold",
+        "name": "Mold Chase Temp",
+        "value": 174.8,
+        "unit": "°C",
+        "status": "normal",
+        "lastUpdated": "6s ago"
+      },
+      {
+        "sensorId": "pressure_hydraulic",
+        "name": "Hydraulic Pressure",
+        "value": 138,
+        "unit": "bar",
+        "status": "normal",
+        "lastUpdated": "6s ago"
+      },
+      {
+        "sensorId": "load_plunger",
+        "name": "Plunger Load",
+        "value": 23.1,
+        "unit": "kN",
+        "status": "normal",
+        "lastUpdated": "6s ago"
+      }
+    ],
+    "anomalies": [],
+    "maintenance": {
+      "lastMaintenanceDate": "2026-08-03",
+      "nextScheduledDate": "2026-09-03",
+      "status": "scheduled",
+      "type": "Preventive Inspection",
+      "technician": "Marcus Thorne"
+    },
+    "documents": [
+      {
+        "id": "DOC-VAI-MAN-MP-001",
+        "title": "Multi-Cavity Auto Molding Press Manual (PDF)",
+        "type": "PDF",
+        "category": "Manual",
+        "updatedAt": "2026-08-12",
+        "size": "52 KB",
+        "tags": [
+          "Molding",
+          "EMC"
+        ]
+      }
+    ],
+    "knowledgeBaseRef": "machine_knowledge/molding",
+    "manualId": "VAI-MAN-MOLD-001",
+    "healthTrend": {
+      "24h": [
+        {
+          "timestamp": "Now",
+          "health": 93
+        }
+      ],
+      "7d": [
+        {
+          "timestamp": "Day 1",
+          "health": 95
+        },
+        {
+          "timestamp": "Day 7",
+          "health": 93
+        }
+      ],
+      "30d": [
+        {
+          "timestamp": "Wk 1",
+          "health": 96
+        },
+        {
+          "timestamp": "Wk 4",
+          "health": 93
+        }
+      ]
+    },
+    "installationDate": "2025-02-15",
+    "lastTelemetryTimestamp": "2026-08-26T15:30:00Z"
+  },
+  {
+    "id": "MP-03",
+    "name": "Auto Molding Press 03 (Multi-Cavity)",
+    "machineType": "molding-press",
+    "processStage": "Bay 4: Encapsulation & Mold Chase",
+    "status": "healthy",
+    "healthScore": 96,
+    "operatingHours": 2150,
+    "firmwareVersion": "v6.1.4",
+    "ipAddress": "10.24.105.3",
+    "location": {
+      "facility": "Fab 2 Cleanroom",
+      "floor": "Level 1 - Front-End Cleanzone",
+      "area": "Bay 4: Encapsulation & Mold Chase",
+      "line": "Molding Line 2",
+      "station": "Press MP-03",
+      "gridCoordinate": {
+        "x": 915,
+        "y": 316
+      }
+    },
+    "rul": {
+      "value": 2150,
+      "unit": "hours",
+      "confidence": 0.96,
+      "estimatedDays": 89.6,
+      "criticalThresholdHours": 100,
+      "degradationStage": "Normal"
+    },
+    "sensors": [
+      {
+        "sensorId": "temperature_mold",
+        "name": "Mold Chase Temp",
+        "value": 176,
+        "unit": "°C",
+        "status": "normal",
+        "lastUpdated": "4s ago"
+      },
+      {
+        "sensorId": "pressure_hydraulic",
+        "name": "Hydraulic Pressure",
+        "value": 133,
+        "unit": "bar",
+        "status": "normal",
+        "lastUpdated": "4s ago"
+      },
+      {
+        "sensorId": "load_plunger",
+        "name": "Plunger Load",
+        "value": 21.8,
+        "unit": "kN",
+        "status": "normal",
+        "lastUpdated": "4s ago"
+      }
+    ],
+    "anomalies": [],
+    "maintenance": {
+      "lastMaintenanceDate": "2026-08-06",
+      "nextScheduledDate": "2026-09-06",
+      "status": "scheduled",
+      "type": "Preventive Inspection",
+      "technician": "Marcus Thorne"
+    },
+    "documents": [
+      {
+        "id": "DOC-VAI-MAN-MP-001",
+        "title": "Multi-Cavity Auto Molding Press Manual (PDF)",
+        "type": "PDF",
+        "category": "Manual",
+        "updatedAt": "2026-08-12",
+        "size": "52 KB",
+        "tags": [
+          "Molding",
+          "EMC"
+        ]
+      }
+    ],
+    "knowledgeBaseRef": "machine_knowledge/molding",
+    "manualId": "VAI-MAN-MOLD-001",
+    "healthTrend": {
+      "24h": [
+        {
+          "timestamp": "Now",
+          "health": 96
+        }
+      ],
+      "7d": [
+        {
+          "timestamp": "Day 1",
+          "health": 97
+        },
+        {
+          "timestamp": "Day 7",
+          "health": 96
+        }
+      ],
+      "30d": [
+        {
+          "timestamp": "Wk 1",
+          "health": 98
+        },
+        {
+          "timestamp": "Wk 4",
+          "health": 96
+        }
+      ]
+    },
+    "installationDate": "2025-02-15",
+    "lastTelemetryTimestamp": "2026-08-26T15:30:00Z"
+  },
+  {
+    "id": "MP-04",
+    "name": "Auto Molding Press 04 (Multi-Cavity)",
+    "machineType": "molding-press",
+    "processStage": "Bay 4: Encapsulation & Mold Chase",
+    "status": "healthy",
+    "healthScore": 95,
+    "operatingHours": 2020,
+    "firmwareVersion": "v6.1.4",
+    "ipAddress": "10.24.105.4",
+    "location": {
+      "facility": "Fab 2 Cleanroom",
+      "floor": "Level 1 - Front-End Cleanzone",
+      "area": "Bay 4: Encapsulation & Mold Chase",
+      "line": "Molding Line 2",
+      "station": "Press MP-04",
+      "gridCoordinate": {
+        "x": 1000,
+        "y": 316
+      }
+    },
+    "rul": {
+      "value": 2020,
+      "unit": "hours",
+      "confidence": 0.95,
+      "estimatedDays": 84.2,
+      "criticalThresholdHours": 100,
+      "degradationStage": "Normal"
+    },
+    "sensors": [
+      {
+        "sensorId": "temperature_mold",
+        "name": "Mold Chase Temp",
+        "value": 175.2,
+        "unit": "°C",
+        "status": "normal",
+        "lastUpdated": "5s ago"
+      },
+      {
+        "sensorId": "pressure_hydraulic",
+        "name": "Hydraulic Pressure",
+        "value": 136,
+        "unit": "bar",
+        "status": "normal",
+        "lastUpdated": "5s ago"
+      },
+      {
+        "sensorId": "load_plunger",
+        "name": "Plunger Load",
+        "value": 22.8,
+        "unit": "kN",
+        "status": "normal",
+        "lastUpdated": "5s ago"
+      }
+    ],
+    "anomalies": [],
+    "maintenance": {
+      "lastMaintenanceDate": "2026-08-09",
+      "nextScheduledDate": "2026-09-09",
+      "status": "scheduled",
+      "type": "Preventive Inspection",
+      "technician": "Marcus Thorne"
+    },
+    "documents": [
+      {
+        "id": "DOC-VAI-MAN-MP-001",
+        "title": "Multi-Cavity Auto Molding Press Manual (PDF)",
+        "type": "PDF",
+        "category": "Manual",
+        "updatedAt": "2026-08-12",
+        "size": "52 KB",
+        "tags": [
+          "Molding",
+          "EMC"
+        ]
+      }
+    ],
+    "knowledgeBaseRef": "machine_knowledge/molding",
+    "manualId": "VAI-MAN-MOLD-001",
+    "healthTrend": {
+      "24h": [
+        {
+          "timestamp": "Now",
+          "health": 95
+        }
+      ],
+      "7d": [
+        {
+          "timestamp": "Day 1",
+          "health": 96
+        },
+        {
+          "timestamp": "Day 7",
+          "health": 95
+        }
+      ],
+      "30d": [
+        {
+          "timestamp": "Wk 1",
+          "health": 98
+        },
+        {
+          "timestamp": "Wk 4",
+          "health": 95
+        }
+      ]
+    },
+    "installationDate": "2025-02-15",
+    "lastTelemetryTimestamp": "2026-08-26T15:30:00Z"
+  },
+  {
+    "id": "AOI-01",
+    "name": "3D Optical AOI Line 01",
+    "machineType": "aoi-inspection",
+    "processStage": "Bay 5A: 3D Optical AOI Metrology",
+    "status": "healthy",
+    "healthScore": 99,
+    "operatingHours": 3200,
+    "firmwareVersion": "v8.2.1",
+    "ipAddress": "10.24.106.1",
+    "location": {
+      "facility": "Fab 2 Cleanroom",
+      "floor": "Level 1 - Front-End Cleanzone",
+      "area": "Bay 5A: 3D Optical AOI Metrology",
+      "line": "AOI Line 1",
+      "station": "Station AOI-01",
+      "gridCoordinate": {
+        "x": 65,
+        "y": 524
+      }
+    },
+    "rul": {
+      "value": 3200,
+      "unit": "hours",
+      "confidence": 0.98,
+      "estimatedDays": 133.3,
+      "criticalThresholdHours": 100,
+      "degradationStage": "Normal"
+    },
+    "sensors": [
+      {
+        "sensorId": "vibration_camera_gantry",
+        "name": "Camera Gantry Vibration",
+        "value": 0.08,
+        "unit": "mm/s",
+        "status": "normal",
+        "lastUpdated": "2s ago"
+      },
+      {
+        "sensorId": "temp_optics",
+        "name": "Optical Sensor Temp",
+        "value": 22.8,
+        "unit": "°C",
+        "status": "normal",
+        "lastUpdated": "2s ago"
+      },
+      {
+        "sensorId": "optical_intensity",
+        "name": "Illumination Uniformity",
+        "value": 98.5,
+        "unit": "%",
+        "status": "normal",
+        "lastUpdated": "2s ago"
+      }
+    ],
+    "anomalies": [],
+    "maintenance": {
+      "lastMaintenanceDate": "2026-08-15",
+      "nextScheduledDate": "2026-10-15",
+      "status": "scheduled",
+      "type": "Tool Calibration",
+      "technician": "Elena Vance"
+    },
+    "documents": [
+      {
+        "id": "DOC-VAI-MAN-AOI-001",
+        "title": "3D Optical AOI Metrology Manual (PDF)",
+        "type": "PDF",
+        "category": "Manual",
+        "updatedAt": "2026-08-16",
+        "size": "36 KB",
+        "tags": [
+          "AOI",
+          "3D Vision"
+        ]
+      }
+    ],
+    "knowledgeBaseRef": "machine_knowledge/ic_tester",
+    "manualId": "VAI-MAN-ATE-001",
+    "healthTrend": {
+      "24h": [
+        {
+          "timestamp": "Now",
+          "health": 99
+        }
+      ],
+      "7d": [
+        {
+          "timestamp": "Day 1",
+          "health": 99
+        },
+        {
+          "timestamp": "Day 7",
+          "health": 99
+        }
+      ],
+      "30d": [
+        {
+          "timestamp": "Wk 1",
+          "health": 100
+        },
+        {
+          "timestamp": "Wk 4",
+          "health": 99
+        }
+      ]
+    },
+    "installationDate": "2025-02-15",
+    "lastTelemetryTimestamp": "2026-08-26T15:30:00Z"
+  },
+  {
+    "id": "AOI-02",
+    "name": "3D Optical AOI Line 02",
+    "machineType": "aoi-inspection",
+    "processStage": "Bay 5A: 3D Optical AOI Metrology",
+    "status": "healthy",
+    "healthScore": 98,
+    "operatingHours": 3050,
+    "firmwareVersion": "v8.2.1",
+    "ipAddress": "10.24.106.2",
+    "location": {
+      "facility": "Fab 2 Cleanroom",
+      "floor": "Level 1 - Front-End Cleanzone",
+      "area": "Bay 5A: 3D Optical AOI Metrology",
+      "line": "AOI Line 1",
+      "station": "Station AOI-02",
+      "gridCoordinate": {
+        "x": 130,
+        "y": 524
+      }
+    },
+    "rul": {
+      "value": 3050,
+      "unit": "hours",
+      "confidence": 0.97,
+      "estimatedDays": 127.1,
+      "criticalThresholdHours": 100,
+      "degradationStage": "Normal"
+    },
+    "sensors": [
+      {
+        "sensorId": "vibration_camera_gantry",
+        "name": "Camera Gantry Vibration",
+        "value": 0.09,
+        "unit": "mm/s",
+        "status": "normal",
+        "lastUpdated": "3s ago"
+      },
+      {
+        "sensorId": "temp_optics",
+        "name": "Optical Sensor Temp",
+        "value": 23.2,
+        "unit": "°C",
+        "status": "normal",
+        "lastUpdated": "3s ago"
+      },
+      {
+        "sensorId": "optical_intensity",
+        "name": "Illumination Uniformity",
+        "value": 98.1,
+        "unit": "%",
+        "status": "normal",
+        "lastUpdated": "3s ago"
+      }
+    ],
+    "anomalies": [],
+    "maintenance": {
+      "lastMaintenanceDate": "2026-08-16",
+      "nextScheduledDate": "2026-10-16",
+      "status": "scheduled",
+      "type": "Tool Calibration",
+      "technician": "Elena Vance"
+    },
+    "documents": [
+      {
+        "id": "DOC-VAI-MAN-AOI-001",
+        "title": "3D Optical AOI Metrology Manual (PDF)",
+        "type": "PDF",
+        "category": "Manual",
+        "updatedAt": "2026-08-16",
+        "size": "36 KB",
+        "tags": [
+          "AOI",
+          "3D Vision"
+        ]
+      }
+    ],
+    "knowledgeBaseRef": "machine_knowledge/ic_tester",
+    "manualId": "VAI-MAN-ATE-001",
+    "healthTrend": {
+      "24h": [
+        {
+          "timestamp": "Now",
+          "health": 98
+        }
+      ],
+      "7d": [
+        {
+          "timestamp": "Day 1",
+          "health": 99
+        },
+        {
+          "timestamp": "Day 7",
+          "health": 98
+        }
+      ],
+      "30d": [
+        {
+          "timestamp": "Wk 1",
+          "health": 99
+        },
+        {
+          "timestamp": "Wk 4",
+          "health": 98
+        }
+      ]
+    },
+    "installationDate": "2025-02-15",
+    "lastTelemetryTimestamp": "2026-08-26T15:30:00Z"
+  },
+  {
+    "id": "AOI-03",
+    "name": "3D Optical AOI Line 03",
+    "machineType": "aoi-inspection",
+    "processStage": "Bay 5A: 3D Optical AOI Metrology",
+    "status": "healthy",
+    "healthScore": 99,
+    "operatingHours": 3180,
+    "firmwareVersion": "v8.2.1",
+    "ipAddress": "10.24.106.3",
+    "location": {
+      "facility": "Fab 2 Cleanroom",
+      "floor": "Level 1 - Front-End Cleanzone",
+      "area": "Bay 5A: 3D Optical AOI Metrology",
+      "line": "AOI Line 2",
+      "station": "Station AOI-03",
+      "gridCoordinate": {
+        "x": 195,
+        "y": 524
+      }
+    },
+    "rul": {
+      "value": 3180,
+      "unit": "hours",
+      "confidence": 0.98,
+      "estimatedDays": 132.5,
+      "criticalThresholdHours": 100,
+      "degradationStage": "Normal"
+    },
+    "sensors": [
+      {
+        "sensorId": "vibration_camera_gantry",
+        "name": "Camera Gantry Vibration",
+        "value": 0.08,
+        "unit": "mm/s",
+        "status": "normal",
+        "lastUpdated": "2s ago"
+      },
+      {
+        "sensorId": "temp_optics",
+        "name": "Optical Sensor Temp",
+        "value": 22.9,
+        "unit": "°C",
+        "status": "normal",
+        "lastUpdated": "2s ago"
+      },
+      {
+        "sensorId": "optical_intensity",
+        "name": "Illumination Uniformity",
+        "value": 98.6,
+        "unit": "%",
+        "status": "normal",
+        "lastUpdated": "2s ago"
+      }
+    ],
+    "anomalies": [],
+    "maintenance": {
+      "lastMaintenanceDate": "2026-08-17",
+      "nextScheduledDate": "2026-10-17",
+      "status": "scheduled",
+      "type": "Tool Calibration",
+      "technician": "Elena Vance"
+    },
+    "documents": [
+      {
+        "id": "DOC-VAI-MAN-AOI-001",
+        "title": "3D Optical AOI Metrology Manual (PDF)",
+        "type": "PDF",
+        "category": "Manual",
+        "updatedAt": "2026-08-16",
+        "size": "36 KB",
+        "tags": [
+          "AOI",
+          "3D Vision"
+        ]
+      }
+    ],
+    "knowledgeBaseRef": "machine_knowledge/ic_tester",
+    "manualId": "VAI-MAN-ATE-001",
+    "healthTrend": {
+      "24h": [
+        {
+          "timestamp": "Now",
+          "health": 99
+        }
+      ],
+      "7d": [
+        {
+          "timestamp": "Day 1",
+          "health": 99
+        },
+        {
+          "timestamp": "Day 7",
+          "health": 99
+        }
+      ],
+      "30d": [
+        {
+          "timestamp": "Wk 1",
+          "health": 100
+        },
+        {
+          "timestamp": "Wk 4",
+          "health": 99
+        }
+      ]
+    },
+    "installationDate": "2025-02-15",
+    "lastTelemetryTimestamp": "2026-08-26T15:30:00Z"
+  },
+  {
+    "id": "AOI-04",
+    "name": "3D Optical AOI Line 04",
+    "machineType": "aoi-inspection",
+    "processStage": "Bay 5A: 3D Optical AOI Metrology",
+    "status": "healthy",
+    "healthScore": 98,
+    "operatingHours": 3100,
+    "firmwareVersion": "v8.2.1",
+    "ipAddress": "10.24.106.4",
+    "location": {
+      "facility": "Fab 2 Cleanroom",
+      "floor": "Level 1 - Front-End Cleanzone",
+      "area": "Bay 5A: 3D Optical AOI Metrology",
+      "line": "AOI Line 2",
+      "station": "Station AOI-04",
+      "gridCoordinate": {
+        "x": 260,
+        "y": 524
+      }
+    },
+    "rul": {
+      "value": 3100,
+      "unit": "hours",
+      "confidence": 0.97,
+      "estimatedDays": 129.2,
+      "criticalThresholdHours": 100,
+      "degradationStage": "Normal"
+    },
+    "sensors": [
+      {
+        "sensorId": "vibration_camera_gantry",
+        "name": "Camera Gantry Vibration",
+        "value": 0.09,
+        "unit": "mm/s",
+        "status": "normal",
+        "lastUpdated": "3s ago"
+      },
+      {
+        "sensorId": "temp_optics",
+        "name": "Optical Sensor Temp",
+        "value": 23,
+        "unit": "°C",
+        "status": "normal",
+        "lastUpdated": "3s ago"
+      },
+      {
+        "sensorId": "optical_intensity",
+        "name": "Illumination Uniformity",
+        "value": 98.2,
+        "unit": "%",
+        "status": "normal",
+        "lastUpdated": "3s ago"
+      }
+    ],
+    "anomalies": [],
+    "maintenance": {
+      "lastMaintenanceDate": "2026-08-18",
+      "nextScheduledDate": "2026-10-18",
+      "status": "scheduled",
+      "type": "Tool Calibration",
+      "technician": "Elena Vance"
+    },
+    "documents": [
+      {
+        "id": "DOC-VAI-MAN-AOI-001",
+        "title": "3D Optical AOI Metrology Manual (PDF)",
+        "type": "PDF",
+        "category": "Manual",
+        "updatedAt": "2026-08-16",
+        "size": "36 KB",
+        "tags": [
+          "AOI",
+          "3D Vision"
+        ]
+      }
+    ],
+    "knowledgeBaseRef": "machine_knowledge/ic_tester",
+    "manualId": "VAI-MAN-ATE-001",
+    "healthTrend": {
+      "24h": [
+        {
+          "timestamp": "Now",
+          "health": 98
+        }
+      ],
+      "7d": [
+        {
+          "timestamp": "Day 1",
+          "health": 99
+        },
+        {
+          "timestamp": "Day 7",
+          "health": 98
+        }
+      ],
+      "30d": [
+        {
+          "timestamp": "Wk 1",
+          "health": 99
+        },
+        {
+          "timestamp": "Wk 4",
+          "health": 98
+        }
+      ]
+    },
+    "installationDate": "2025-02-15",
+    "lastTelemetryTimestamp": "2026-08-26T15:30:00Z"
+  },
+  {
+    "id": "XR-01",
+    "name": "Microfocus X-Ray NDT Cell 01",
+    "machineType": "x-ray-inspection",
+    "processStage": "Bay 5B: Lead-Shielded X-Ray",
+    "status": "healthy",
+    "healthScore": 97,
+    "operatingHours": 2450,
+    "firmwareVersion": "v4.0.5",
+    "ipAddress": "10.24.107.1",
+    "location": {
+      "facility": "Fab 2 Cleanroom",
+      "floor": "Level 1 - Front-End Cleanzone",
+      "area": "Bay 5B: Lead-Shielded X-Ray",
+      "line": "NDT Vault 1",
+      "station": "Station XR-01",
+      "gridCoordinate": {
+        "x": 385,
+        "y": 524
+      }
+    },
+    "rul": {
+      "value": 2450,
+      "unit": "hours",
+      "confidence": 0.96,
+      "estimatedDays": 102.1,
+      "criticalThresholdHours": 120,
+      "degradationStage": "Normal"
+    },
+    "sensors": [
+      {
+        "sensorId": "tube_voltage",
+        "name": "Tube High Voltage",
+        "value": 130,
+        "unit": "kV",
+        "status": "normal",
+        "lastUpdated": "4s ago"
+      },
+      {
+        "sensorId": "tube_temp",
+        "name": "Target Temp",
+        "value": 34.8,
+        "unit": "°C",
+        "status": "normal",
+        "lastUpdated": "4s ago"
+      },
+      {
+        "sensorId": "vibration_stage",
+        "name": "Manipulator Vibration",
+        "value": 0.22,
+        "unit": "mm/s",
+        "status": "normal",
+        "lastUpdated": "4s ago"
+      }
+    ],
+    "anomalies": [],
+    "maintenance": {
+      "lastMaintenanceDate": "2026-08-01",
+      "nextScheduledDate": "2026-11-01",
+      "status": "scheduled",
+      "type": "Preventive Inspection",
+      "technician": "Elena Vance"
+    },
+    "documents": [
+      {
+        "id": "DOC-VAI-MAN-XR-001",
+        "title": "Microfocus X-Ray NDT Station Manual (PDF)",
+        "type": "PDF",
+        "category": "Manual",
+        "updatedAt": "2026-08-10",
+        "size": "40 KB",
+        "tags": [
+          "X-Ray",
+          "NDT"
+        ]
+      }
+    ],
+    "knowledgeBaseRef": "machine_knowledge/ic_tester",
+    "manualId": "VAI-MAN-ATE-001",
+    "healthTrend": {
+      "24h": [
+        {
+          "timestamp": "Now",
+          "health": 97
+        }
+      ],
+      "7d": [
+        {
+          "timestamp": "Day 1",
+          "health": 98
+        },
+        {
+          "timestamp": "Day 7",
+          "health": 97
+        }
+      ],
+      "30d": [
+        {
+          "timestamp": "Wk 1",
+          "health": 99
+        },
+        {
+          "timestamp": "Wk 4",
+          "health": 97
+        }
+      ]
+    },
+    "installationDate": "2025-02-15",
+    "lastTelemetryTimestamp": "2026-08-26T15:30:00Z"
+  },
+  {
+    "id": "XR-02",
+    "name": "Microfocus X-Ray NDT Cell 02",
+    "machineType": "x-ray-inspection",
+    "processStage": "Bay 5B: Lead-Shielded X-Ray",
+    "status": "healthy",
+    "healthScore": 96,
+    "operatingHours": 2380,
+    "firmwareVersion": "v4.0.5",
+    "ipAddress": "10.24.107.2",
+    "location": {
+      "facility": "Fab 2 Cleanroom",
+      "floor": "Level 1 - Front-End Cleanzone",
+      "area": "Bay 5B: Lead-Shielded X-Ray",
+      "line": "NDT Vault 2",
+      "station": "Station XR-02",
+      "gridCoordinate": {
+        "x": 495,
+        "y": 524
+      }
+    },
+    "rul": {
+      "value": 2380,
+      "unit": "hours",
+      "confidence": 0.95,
+      "estimatedDays": 99.2,
+      "criticalThresholdHours": 120,
+      "degradationStage": "Normal"
+    },
+    "sensors": [
+      {
+        "sensorId": "tube_voltage",
+        "name": "Tube High Voltage",
+        "value": 132,
+        "unit": "kV",
+        "status": "normal",
+        "lastUpdated": "5s ago"
+      },
+      {
+        "sensorId": "tube_temp",
+        "name": "Target Temp",
+        "value": 35.2,
+        "unit": "°C",
+        "status": "normal",
+        "lastUpdated": "5s ago"
+      },
+      {
+        "sensorId": "vibration_stage",
+        "name": "Manipulator Vibration",
+        "value": 0.24,
+        "unit": "mm/s",
+        "status": "normal",
+        "lastUpdated": "5s ago"
+      }
+    ],
+    "anomalies": [],
+    "maintenance": {
+      "lastMaintenanceDate": "2026-08-03",
+      "nextScheduledDate": "2026-11-03",
+      "status": "scheduled",
+      "type": "Preventive Inspection",
+      "technician": "Elena Vance"
+    },
+    "documents": [
+      {
+        "id": "DOC-VAI-MAN-XR-001",
+        "title": "Microfocus X-Ray NDT Station Manual (PDF)",
+        "type": "PDF",
+        "category": "Manual",
+        "updatedAt": "2026-08-10",
+        "size": "40 KB",
+        "tags": [
+          "X-Ray",
+          "NDT"
+        ]
+      }
+    ],
+    "knowledgeBaseRef": "machine_knowledge/ic_tester",
+    "manualId": "VAI-MAN-ATE-001",
+    "healthTrend": {
+      "24h": [
+        {
+          "timestamp": "Now",
+          "health": 96
+        }
+      ],
+      "7d": [
+        {
+          "timestamp": "Day 1",
+          "health": 97
+        },
+        {
+          "timestamp": "Day 7",
+          "health": 96
+        }
+      ],
+      "30d": [
+        {
+          "timestamp": "Wk 1",
+          "health": 98
+        },
+        {
+          "timestamp": "Wk 4",
+          "health": 96
+        }
+      ]
+    },
+    "installationDate": "2025-02-15",
+    "lastTelemetryTimestamp": "2026-08-26T15:30:00Z"
+  },
+  {
+    "id": "LM-01",
+    "name": "Galvo Fiber Laser Marker 01",
+    "machineType": "laser-marking",
+    "processStage": "Bay 5C: Laser Marking Cell",
+    "status": "healthy",
+    "healthScore": 98,
+    "operatingHours": 3500,
+    "firmwareVersion": "v5.1.0",
+    "ipAddress": "10.24.108.1",
+    "location": {
+      "facility": "Fab 2 Cleanroom",
+      "floor": "Level 1 - Front-End Cleanzone",
+      "area": "Bay 5C: Laser Marking Cell",
+      "line": "Laser Line 1",
+      "station": "Station LM-01",
+      "gridCoordinate": {
+        "x": 650,
+        "y": 524
+      }
+    },
+    "rul": {
+      "value": 3500,
+      "unit": "hours",
+      "confidence": 0.97,
+      "estimatedDays": 145.8,
+      "criticalThresholdHours": 120,
+      "degradationStage": "Normal"
+    },
+    "sensors": [
+      {
+        "sensorId": "laser_power",
+        "name": "Fiber Laser Power",
+        "value": 30.2,
+        "unit": "W",
+        "status": "normal",
+        "lastUpdated": "3s ago"
+      },
+      {
+        "sensorId": "galvo_temp",
+        "name": "Galvo Head Temp",
+        "value": 28.5,
+        "unit": "°C",
+        "status": "normal",
+        "lastUpdated": "3s ago"
+      },
+      {
+        "sensorId": "exhaust_flow",
+        "name": "Exhaust Air Velocity",
+        "value": 11.2,
+        "unit": "m/s",
+        "status": "normal",
+        "lastUpdated": "3s ago"
+      }
+    ],
+    "anomalies": [],
+    "maintenance": {
+      "lastMaintenanceDate": "2026-08-08",
+      "nextScheduledDate": "2026-11-08",
+      "status": "scheduled",
+      "type": "Preventive Inspection",
+      "technician": "Marcus Thorne"
+    },
+    "documents": [
+      {
+        "id": "DOC-VAI-MAN-LM-001",
+        "title": "Galvo Fiber Laser Marker Manual (PDF)",
+        "type": "PDF",
+        "category": "Manual",
+        "updatedAt": "2026-08-14",
+        "size": "30 KB",
+        "tags": [
+          "Laser Marker",
+          "2D Matrix"
+        ]
+      }
+    ],
+    "knowledgeBaseRef": "machine_knowledge/ic_tester",
+    "manualId": "VAI-MAN-ATE-001",
+    "healthTrend": {
+      "24h": [
+        {
+          "timestamp": "Now",
+          "health": 98
+        }
+      ],
+      "7d": [
+        {
+          "timestamp": "Day 1",
+          "health": 99
+        },
+        {
+          "timestamp": "Day 7",
+          "health": 98
+        }
+      ],
+      "30d": [
+        {
+          "timestamp": "Wk 1",
+          "health": 99
+        },
+        {
+          "timestamp": "Wk 4",
+          "health": 98
+        }
+      ]
+    },
+    "installationDate": "2025-02-15",
+    "lastTelemetryTimestamp": "2026-08-26T15:30:00Z"
+  },
+  {
+    "id": "LM-02",
+    "name": "Galvo Fiber Laser Marker 02",
+    "machineType": "laser-marking",
+    "processStage": "Bay 5C: Laser Marking Cell",
+    "status": "healthy",
+    "healthScore": 97,
+    "operatingHours": 3350,
+    "firmwareVersion": "v5.1.0",
+    "ipAddress": "10.24.108.2",
+    "location": {
+      "facility": "Fab 2 Cleanroom",
+      "floor": "Level 1 - Front-End Cleanzone",
+      "area": "Bay 5C: Laser Marking Cell",
+      "line": "Laser Line 2",
+      "station": "Station LM-02",
+      "gridCoordinate": {
+        "x": 745,
+        "y": 524
+      }
+    },
+    "rul": {
+      "value": 3350,
+      "unit": "hours",
+      "confidence": 0.96,
+      "estimatedDays": 139.6,
+      "criticalThresholdHours": 120,
+      "degradationStage": "Normal"
+    },
+    "sensors": [
+      {
+        "sensorId": "laser_power",
+        "name": "Fiber Laser Power",
+        "value": 29.8,
+        "unit": "W",
+        "status": "normal",
+        "lastUpdated": "4s ago"
+      },
+      {
+        "sensorId": "galvo_temp",
+        "name": "Galvo Head Temp",
+        "value": 29.1,
+        "unit": "°C",
+        "status": "normal",
+        "lastUpdated": "4s ago"
+      },
+      {
+        "sensorId": "exhaust_flow",
+        "name": "Exhaust Air Velocity",
+        "value": 11,
+        "unit": "m/s",
+        "status": "normal",
+        "lastUpdated": "4s ago"
+      }
+    ],
+    "anomalies": [],
+    "maintenance": {
+      "lastMaintenanceDate": "2026-08-10",
+      "nextScheduledDate": "2026-11-10",
+      "status": "scheduled",
+      "type": "Preventive Inspection",
+      "technician": "Marcus Thorne"
+    },
+    "documents": [
+      {
+        "id": "DOC-VAI-MAN-LM-001",
+        "title": "Galvo Fiber Laser Marker Manual (PDF)",
+        "type": "PDF",
+        "category": "Manual",
+        "updatedAt": "2026-08-14",
+        "size": "30 KB",
+        "tags": [
+          "Laser Marker",
+          "2D Matrix"
+        ]
+      }
+    ],
+    "knowledgeBaseRef": "machine_knowledge/ic_tester",
+    "manualId": "VAI-MAN-ATE-001",
+    "healthTrend": {
+      "24h": [
+        {
+          "timestamp": "Now",
+          "health": 97
+        }
+      ],
+      "7d": [
+        {
+          "timestamp": "Day 1",
+          "health": 98
+        },
+        {
+          "timestamp": "Day 7",
+          "health": 97
+        }
+      ],
+      "30d": [
+        {
+          "timestamp": "Wk 1",
+          "health": 99
+        },
+        {
+          "timestamp": "Wk 4",
+          "health": 97
+        }
+      ]
+    },
+    "installationDate": "2025-02-15",
+    "lastTelemetryTimestamp": "2026-08-26T15:30:00Z"
+  },
+  {
+    "id": "TH-01",
+    "name": "IC Tri-Temp Test Handler 01",
+    "machineType": "test-handler",
+    "processStage": "Bay 6A: Tri-Temp Final Test",
+    "status": "healthy",
+    "healthScore": 96,
+    "operatingHours": 2100,
+    "firmwareVersion": "v9.0.2",
+    "ipAddress": "10.24.109.1",
+    "location": {
+      "facility": "Fab 2 Cleanroom",
+      "floor": "Level 1 - Front-End Cleanzone",
+      "area": "Bay 6A: Tri-Temp Final Test",
+      "line": "Test Line 1",
+      "station": "Handler TH-01",
+      "gridCoordinate": {
+        "x": 900,
+        "y": 522
+      }
+    },
+    "rul": {
+      "value": 2100,
+      "unit": "hours",
+      "confidence": 0.95,
+      "estimatedDays": 87.5,
+      "criticalThresholdHours": 80,
+      "degradationStage": "Normal"
+    },
+    "sensors": [
+      {
+        "sensorId": "vibration_handler",
+        "name": "Handler Vibration",
+        "value": 0.52,
+        "unit": "mm/s",
+        "status": "normal",
+        "lastUpdated": "3s ago"
+      },
+      {
+        "sensorId": "temperature_chamber",
+        "name": "Soak Chamber Temp",
+        "value": 85,
+        "unit": "°C",
+        "status": "normal",
+        "lastUpdated": "3s ago"
+      },
+      {
+        "sensorId": "load_actuator",
+        "name": "Socket Actuator Load",
+        "value": 52,
+        "unit": "N",
+        "status": "normal",
+        "lastUpdated": "3s ago"
+      }
+    ],
+    "anomalies": [],
+    "maintenance": {
+      "lastMaintenanceDate": "2026-08-12",
+      "nextScheduledDate": "2026-09-12",
+      "status": "scheduled",
+      "type": "Tool Calibration",
+      "technician": "Kenji Sato"
+    },
+    "documents": [
+      {
+        "id": "DOC-VAI-MAN-TH-001",
+        "title": "Tri-Temp Final Test Handler Manual (PDF)",
+        "type": "PDF",
+        "category": "Manual",
+        "updatedAt": "2026-08-16",
+        "size": "48 KB",
+        "tags": [
+          "ATE",
+          "Tri-Temp"
+        ]
+      }
+    ],
+    "knowledgeBaseRef": "machine_knowledge/ic_tester",
+    "manualId": "VAI-MAN-ATE-001",
+    "healthTrend": {
+      "24h": [
+        {
+          "timestamp": "Now",
+          "health": 96
+        }
+      ],
+      "7d": [
+        {
+          "timestamp": "Day 1",
+          "health": 97
+        },
+        {
+          "timestamp": "Day 7",
+          "health": 96
+        }
+      ],
+      "30d": [
+        {
+          "timestamp": "Wk 1",
+          "health": 98
+        },
+        {
+          "timestamp": "Wk 4",
+          "health": 96
+        }
+      ]
+    },
+    "installationDate": "2025-02-15",
+    "lastTelemetryTimestamp": "2026-08-26T15:30:00Z"
+  },
+  {
+    "id": "TH-02",
+    "name": "IC Tri-Temp Test Handler 02",
+    "machineType": "test-handler",
+    "processStage": "Bay 6A: Tri-Temp Final Test",
+    "status": "healthy",
+    "healthScore": 97,
+    "operatingHours": 2250,
+    "firmwareVersion": "v9.0.2",
+    "ipAddress": "10.24.109.2",
+    "location": {
+      "facility": "Fab 2 Cleanroom",
+      "floor": "Level 1 - Front-End Cleanzone",
+      "area": "Bay 6A: Tri-Temp Final Test",
+      "line": "Test Line 2",
+      "station": "Handler TH-02",
+      "gridCoordinate": {
+        "x": 1000,
+        "y": 522
+      }
+    },
+    "rul": {
+      "value": 2250,
+      "unit": "hours",
+      "confidence": 0.96,
+      "estimatedDays": 93.8,
+      "criticalThresholdHours": 80,
+      "degradationStage": "Normal"
+    },
+    "sensors": [
+      {
+        "sensorId": "vibration_handler",
+        "name": "Handler Vibration",
+        "value": 0.48,
+        "unit": "mm/s",
+        "status": "normal",
+        "lastUpdated": "4s ago"
+      },
+      {
+        "sensorId": "temperature_chamber",
+        "name": "Soak Chamber Temp",
+        "value": -40,
+        "unit": "°C",
+        "status": "normal",
+        "lastUpdated": "4s ago"
+      },
+      {
+        "sensorId": "load_actuator",
+        "name": "Socket Actuator Load",
+        "value": 50,
+        "unit": "N",
+        "status": "normal",
+        "lastUpdated": "4s ago"
+      }
+    ],
+    "anomalies": [],
+    "maintenance": {
+      "lastMaintenanceDate": "2026-08-14",
+      "nextScheduledDate": "2026-09-14",
+      "status": "scheduled",
+      "type": "Tool Calibration",
+      "technician": "Kenji Sato"
+    },
+    "documents": [
+      {
+        "id": "DOC-VAI-MAN-TH-001",
+        "title": "Tri-Temp Final Test Handler Manual (PDF)",
+        "type": "PDF",
+        "category": "Manual",
+        "updatedAt": "2026-08-16",
+        "size": "48 KB",
+        "tags": [
+          "ATE",
+          "Tri-Temp"
+        ]
+      }
+    ],
+    "knowledgeBaseRef": "machine_knowledge/ic_tester",
+    "manualId": "VAI-MAN-ATE-001",
+    "healthTrend": {
+      "24h": [
+        {
+          "timestamp": "Now",
+          "health": 97
+        }
+      ],
+      "7d": [
+        {
+          "timestamp": "Day 1",
+          "health": 98
+        },
+        {
+          "timestamp": "Day 7",
+          "health": 97
+        }
+      ],
+      "30d": [
+        {
+          "timestamp": "Wk 1",
+          "health": 99
+        },
+        {
+          "timestamp": "Wk 4",
+          "health": 97
+        }
+      ]
+    },
+    "installationDate": "2025-02-15",
+    "lastTelemetryTimestamp": "2026-08-26T15:30:00Z"
+  },
+  {
+    "id": "TR-01",
+    "name": "Automated Tape & Reel 01",
+    "machineType": "tape-reel",
+    "processStage": "Bay 6B: Tape & Reel Packaging",
+    "status": "healthy",
+    "healthScore": 96,
+    "operatingHours": 2400,
+    "firmwareVersion": "v3.8.0",
+    "ipAddress": "10.24.110.1",
+    "location": {
+      "facility": "Fab 2 Cleanroom",
+      "floor": "Level 1 - Front-End Cleanzone",
+      "area": "Bay 6B: Tape & Reel Packaging",
+      "line": "Pack Line 1",
+      "station": "Station TR-01",
+      "gridCoordinate": {
+        "x": 65,
+        "y": 729
+      }
+    },
+    "rul": {
+      "value": 2400,
+      "unit": "hours",
+      "confidence": 0.95,
+      "estimatedDays": 100,
+      "criticalThresholdHours": 100,
+      "degradationStage": "Normal"
+    },
+    "sensors": [
+      {
+        "sensorId": "vibration_indexer",
+        "name": "Indexer Vibration",
+        "value": 0.32,
+        "unit": "mm/s",
+        "status": "normal",
+        "lastUpdated": "3s ago"
+      },
+      {
+        "sensorId": "temp_sealer",
+        "name": "Heat Seal Bar Temp",
+        "value": 175,
+        "unit": "°C",
+        "status": "normal",
+        "lastUpdated": "3s ago"
+      },
+      {
+        "sensorId": "peel_force",
+        "name": "Tape Peel Force",
+        "value": 0.45,
+        "unit": "N",
+        "status": "normal",
+        "lastUpdated": "3s ago"
+      }
+    ],
+    "anomalies": [],
+    "maintenance": {
+      "lastMaintenanceDate": "2026-08-06",
+      "nextScheduledDate": "2026-09-06",
+      "status": "scheduled",
+      "type": "Preventive Inspection",
+      "technician": "Marcus Thorne"
+    },
+    "documents": [
+      {
+        "id": "DOC-VAI-MAN-TR-001",
+        "title": "Tape & Reel Packaging System Manual (PDF)",
+        "type": "PDF",
+        "category": "Manual",
+        "updatedAt": "2026-08-12",
+        "size": "32 KB",
+        "tags": [
+          "Tape & Reel",
+          "Packaging"
+        ]
+      }
+    ],
+    "knowledgeBaseRef": "machine_knowledge/ic_tester",
+    "manualId": "VAI-MAN-ATE-001",
+    "healthTrend": {
+      "24h": [
+        {
+          "timestamp": "Now",
+          "health": 96
+        }
+      ],
+      "7d": [
+        {
+          "timestamp": "Day 1",
+          "health": 97
+        },
+        {
+          "timestamp": "Day 7",
+          "health": 96
+        }
+      ],
+      "30d": [
+        {
+          "timestamp": "Wk 1",
+          "health": 98
+        },
+        {
+          "timestamp": "Wk 4",
+          "health": 96
+        }
+      ]
+    },
+    "installationDate": "2025-02-15",
+    "lastTelemetryTimestamp": "2026-08-26T15:30:00Z"
+  },
+  {
+    "id": "TR-02",
+    "name": "Automated Tape & Reel 02",
+    "machineType": "tape-reel",
+    "processStage": "Bay 6B: Tape & Reel Packaging",
+    "status": "healthy",
+    "healthScore": 95,
+    "operatingHours": 2280,
+    "firmwareVersion": "v3.8.0",
+    "ipAddress": "10.24.110.2",
+    "location": {
+      "facility": "Fab 2 Cleanroom",
+      "floor": "Level 1 - Front-End Cleanzone",
+      "area": "Bay 6B: Tape & Reel Packaging",
+      "line": "Pack Line 1",
+      "station": "Station TR-02",
+      "gridCoordinate": {
+        "x": 140,
+        "y": 729
+      }
+    },
+    "rul": {
+      "value": 2280,
+      "unit": "hours",
+      "confidence": 0.94,
+      "estimatedDays": 95,
+      "criticalThresholdHours": 100,
+      "degradationStage": "Normal"
+    },
+    "sensors": [
+      {
+        "sensorId": "vibration_indexer",
+        "name": "Indexer Vibration",
+        "value": 0.34,
+        "unit": "mm/s",
+        "status": "normal",
+        "lastUpdated": "4s ago"
+      },
+      {
+        "sensorId": "temp_sealer",
+        "name": "Heat Seal Bar Temp",
+        "value": 176,
+        "unit": "°C",
+        "status": "normal",
+        "lastUpdated": "4s ago"
+      },
+      {
+        "sensorId": "peel_force",
+        "name": "Tape Peel Force",
+        "value": 0.46,
+        "unit": "N",
+        "status": "normal",
+        "lastUpdated": "4s ago"
+      }
+    ],
+    "anomalies": [],
+    "maintenance": {
+      "lastMaintenanceDate": "2026-08-08",
+      "nextScheduledDate": "2026-09-08",
+      "status": "scheduled",
+      "type": "Preventive Inspection",
+      "technician": "Marcus Thorne"
+    },
+    "documents": [
+      {
+        "id": "DOC-VAI-MAN-TR-001",
+        "title": "Tape & Reel Packaging System Manual (PDF)",
+        "type": "PDF",
+        "category": "Manual",
+        "updatedAt": "2026-08-12",
+        "size": "32 KB",
+        "tags": [
+          "Tape & Reel",
+          "Packaging"
+        ]
+      }
+    ],
+    "knowledgeBaseRef": "machine_knowledge/ic_tester",
+    "manualId": "VAI-MAN-ATE-001",
+    "healthTrend": {
+      "24h": [
+        {
+          "timestamp": "Now",
+          "health": 95
+        }
+      ],
+      "7d": [
+        {
+          "timestamp": "Day 1",
+          "health": 96
+        },
+        {
+          "timestamp": "Day 7",
+          "health": 95
+        }
+      ],
+      "30d": [
+        {
+          "timestamp": "Wk 1",
+          "health": 97
+        },
+        {
+          "timestamp": "Wk 4",
+          "health": 95
+        }
+      ]
+    },
+    "installationDate": "2025-02-15",
+    "lastTelemetryTimestamp": "2026-08-26T15:30:00Z"
+  },
+  {
+    "id": "TR-03",
+    "name": "Automated Tape & Reel 03",
+    "machineType": "tape-reel",
+    "processStage": "Bay 6B: Tape & Reel Packaging",
+    "status": "healthy",
+    "healthScore": 98,
+    "operatingHours": 2600,
+    "firmwareVersion": "v3.8.0",
+    "ipAddress": "10.24.110.3",
+    "location": {
+      "facility": "Fab 2 Cleanroom",
+      "floor": "Level 1 - Front-End Cleanzone",
+      "area": "Bay 6B: Tape & Reel Packaging",
+      "line": "Pack Line 2",
+      "station": "Station TR-03",
+      "gridCoordinate": {
+        "x": 215,
+        "y": 729
+      }
+    },
+    "rul": {
+      "value": 2600,
+      "unit": "hours",
+      "confidence": 0.97,
+      "estimatedDays": 108.3,
+      "criticalThresholdHours": 100,
+      "degradationStage": "Normal"
+    },
+    "sensors": [
+      {
+        "sensorId": "vibration_indexer",
+        "name": "Indexer Vibration",
+        "value": 0.3,
+        "unit": "mm/s",
+        "status": "normal",
+        "lastUpdated": "3s ago"
+      },
+      {
+        "sensorId": "temp_sealer",
+        "name": "Heat Seal Bar Temp",
+        "value": 174,
+        "unit": "°C",
+        "status": "normal",
+        "lastUpdated": "3s ago"
+      },
+      {
+        "sensorId": "peel_force",
+        "name": "Tape Peel Force",
+        "value": 0.44,
+        "unit": "N",
+        "status": "normal",
+        "lastUpdated": "3s ago"
+      }
+    ],
+    "anomalies": [],
+    "maintenance": {
+      "lastMaintenanceDate": "2026-08-11",
+      "nextScheduledDate": "2026-09-11",
+      "status": "scheduled",
+      "type": "Preventive Inspection",
+      "technician": "Marcus Thorne"
+    },
+    "documents": [
+      {
+        "id": "DOC-VAI-MAN-TR-001",
+        "title": "Tape & Reel Packaging System Manual (PDF)",
+        "type": "PDF",
+        "category": "Manual",
+        "updatedAt": "2026-08-12",
+        "size": "32 KB",
+        "tags": [
+          "Tape & Reel",
+          "Packaging"
+        ]
+      }
+    ],
+    "knowledgeBaseRef": "machine_knowledge/ic_tester",
+    "manualId": "VAI-MAN-ATE-001",
+    "healthTrend": {
+      "24h": [
+        {
+          "timestamp": "Now",
+          "health": 98
+        }
+      ],
+      "7d": [
+        {
+          "timestamp": "Day 1",
+          "health": 99
+        },
+        {
+          "timestamp": "Day 7",
+          "health": 98
+        }
+      ],
+      "30d": [
+        {
+          "timestamp": "Wk 1",
+          "health": 99
+        },
+        {
+          "timestamp": "Wk 4",
+          "health": 98
+        }
+      ]
+    },
+    "installationDate": "2025-02-15",
+    "lastTelemetryTimestamp": "2026-08-26T15:30:00Z"
+  },
+  {
+    "id": "TR-04",
+    "name": "Automated Tape & Reel 04",
+    "machineType": "tape-reel",
+    "processStage": "Bay 6B: Tape & Reel Packaging",
+    "status": "healthy",
+    "healthScore": 94,
+    "operatingHours": 2150,
+    "firmwareVersion": "v3.8.0",
+    "ipAddress": "10.24.110.4",
+    "location": {
+      "facility": "Fab 2 Cleanroom",
+      "floor": "Level 1 - Front-End Cleanzone",
+      "area": "Bay 6B: Tape & Reel Packaging",
+      "line": "Pack Line 2",
+      "station": "Station TR-04",
+      "gridCoordinate": {
+        "x": 290,
+        "y": 729
+      }
+    },
+    "rul": {
+      "value": 2150,
+      "unit": "hours",
+      "confidence": 0.94,
+      "estimatedDays": 89.6,
+      "criticalThresholdHours": 100,
+      "degradationStage": "Normal"
+    },
+    "sensors": [
+      {
+        "sensorId": "vibration_indexer",
+        "name": "Indexer Vibration",
+        "value": 0.36,
+        "unit": "mm/s",
+        "status": "normal",
+        "lastUpdated": "4s ago"
+      },
+      {
+        "sensorId": "temp_sealer",
+        "name": "Heat Seal Bar Temp",
+        "value": 178,
+        "unit": "°C",
+        "status": "normal",
+        "lastUpdated": "4s ago"
+      },
+      {
+        "sensorId": "peel_force",
+        "name": "Tape Peel Force",
+        "value": 0.48,
+        "unit": "N",
+        "status": "normal",
+        "lastUpdated": "4s ago"
+      }
+    ],
+    "anomalies": [],
+    "maintenance": {
+      "lastMaintenanceDate": "2026-08-13",
+      "nextScheduledDate": "2026-09-13",
+      "status": "scheduled",
+      "type": "Preventive Inspection",
+      "technician": "Marcus Thorne"
+    },
+    "documents": [
+      {
+        "id": "DOC-VAI-MAN-TR-001",
+        "title": "Tape & Reel Packaging System Manual (PDF)",
+        "type": "PDF",
+        "category": "Manual",
+        "updatedAt": "2026-08-12",
+        "size": "32 KB",
+        "tags": [
+          "Tape & Reel",
+          "Packaging"
+        ]
+      }
+    ],
+    "knowledgeBaseRef": "machine_knowledge/ic_tester",
+    "manualId": "VAI-MAN-ATE-001",
+    "healthTrend": {
+      "24h": [
+        {
+          "timestamp": "Now",
+          "health": 94
+        }
+      ],
+      "7d": [
+        {
+          "timestamp": "Day 1",
+          "health": 95
+        },
+        {
+          "timestamp": "Day 7",
+          "health": 94
+        }
+      ],
+      "30d": [
+        {
+          "timestamp": "Wk 1",
+          "health": 97
+        },
+        {
+          "timestamp": "Wk 4",
+          "health": 94
+        }
+      ]
+    },
+    "installationDate": "2025-02-15",
+    "lastTelemetryTimestamp": "2026-08-26T15:30:00Z"
+  },
+  {
+    "id": "TR-05",
+    "name": "Automated Tape & Reel 05",
+    "machineType": "tape-reel",
+    "processStage": "Bay 6B: Tape & Reel Packaging",
+    "status": "healthy",
+    "healthScore": 97,
+    "operatingHours": 2520,
+    "firmwareVersion": "v3.8.0",
+    "ipAddress": "10.24.110.5",
+    "location": {
+      "facility": "Fab 2 Cleanroom",
+      "floor": "Level 1 - Front-End Cleanzone",
+      "area": "Bay 6B: Tape & Reel Packaging",
+      "line": "Pack Line 3",
+      "station": "Station TR-05",
+      "gridCoordinate": {
+        "x": 365,
+        "y": 729
+      }
+    },
+    "rul": {
+      "value": 2520,
+      "unit": "hours",
+      "confidence": 0.96,
+      "estimatedDays": 105,
+      "criticalThresholdHours": 100,
+      "degradationStage": "Normal"
+    },
+    "sensors": [
+      {
+        "sensorId": "vibration_indexer",
+        "name": "Indexer Vibration",
+        "value": 0.31,
+        "unit": "mm/s",
+        "status": "normal",
+        "lastUpdated": "3s ago"
+      },
+      {
+        "sensorId": "temp_sealer",
+        "name": "Heat Seal Bar Temp",
+        "value": 175,
+        "unit": "°C",
+        "status": "normal",
+        "lastUpdated": "3s ago"
+      },
+      {
+        "sensorId": "peel_force",
+        "name": "Tape Peel Force",
+        "value": 0.45,
+        "unit": "N",
+        "status": "normal",
+        "lastUpdated": "3s ago"
+      }
+    ],
+    "anomalies": [],
+    "maintenance": {
+      "lastMaintenanceDate": "2026-08-15",
+      "nextScheduledDate": "2026-09-15",
+      "status": "scheduled",
+      "type": "Preventive Inspection",
+      "technician": "Marcus Thorne"
+    },
+    "documents": [
+      {
+        "id": "DOC-VAI-MAN-TR-001",
+        "title": "Tape & Reel Packaging System Manual (PDF)",
+        "type": "PDF",
+        "category": "Manual",
+        "updatedAt": "2026-08-12",
+        "size": "32 KB",
+        "tags": [
+          "Tape & Reel",
+          "Packaging"
+        ]
+      }
+    ],
+    "knowledgeBaseRef": "machine_knowledge/ic_tester",
+    "manualId": "VAI-MAN-ATE-001",
+    "healthTrend": {
+      "24h": [
+        {
+          "timestamp": "Now",
+          "health": 97
+        }
+      ],
+      "7d": [
+        {
+          "timestamp": "Day 1",
+          "health": 98
+        },
+        {
+          "timestamp": "Day 7",
+          "health": 97
+        }
+      ],
+      "30d": [
+        {
+          "timestamp": "Wk 1",
+          "health": 99
+        },
+        {
+          "timestamp": "Wk 4",
+          "health": 97
+        }
+      ]
+    },
+    "installationDate": "2025-02-15",
+    "lastTelemetryTimestamp": "2026-08-26T15:30:00Z"
+  },
+  {
+    "id": "TR-06",
+    "name": "Automated Tape & Reel 06",
+    "machineType": "tape-reel",
+    "processStage": "Bay 6B: Tape & Reel Packaging",
+    "status": "healthy",
+    "healthScore": 98,
+    "operatingHours": 2700,
+    "firmwareVersion": "v3.8.0",
+    "ipAddress": "10.24.110.6",
+    "location": {
+      "facility": "Fab 2 Cleanroom",
+      "floor": "Level 1 - Front-End Cleanzone",
+      "area": "Bay 6B: Tape & Reel Packaging",
+      "line": "Pack Line 3",
+      "station": "Station TR-06",
+      "gridCoordinate": {
+        "x": 440,
+        "y": 729
+      }
+    },
+    "rul": {
+      "value": 2700,
+      "unit": "hours",
+      "confidence": 0.97,
+      "estimatedDays": 112.5,
+      "criticalThresholdHours": 100,
+      "degradationStage": "Normal"
+    },
+    "sensors": [
+      {
+        "sensorId": "vibration_indexer",
+        "name": "Indexer Vibration",
+        "value": 0.29,
+        "unit": "mm/s",
+        "status": "normal",
+        "lastUpdated": "2s ago"
+      },
+      {
+        "sensorId": "temp_sealer",
+        "name": "Heat Seal Bar Temp",
+        "value": 174,
+        "unit": "°C",
+        "status": "normal",
+        "lastUpdated": "2s ago"
+      },
+      {
+        "sensorId": "peel_force",
+        "name": "Tape Peel Force",
+        "value": 0.43,
+        "unit": "N",
+        "status": "normal",
+        "lastUpdated": "2s ago"
+      }
+    ],
+    "anomalies": [],
+    "maintenance": {
+      "lastMaintenanceDate": "2026-08-16",
+      "nextScheduledDate": "2026-09-16",
+      "status": "scheduled",
+      "type": "Preventive Inspection",
+      "technician": "Marcus Thorne"
+    },
+    "documents": [
+      {
+        "id": "DOC-VAI-MAN-TR-001",
+        "title": "Tape & Reel Packaging System Manual (PDF)",
+        "type": "PDF",
+        "category": "Manual",
+        "updatedAt": "2026-08-12",
+        "size": "32 KB",
+        "tags": [
+          "Tape & Reel",
+          "Packaging"
+        ]
+      }
+    ],
+    "knowledgeBaseRef": "machine_knowledge/ic_tester",
+    "manualId": "VAI-MAN-ATE-001",
+    "healthTrend": {
+      "24h": [
+        {
+          "timestamp": "Now",
+          "health": 98
+        }
+      ],
+      "7d": [
+        {
+          "timestamp": "Day 1",
+          "health": 99
+        },
+        {
+          "timestamp": "Day 7",
+          "health": 98
+        }
+      ],
+      "30d": [
+        {
+          "timestamp": "Wk 1",
+          "health": 99
+        },
+        {
+          "timestamp": "Wk 4",
+          "health": 98
+        }
+      ]
+    },
+    "installationDate": "2025-02-15",
+    "lastTelemetryTimestamp": "2026-08-26T15:30:00Z"
   }
 ];

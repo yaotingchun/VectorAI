@@ -47,10 +47,20 @@ const sensorThresholds: Record<string, { baseline: number; warning: number; thre
   temperature_coolant: { baseline: 20.0, warning: 22.0, threshold: 25.0, direction: 'HIGHER_IS_WORSE' },
   load_motor: { baseline: 5.5, warning: 7.5, threshold: 9.5, direction: 'HIGHER_IS_WORSE' },
 
+  // Stocker & Transport
+  vibration_crane: { baseline: 0.1, warning: 0.3, threshold: 0.6, direction: 'HIGHER_IS_WORSE' },
+  pressure_n2: { baseline: 50.0, warning: 45.0, threshold: 30.0, direction: 'LOWER_IS_WORSE' },
+  temp_stocker: { baseline: 21.0, warning: 24.0, threshold: 28.0, direction: 'HIGHER_IS_WORSE' },
+
   // Die Attacher
   vibration_arm: { baseline: 0.25, warning: 0.45, threshold: 0.75, direction: 'HIGHER_IS_WORSE' },
   pressure_vacuum: { baseline: -88.0, warning: -80.0, threshold: -65.0, direction: 'HIGHER_IS_WORSE' }, // -52 is critical
   temperature_heater: { baseline: 150.0, warning: 160.0, threshold: 175.0, direction: 'HIGHER_IS_WORSE' },
+
+  // Plasma Cleaner
+  vibration_vacuum_pump: { baseline: 0.15, warning: 0.35, threshold: 0.7, direction: 'HIGHER_IS_WORSE' },
+  chamber_pressure: { baseline: 80.0, warning: 95.0, threshold: 120.0, direction: 'HIGHER_IS_WORSE' },
+  rf_reflected_power: { baseline: 15.0, warning: 30.0, threshold: 50.0, direction: 'HIGHER_IS_WORSE' },
 
   // Wire Bonder
   vibration_ultrasonic: { baseline: 0.35, warning: 0.55, threshold: 0.85, direction: 'HIGHER_IS_WORSE' },
@@ -62,20 +72,57 @@ const sensorThresholds: Record<string, { baseline: number; warning: number; thre
   pressure_hydraulic: { baseline: 150.0, warning: 165.0, threshold: 185.0, direction: 'HIGHER_IS_WORSE' },
   load_plunger: { baseline: 28.0, warning: 35.0, threshold: 48.0, direction: 'HIGHER_IS_WORSE' },
 
-  // IC Tester & Sorter
+  // 3D AOI Inspection
+  vibration_camera_gantry: { baseline: 0.08, warning: 0.2, threshold: 0.5, direction: 'HIGHER_IS_WORSE' },
+  temp_optics: { baseline: 22.0, warning: 28.0, threshold: 38.0, direction: 'HIGHER_IS_WORSE' },
+  optical_intensity: { baseline: 98.0, warning: 90.0, threshold: 80.0, direction: 'LOWER_IS_WORSE' },
+
+  // X-Ray NDT
+  tube_voltage: { baseline: 130.0, warning: 145.0, threshold: 160.0, direction: 'HIGHER_IS_WORSE' },
+  tube_temp: { baseline: 35.0, warning: 50.0, threshold: 70.0, direction: 'HIGHER_IS_WORSE' },
+  vibration_stage: { baseline: 0.2, warning: 0.45, threshold: 0.8, direction: 'HIGHER_IS_WORSE' },
+
+  // Laser Marking
+  laser_power: { baseline: 30.0, warning: 25.0, threshold: 18.0, direction: 'LOWER_IS_WORSE' },
+  galvo_temp: { baseline: 28.0, warning: 38.0, threshold: 52.0, direction: 'HIGHER_IS_WORSE' },
+  exhaust_flow: { baseline: 11.0, warning: 8.0, threshold: 5.0, direction: 'LOWER_IS_WORSE' },
+
+  // IC Tester & Handler
   vibration_handler: { baseline: 0.4, warning: 0.6, threshold: 0.9, direction: 'HIGHER_IS_WORSE' }, // 0.95 is critical
   temperature_chamber: { baseline: 25.0, warning: 28.0, threshold: 35.0, direction: 'HIGHER_IS_WORSE' },
   load_actuator: { baseline: 50.0, warning: 60.0, threshold: 75.0, direction: 'HIGHER_IS_WORSE' },
+
+  // Tape & Reel
+  vibration_indexer: { baseline: 0.3, warning: 0.55, threshold: 0.9, direction: 'HIGHER_IS_WORSE' },
+  temp_sealer: { baseline: 175.0, warning: 190.0, threshold: 210.0, direction: 'HIGHER_IS_WORSE' },
+  peel_force: { baseline: 0.45, warning: 0.7, threshold: 1.0, direction: 'HIGHER_IS_WORSE' },
 };
 
 const mapCategory = (type: string): MachineCategory => {
   switch (type) {
-    case 'wafer_dicing': return 'dicing';
-    case 'die_attacher': return 'die_attach';
-    case 'wire_bonder': return 'wire_bond';
-    case 'molding': return 'molding';
-    case 'ic_tester': return 'ate_sort';
-    default: return 'dicing';
+    case 'wafer-saw':
+    case 'wafer_dicing':
+    case 'stocker':
+      return 'dicing';
+    case 'die-attach':
+    case 'die_attacher':
+    case 'plasma-cleaner':
+      return 'die_attach';
+    case 'wire-bonding':
+    case 'wire_bonder':
+      return 'wire_bond';
+    case 'molding-press':
+    case 'molding':
+      return 'molding';
+    case 'aoi-inspection':
+    case 'x-ray-inspection':
+    case 'laser-marking':
+    case 'test-handler':
+    case 'tape-reel':
+    case 'ic_tester':
+      return 'ate_sort';
+    default:
+      return 'dicing';
   }
 };
 

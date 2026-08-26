@@ -106,45 +106,59 @@ export const FactoryCanvas: React.FC<FactoryCanvasProps> = ({
     const paths: React.ReactNode[] = [];
 
     const connections: Array<{ from: string; to: string }> = [
-      // LINE ALPHA (Top Bay - QFN Line)
-      // Dicing -> Die Attach
-      { from: 'WS-2001', to: 'DA-3001' },
-      { from: 'WS-2002', to: 'DA-3002' },
-      // Die Attach -> Plasma Cleaner A
-      { from: 'DA-3001', to: 'PC-1001' },
-      { from: 'DA-3002', to: 'PC-1001' },
-      // Plasma Cleaner A -> Wire Bonding
-      { from: 'PC-1001', to: 'WB-6001' },
-      { from: 'PC-1001', to: 'WB-6002' },
-      // Wire Bonding -> Molding Press & Ball Attach
-      { from: 'WB-6001', to: 'MP-7001' },
-      { from: 'WB-6002', to: 'BA-8001' },
-      // Molding / Ball Attach -> 3D AOI Metrology
-      { from: 'MP-7001', to: 'AOI-5001' },
-      { from: 'BA-8001', to: 'AOI-5002' },
-      // 3D AOI -> Laser Marking & Tape-Reel
-      { from: 'AOI-5001', to: 'LM-2001' },
-      { from: 'AOI-5002', to: 'TR-3001' },
-
-      // LINE BETA (Bottom Bay - BGA Line)
-      // Dicing -> Die Attach
-      { from: 'WS-2003', to: 'DA-3003' },
-      { from: 'WS-2004', to: 'DA-3004' },
-      // Die Attach -> Plasma Cleaner B
-      { from: 'DA-3003', to: 'PC-1002' },
-      { from: 'DA-3004', to: 'PC-1002' },
-      // Plasma Cleaner B -> Wire Bonding
-      { from: 'PC-1002', to: 'WB-6003' },
-      { from: 'PC-1002', to: 'WB-6004' },
-      // Wire Bonding -> Molding Press & Ball Attach
-      { from: 'WB-6003', to: 'MP-7002' },
-      { from: 'WB-6004', to: 'BA-8002' },
-      // Molding / Ball Attach -> 3D AOI & X-Ray QA
-      { from: 'MP-7002', to: 'AOI-5003' },
-      { from: 'BA-8002', to: 'XR-6001' },
-      // Metrology -> Laser Marking & Tape-Reel
-      { from: 'AOI-5003', to: 'LM-2002' },
-      { from: 'XR-6001', to: 'TR-3002' },
+      // Stage 01 (WS & STK) -> Stage 02 (DA)
+      { from: 'STK-01', to: 'WS-01' },
+      { from: 'STK-01', to: 'WS-02' },
+      { from: 'WS-01', to: 'DA-01' },
+      { from: 'WS-01', to: 'DA-02' },
+      { from: 'WS-02', to: 'DA-03' },
+      { from: 'WS-02', to: 'DA-04' },
+      // Stage 02 (DA) -> Stage 03 (PC)
+      { from: 'DA-01', to: 'PC-01' },
+      { from: 'DA-02', to: 'PC-01' },
+      { from: 'DA-03', to: 'PC-02' },
+      { from: 'DA-04', to: 'PC-02' },
+      // Stage 03 (PC) -> Stage 04 (WB)
+      { from: 'PC-01', to: 'WB-01' },
+      { from: 'PC-01', to: 'WB-02' },
+      { from: 'PC-01', to: 'WB-03' },
+      { from: 'PC-01', to: 'WB-04' },
+      { from: 'PC-02', to: 'WB-05' },
+      { from: 'PC-02', to: 'WB-06' },
+      { from: 'PC-02', to: 'WB-07' },
+      { from: 'PC-02', to: 'WB-08' },
+      // Stage 04 (WB) -> Stage 05 (MP)
+      { from: 'WB-01', to: 'MP-01' },
+      { from: 'WB-02', to: 'MP-01' },
+      { from: 'WB-03', to: 'MP-02' },
+      { from: 'WB-04', to: 'MP-02' },
+      { from: 'WB-05', to: 'MP-03' },
+      { from: 'WB-06', to: 'MP-03' },
+      { from: 'WB-07', to: 'MP-04' },
+      { from: 'WB-08', to: 'MP-04' },
+      // Stage 05 (MP) -> Stage 06 (AOI)
+      { from: 'MP-01', to: 'AOI-01' },
+      { from: 'MP-02', to: 'AOI-02' },
+      { from: 'MP-03', to: 'AOI-03' },
+      { from: 'MP-04', to: 'AOI-04' },
+      // Stage 06 (AOI) -> Stage 06 (XR)
+      { from: 'AOI-01', to: 'XR-01' },
+      { from: 'AOI-02', to: 'XR-01' },
+      { from: 'AOI-03', to: 'XR-02' },
+      { from: 'AOI-04', to: 'XR-02' },
+      // Stage 06 (XR) -> Stage 07 (LM)
+      { from: 'XR-01', to: 'LM-01' },
+      { from: 'XR-02', to: 'LM-02' },
+      // Stage 07 (LM) -> Stage 07 (TH)
+      { from: 'LM-01', to: 'TH-01' },
+      { from: 'LM-02', to: 'TH-02' },
+      // Stage 07 (TH) -> Stage 07 (TR)
+      { from: 'TH-01', to: 'TR-01' },
+      { from: 'TH-01', to: 'TR-02' },
+      { from: 'TH-01', to: 'TR-03' },
+      { from: 'TH-02', to: 'TR-04' },
+      { from: 'TH-02', to: 'TR-05' },
+      { from: 'TH-02', to: 'TR-06' },
     ];
 
     connections.forEach((conn, index) => {
@@ -224,7 +238,7 @@ export const FactoryCanvas: React.FC<FactoryCanvasProps> = ({
     {
       step: '01',
       title: 'WAFER DICING',
-      nodeCount: '4 NODES',
+      nodeCount: '3 NODES',
       color: '#2563EB', // Blue
       bgTint: 'rgba(37, 99, 235, 0.035)',
       borderTint: 'rgba(37, 99, 235, 0.22)',
@@ -273,7 +287,7 @@ export const FactoryCanvas: React.FC<FactoryCanvasProps> = ({
     {
       step: '04',
       title: 'WIRE BOND',
-      nodeCount: '4 NODES',
+      nodeCount: '8 NODES',
       color: '#16A34A', // Green
       bgTint: 'rgba(22, 163, 74, 0.035)',
       borderTint: 'rgba(22, 163, 74, 0.22)',
@@ -289,7 +303,7 @@ export const FactoryCanvas: React.FC<FactoryCanvasProps> = ({
     },
     {
       step: '05',
-      title: 'MOLD & BALL',
+      title: 'AUTO MOLD',
       nodeCount: '4 NODES',
       color: '#7C3AED', // Purple
       bgTint: 'rgba(124, 58, 237, 0.035)',
@@ -309,7 +323,7 @@ export const FactoryCanvas: React.FC<FactoryCanvasProps> = ({
     {
       step: '06',
       title: '3D AOI & X-RAY',
-      nodeCount: '4 NODES',
+      nodeCount: '6 NODES',
       color: '#EA580C', // Orange
       bgTint: 'rgba(234, 88, 12, 0.035)',
       borderTint: 'rgba(234, 88, 12, 0.22)',
@@ -324,8 +338,8 @@ export const FactoryCanvas: React.FC<FactoryCanvasProps> = ({
     },
     {
       step: '07',
-      title: 'FINAL PACK',
-      nodeCount: '4 NODES',
+      title: 'LASER, TEST & PACK',
+      nodeCount: '10 NODES',
       color: '#0891B2', // Cyan
       bgTint: 'rgba(8, 145, 178, 0.035)',
       borderTint: 'rgba(8, 145, 178, 0.22)',

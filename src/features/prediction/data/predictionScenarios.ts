@@ -186,6 +186,19 @@ const TYPE_CONFIGS: Record<string, TypeConfig> = {
   }
 };
 
+// Aliases for cleanroom hyphenated types
+TYPE_CONFIGS['wafer-saw'] = TYPE_CONFIGS['wafer_dicing'];
+TYPE_CONFIGS['stocker'] = TYPE_CONFIGS['wafer_dicing'];
+TYPE_CONFIGS['die-attach'] = TYPE_CONFIGS['die_attacher'];
+TYPE_CONFIGS['plasma-cleaner'] = TYPE_CONFIGS['die_attacher'];
+TYPE_CONFIGS['wire-bonding'] = TYPE_CONFIGS['wire_bonder'];
+TYPE_CONFIGS['molding-press'] = TYPE_CONFIGS['molding'];
+TYPE_CONFIGS['aoi-inspection'] = TYPE_CONFIGS['ic_tester'];
+TYPE_CONFIGS['x-ray-inspection'] = TYPE_CONFIGS['ic_tester'];
+TYPE_CONFIGS['laser-marking'] = TYPE_CONFIGS['ic_tester'];
+TYPE_CONFIGS['test-handler'] = TYPE_CONFIGS['ic_tester'];
+TYPE_CONFIGS['tape-reel'] = TYPE_CONFIGS['ic_tester'];
+
 // ─── Main derivation function ─────────────────────────────────────────────────
 
 export function getPredictionScenario(machine: Machine): PredictionScenario {

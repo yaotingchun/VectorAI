@@ -88,6 +88,144 @@ export interface AgentFacilityOverview {
 // ─── Machine Failure Dossier Knowledge Base from Technical Manuals ─────────────
 
 const MACHINE_SCENARIOS: Record<string, Partial<AgentScenario>> = {
+  'WB-04': {
+    headline: 'Ultrasonic Transducer Resonance Drift & NSOP Risk',
+    whatHappened:
+      'Transducer head vibration reached 2.85 mm/s (warning threshold 1.2 mm/s) with resonance shift (+4.2 kHz) causing NSOP risk during 18µm Cu bonding.',
+    physicalMechanism:
+      'PZT piezo ceramic transducer resonance drift and capillary tool tip erosion from high-speed copper ball thermosonic bonding cycles.',
+    riskProgression:
+      'Non-stick on pad (NSOP), lifted ball bonds, and open-circuit micro-interconnect defects if capillary is not replaced and resonance retuned within 24h.',
+    scrapRiskEstimate: '$28,000 in high-density multi-chip module lots',
+    sopReference: 'SOP-WB-910: Ultrasonic Transducer & Capillary Replacement',
+    recommendedAction:
+      'Replace capillary tool (25µm ceramic), retune PZT piezo transducer stack resonance frequency at 138.4 kHz, and verify bond pull strength > 6.5g.',
+    requiredParts: ['Capillary Tool 25µm Ceramic', 'PZT Transducer Stack Calibrator', 'High-Purity Au/Cu Calibration Wire'],
+    assignedTechnician: 'Kenji Sato',
+    technicianRole: 'Lead Ultrasonic Wire Bond Specialist',
+    communicationChannel: {
+      type: 'WHATSAPP',
+      label: 'WhatsApp (+1-555-019-8834)',
+      address: '+1-555-019-8834',
+    },
+    estimatedDowntimeHours: 2.5,
+    anomalyTitle: 'Ultrasonic Transducer Resonance Drift',
+    anomalySeverity: 'WARNING',
+    anomalySensor: 'Ultrasonic Vibration (vibration_ultrasonic)',
+    aiIdentifiedCondition: 'Ultrasonic Transducer Resonance Frequency Shift',
+    aiManualReference: "Wire Bonder Manual Section 9 Diagnostic Scenario 'SCEN-WB-002'",
+    rootCauseTags: ['Piezoelectric transducer drift', 'Capillary tip wear', 'Resonance mismatch'],
+  },
+  'WS-02': {
+    headline: 'High-Speed Spindle Ceramic Bearing Harmonic Micro-Spalling',
+    whatHappened:
+      'Spindle radial vibration elevated to 0.42 mm/s at 30,000 RPM. Motor load elevated by 12% indicating early blade micro-binding.',
+    physicalMechanism:
+      'Micro-pitting on spindle air-bearing ceramic races caused by silicon slurry ingress past the labyrinth seal.',
+    riskProgression:
+      'Wafer backside chipping along die scribe lines and potential high-speed spindle wobble.',
+    scrapRiskEstimate: '$31,000 in GaN power semiconductor wafers',
+    sopReference: 'SOP-DIC-214: Spindle Bearing & Diamond Blade Re-Truing',
+    recommendedAction:
+      'Schedule maintenance within 24h window. Replace hubbed diamond dicing blade, flush deionized coolant flow, and balance spindle.',
+    requiredParts: ['Resinoid Diamond Blade 2-inch Hubbed', 'Labyrinth Seal Gasket', 'High-Purity Spindle Synthetic Lubricant'],
+    assignedTechnician: 'Kenji Sato',
+    technicianRole: 'Precision Machining & Spindle Engineer',
+    communicationChannel: {
+      type: 'EMAIL',
+      label: 'Email (kenji.sato@vectorai.internal)',
+      address: 'kenji.sato@vectorai.internal',
+    },
+    estimatedDowntimeHours: 1.5,
+    anomalyTitle: 'Spindle Bearing Harmonic Anomaly',
+    anomalySeverity: 'WARNING',
+    anomalySensor: 'Spindle Radial Vibration (vibration_spindle)',
+    aiIdentifiedCondition: 'Ceramic Bearing Raceway Micro-Spalling',
+    aiManualReference: "Wafer Saw Manual Section 7 Diagnostic Scenario 'SCEN-DIC-001'",
+    rootCauseTags: ['Silicon slurry ingress past labyrinth seal', 'Ceramic ball abrasive wear', 'Blade hub deflection'],
+  },
+  'DA-02': {
+    headline: 'Vacuum Collet Pickup Timing & Ejector Pin Calibration',
+    whatHappened:
+      'Collet vacuum pressure registered -80 kPa with slight pickup timing variance during multi-die transfer.',
+    physicalMechanism:
+      'Vacuum line micro-filter particulate loading and central ejector needle tip surface wear.',
+    riskProgression:
+      'Minor die placement tilt and epoxy bond-line thickness (BLT) variance if uncorrected.',
+    scrapRiskEstimate: '$14,000 in flip-chip die assemblies',
+    sopReference: 'SOP-DA-501: Wafer Table Ejector Mechanism & Coordinate Re-Teaching',
+    recommendedAction:
+      'Flush vacuum solenoid filter, re-teach pickup coordinates, and verify optical fiducial camera calibration.',
+    requiredParts: ['Vacuum Line Filter Cartridge', 'Ejector Pin Set (0.3mm)', 'Silicone Pick-Up Collet'],
+    assignedTechnician: 'Marcus Thorne',
+    technicianRole: 'Die Attach Systems Specialist',
+    communicationChannel: {
+      type: 'EMAIL',
+      label: 'Email (marcus.thorne@vectorai.internal)',
+      address: 'marcus.thorne@vectorai.internal',
+    },
+    estimatedDowntimeHours: 1.0,
+    anomalyTitle: 'Collet Vacuum Line Minor Variance',
+    anomalySeverity: 'INFO',
+    anomalySensor: 'Collet Vacuum Pressure (pressure_vacuum)',
+    aiIdentifiedCondition: 'Vacuum Filter Particulate Buildup',
+    aiManualReference: "Die Bonder Manual Section 11 Diagnostic Scenario 'SCEN-DA-005'",
+    rootCauseTags: ['Vacuum line particulate accumulation', 'Ejector needle wear'],
+  },
+  'MP-02': {
+    headline: 'Hydraulic Platen Ram Seal & Degate Trimmer Inspection',
+    whatHappened:
+      'Hydraulic clamp pressure stable at 138 bar; platen temperature registered 174.8°C with nominal transfer curve.',
+    physicalMechanism:
+      'Epoxy molding compound (EMC) resin flash micro-accumulation in mold chase air vents.',
+    riskProgression: 'Controlled state: Routine preventive window approaching in 14 days.',
+    scrapRiskEstimate: '$0 (Proactive Service)',
+    sopReference: 'SOP-MOL-301: EMC Mold Cavity Descaling & Seal Inspection',
+    recommendedAction:
+      'Execute scheduled air vent descaling, inspect platen thermocouple calibration, and verify degassing vacuum.',
+    requiredParts: ['Mold Cavity Release Agent (High Temp)', 'Hydraulic O-Ring Seal Kit'],
+    assignedTechnician: 'Marcus Thorne',
+    technicianRole: 'Encapsulation Systems Engineer',
+    communicationChannel: {
+      type: 'EMAIL',
+      label: 'Email (marcus.thorne@vectorai.internal)',
+      address: 'marcus.thorne@vectorai.internal',
+    },
+    estimatedDowntimeHours: 2.0,
+    anomalyTitle: 'Routine Platen Descaling Scheduled',
+    anomalySeverity: 'INFO',
+    anomalySensor: 'Mold Platen Thermocouple (temperature_mold)',
+    aiIdentifiedCondition: 'Preventive Interval Window Approaching',
+    aiManualReference: 'Molding Technical Manual SOP-MOL-301',
+    rootCauseTags: ['EMC resin flash micro-accumulation', 'Preventive interval trigger'],
+  },
+  'TH-01': {
+    headline: 'Tri-Temp Test Soak Thermal Calibration & Socket Contact Check',
+    whatHappened:
+      'Thermal soak chamber temperature stable at +85°C. Handler vibration 0.52 mm/s (nominal).',
+    physicalMechanism:
+      'Kelvin socket probe contact cycle accumulation after 120,000 DUT touch-downs.',
+    riskProgression: 'Nominal operation: Contact resistance within 25 mΩ specification.',
+    scrapRiskEstimate: '$0 (Nominal Test)',
+    sopReference: 'SOP-ATE-605: Handler Linear Rail & Pogo Pin Replacement',
+    recommendedAction:
+      'Clean Kelvin socket test pins with optical contact brush and verify soak chamber thermistor calibration.',
+    requiredParts: ['Kelvin Test Socket Insert', 'Pogo Pin Contact Set (128-pin)', 'Optical Encoder Cleaner'],
+    assignedTechnician: 'Kenji Sato',
+    technicianRole: 'ATE Test Cell Automation Specialist',
+    communicationChannel: {
+      type: 'WHATSAPP',
+      label: 'WhatsApp (+1-555-019-8834)',
+      address: '+1-555-019-8834',
+    },
+    estimatedDowntimeHours: 1.0,
+    anomalyTitle: 'Socket Contact Cycle Check',
+    anomalySeverity: 'INFO',
+    anomalySensor: 'Socket Actuator Load (load_actuator)',
+    aiIdentifiedCondition: 'Routine Socket Inspection',
+    aiManualReference: 'ATE Technical Manual SOP-ATE-605',
+    rootCauseTags: ['DUT touch-down cycle count', 'Contact resistance check'],
+  },
   'ATE-002': {
     headline: 'Carriage Track Alignment & Optical Jitter Drift',
     whatHappened:
@@ -294,18 +432,40 @@ function generateDefaultScenario(rul: number, category: string): AgentScenario {
 
   const partsMap: Record<string, string[]> = {
     dicing: ['Diamond Dicing Blade (Hubbed)', 'Coolant Filter 2-micron', 'Labyrinth Seal Gasket'],
+    'wafer-saw': ['Diamond Dicing Blade (Hubbed)', 'Coolant Filter 2-micron', 'Labyrinth Seal Gasket'],
+    stocker: ['AMHS Robot Gripper Belt', 'HEPA Fan Filter Cartridge', 'N2 Purge Valve Seal'],
     die_attach: ['Silicone Suction Collet', 'Vacuum Solenoid Valve', 'Epoxy Dispense Needle (30G)'],
+    'die-attach': ['Silicone Suction Collet', 'Vacuum Solenoid Valve', 'Epoxy Dispense Needle (30G)'],
+    'plasma-cleaner': ['Vacuum Chamber O-Ring', 'RF Matching Network Capacitor', 'Argon Gas Mass Flow Filter'],
     wire_bond: ['Ceramic Capillary Tip (Gold Wire)', 'Piezo Transducer Horn', 'Clamp Anvil Kit'],
+    'wire-bonding': ['Ceramic Capillary Tip (Gold Wire)', 'Piezo Transducer Horn', 'Clamp Anvil Kit'],
     molding: ['Mold Cavity Seal O-Ring', 'Hydraulic Plunger Filter', 'Thermal Thermocouple Type-K'],
+    'molding-press': ['Mold Cavity Seal O-Ring', 'Hydraulic Plunger Filter', 'Thermal Thermocouple Type-K'],
     ate_sort: ['Pogo Pin Contact Set (64-pin)', 'Linear Guide Rail Grease', 'Vacuum Sucker Cup'],
+    'aoi-inspection': ['Telecentric Optical Lens Wipe', 'RGB+W LED Dome Array', 'Gantry Linear Guide Grease'],
+    'x-ray-inspection': ['Microfocus X-Ray Target Gasket', 'High-Voltage Cable Insulator', 'Lead Shield Seal'],
+    'laser-marking': ['Galvo Mirror Cleanroom Wipe', 'Fiber Laser Collimator', 'F-Theta Scan Lens Protector'],
+    'test-handler': ['Kelvin Test Socket Insert', 'Pogo Pin Contact Set (128-pin)', 'Optical Encoder Cleaner'],
+    'tape-reel': ['Carrier Tape Heat Seal Bar', 'Indexer Stepper Belt', 'Optical Pocket Sensor'],
   };
 
   const techMap: Record<string, { name: string; role: string; email: string }> = {
     dicing: { name: 'David Kim', role: 'Dicing & Spindle Engineer', email: 'david.kim@vectorai.internal' },
-    die_attach: { name: 'Sarah Jenkins', role: 'Die Attach Specialist', email: 'sarah.jenkins@vectorai.internal' },
+    'wafer-saw': { name: 'Kenji Sato', role: 'Precision Dicing Specialist', email: 'kenji.sato@vectorai.internal' },
+    stocker: { name: 'Elena Vance', role: 'AMHS Automation Engineer', email: 'elena.vance@vectorai.internal' },
+    die_attach: { name: 'Marcus Thorne', role: 'Die Attach Specialist', email: 'marcus.thorne@vectorai.internal' },
+    'die-attach': { name: 'Marcus Thorne', role: 'Die Attach Specialist', email: 'marcus.thorne@vectorai.internal' },
+    'plasma-cleaner': { name: 'Elena Vance', role: 'Plasma & Surface Treatment Engineer', email: 'elena.vance@vectorai.internal' },
     wire_bond: { name: 'Kenji Sato', role: 'Ultrasonic Wire Bond Lead', email: 'kenji.sato@vectorai.internal' },
-    molding: { name: 'Sarah Jenkins', role: 'Molding Systems Engineer', email: 'sarah.jenkins@vectorai.internal' },
+    'wire-bonding': { name: 'Kenji Sato', role: 'Ultrasonic Wire Bond Lead', email: 'kenji.sato@vectorai.internal' },
+    molding: { name: 'Marcus Thorne', role: 'Encapsulation Systems Engineer', email: 'marcus.thorne@vectorai.internal' },
+    'molding-press': { name: 'Marcus Thorne', role: 'Encapsulation Systems Engineer', email: 'marcus.thorne@vectorai.internal' },
     ate_sort: { name: 'Kenji Sato', role: 'ATE Test Cell Specialist', email: 'kenji.sato@vectorai.internal' },
+    'aoi-inspection': { name: 'Elena Vance', role: 'Vision Metrology Specialist', email: 'elena.vance@vectorai.internal' },
+    'x-ray-inspection': { name: 'Elena Vance', role: 'NDT Radiography Engineer', email: 'elena.vance@vectorai.internal' },
+    'laser-marking': { name: 'Marcus Thorne', role: 'Laser Systems Technician', email: 'marcus.thorne@vectorai.internal' },
+    'test-handler': { name: 'Kenji Sato', role: 'ATE Test Handler Engineer', email: 'kenji.sato@vectorai.internal' },
+    'tape-reel': { name: 'Marcus Thorne', role: 'Packaging Systems Specialist', email: 'marcus.thorne@vectorai.internal' },
   };
 
   const tech = techMap[category] || techMap.dicing;
