@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { TabId, NAV_ITEMS } from '../../types/navigation';
+import { NotificationPanel } from './NotificationPanel';
 
 interface HeaderProps {
   activeTab: TabId;
+  onNavigate: (tab: string, machineId?: string) => void;
 }
 
-export const Header: React.FC<HeaderProps> = ({ activeTab }) => {
+export const Header: React.FC<HeaderProps> = ({ activeTab, onNavigate }) => {
   const [timeStr, setTimeStr] = useState('');
 
   useEffect(() => {
@@ -47,8 +49,12 @@ export const Header: React.FC<HeaderProps> = ({ activeTab }) => {
         </span>
       </div>
 
-      {/* Right Clock */}
-      <div className="header-status-group" style={{ display: 'flex', alignItems: 'center' }}>
+      {/* Right: Notification Bell + Clock */}
+      <div className="header-status-group" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+        {/* Notification Bell */}
+        <NotificationPanel onNavigate={onNavigate} />
+
+        {/* Clock */}
         <div
           style={{
             border: '1.5px solid var(--border-strong)',

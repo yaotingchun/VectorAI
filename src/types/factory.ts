@@ -68,6 +68,38 @@ export interface ModelWeights {
   timeWeight: number;     // θ_time (weight for operating hours, e.g. 1.2)
 }
 
+export type CommunicationChannelType = 'EMAIL' | 'WHATSAPP' | 'WEBSITE';
+
+export interface CommunicationChannel {
+  type: CommunicationChannelType;
+  address: string;
+  label: string;
+}
+
+export interface NotificationLog {
+  channel: CommunicationChannelType;
+  channelAddress: string;    // email address, phone number, or URL
+  sentAt: string;            // ISO timestamp
+  recipient: string;         // tech name or target
+  subject: string;
+  body: string;
+  delivered: boolean;
+}
+
+export interface ProgressStep {
+  label: string;
+  status: 'DONE' | 'ACTIVE' | 'PENDING';
+  completedAt?: string;      // ISO timestamp when done
+}
+
+export interface DiagnosisReport {
+  generatedAt: string;       // ISO timestamp
+  faultSummary: string;
+  sensorReadings: { sensor: string; value: string; status: 'OK' | 'WARNING' | 'CRITICAL' }[];
+  recommendedActions: string[];
+  estimatedRootCause: string;
+}
+
 export interface MaintenanceTask {
   id: string;
   machineId: string;
@@ -78,8 +110,16 @@ export interface MaintenanceTask {
   priority: 'CRITICAL' | 'HIGH' | 'MEDIUM' | 'LOW';
   status: 'SCHEDULED' | 'IN_PROGRESS' | 'COMPLETED';
   technician: string;
+  communicationChannel: CommunicationChannel;
   estimatedDuration: number; // hours
   partsRequired: string[];
+  // Auto-dispatch notification log (only in saved communication channel)
+  notificationLog: NotificationLog[];
+  // Diagnosis PDF data
+  diagnosisReport: DiagnosisReport;
+  // Progress tracking steps
+  progressSteps: ProgressStep[];
+  progressPercent: number; // 0-100
 }
 
 export interface SystemEvent {

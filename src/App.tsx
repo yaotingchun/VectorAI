@@ -92,7 +92,7 @@ export const App: React.FC = () => {
         <IntroScreen onComplete={() => setShowIntro(false)} />
       )}
 
-      <AppLayout activeTab={activeTab} onSelectTab={setActiveTab}>
+      <AppLayout activeTab={activeTab} onSelectTab={setActiveTab} onNavigate={handleNavigate}>
         {renderActivePage()}
       </AppLayout>
     </FactoryProvider>

@@ -6,12 +6,14 @@ import { Header } from './Header';
 interface AppLayoutProps {
   activeTab: TabId;
   onSelectTab: (tab: TabId) => void;
+  onNavigate: (tab: string, machineId?: string) => void;
   children: React.ReactNode;
 }
 
 export const AppLayout: React.FC<AppLayoutProps> = ({
   activeTab,
   onSelectTab,
+  onNavigate,
   children,
 }) => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
@@ -28,7 +30,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
 
       {/* Main Workspace */}
       <div className="main-wrapper">
-        <Header activeTab={activeTab} />
+        <Header activeTab={activeTab} onNavigate={onNavigate} />
         
         <main className={`content-viewport blueprint-grid ${activeTab === 'rerouting' || activeTab === 'vfactory' ? 'canvas-mode' : ''}`}>
           {children}
