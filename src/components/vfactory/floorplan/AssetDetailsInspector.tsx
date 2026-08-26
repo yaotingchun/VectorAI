@@ -11,6 +11,7 @@ import {
   Trash2,
   X,
   Cpu,
+  Radio,
 } from 'lucide-react';
 
 interface AssetDetailsInspectorProps {
@@ -19,6 +20,7 @@ interface AssetDetailsInspectorProps {
   onNavigateToMachine?: (machineId: string) => void;
   onRemoveAsset?: (assetId: string) => void;
   onUpdateAsset?: (asset: FloorMachineAsset) => void;
+  onOpenSensorProvisioning?: (machine: FloorMachineAsset) => void;
 }
 
 export const AssetDetailsInspector: React.FC<AssetDetailsInspectorProps> = ({
@@ -27,6 +29,7 @@ export const AssetDetailsInspector: React.FC<AssetDetailsInspectorProps> = ({
   onNavigateToMachine,
   onRemoveAsset,
   onUpdateAsset,
+  onOpenSensorProvisioning,
 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editNotes, setEditNotes] = useState('');
@@ -165,9 +168,70 @@ export const AssetDetailsInspector: React.FC<AssetDetailsInspectorProps> = ({
           </div>
         </div>
 
-        {/* Real-time Telemetry Grid */}
+        {/* SECTION 2: SENSOR REGISTRY & NFC TAG BINDING */}
         <div className="inspector-section">
-          <div className="inspector-section-header">LIVE SENSORS (OPC-UA)</div>
+          <div className="inspector-section-header">
+            <span>SENSOR REGISTRY & HARDWARE BINDING</span>
+          </div>
+
+          {selectedAsset.sensorKit ? (
+            <div className="inspector-sensor-kit-box">
+              <div className="sensor-kit-top-row">
+                <span className="sensor-kit-name">{selectedAsset.sensorKit.kitModel}</span>
+                <span className="sensor-kit-signal-pill">
+                  <Radio size={10} />
+                  <span>{selectedAsset.sensorKit.signalStrength}% Locked</span>
+                </span>
+              </div>
+
+              <div className="sensor-kit-meta-row">
+                <span className="sensor-kit-sn">TAG: <code>{selectedAsset.sensorKit.nfcTagSerial}</code></span>
+                <span className="sensor-kit-proto">{selectedAsset.sensorKit.telemetryProtocol}</span>
+              </div>
+
+              {/* Registered Channels */}
+              <div className="inspector-sensor-chips-list">
+                {selectedAsset.sensorKit.sensors.map((s) => (
+                  <div key={s.id} className="inspector-sensor-chip">
+                    <span className="sensor-chip-dot green" />
+                    <span className="sensor-chip-name">{s.name.split(' ')[0]}</span>
+                    <span className="sensor-chip-val">{s.currentValue} {s.unit}</span>
+                  </div>
+                ))}
+              </div>
+
+              <button
+                onClick={() => onOpenSensorProvisioning?.(selectedAsset)}
+                className="sensor-kit-rebind-btn"
+                title="Scan another NFC kit or add extra sensors"
+              >
+                <Radio size={12} />
+                <span>+ ADD SENSOR / REPAIR NFC KIT</span>
+              </button>
+            </div>
+          ) : (
+            <div className="inspector-unbound-sensor-box">
+              <div className="unbound-icon-wrap">
+                <Radio size={20} className="unbound-icon" />
+              </div>
+              <div className="unbound-title">EMPTY MACHINE INSTANCE</div>
+              <div className="unbound-desc">
+                No sensor kit registered yet. Scan the physical kit's NFC tag to pull sensor calibration and bind telemetry.
+              </div>
+              <button
+                onClick={() => onOpenSensorProvisioning?.(selectedAsset)}
+                className="sensor-scan-nfc-cta-btn"
+              >
+                <Radio size={14} />
+                <span>+ ADD SENSOR KIT (SCAN NFC)</span>
+              </button>
+            </div>
+          )}
+        </div>
+
+        {/* SECTION 3: REAL-TIME TELEMETRY (OPC-UA) */}
+        <div className="inspector-section">
+          <div className="inspector-section-header">LIVE SENSORS (OPC-UA STREAM)</div>
 
           <div className="inspector-telemetry-mini-grid">
             <div className="telemetry-box">

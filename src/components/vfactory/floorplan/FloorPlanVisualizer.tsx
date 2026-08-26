@@ -17,6 +17,7 @@ import { FloorCanvas } from './FloorCanvas';
 import { AssetDetailsInspector } from './AssetDetailsInspector';
 import { FloorBottomBar } from './FloorBottomBar';
 import { FloorPlanConfigStudio } from './FloorPlanConfigStudio';
+import { SensorKitProvisioningModal } from './SensorKitProvisioningModal';
 import { Settings } from 'lucide-react';
 import '../../../styles/floorplan.css';
 
@@ -29,6 +30,9 @@ const STORAGE_KEY = 'vector_vfactory_floorplan_v1';
 export const FloorPlanVisualizer: React.FC<FloorPlanVisualizerProps> = ({
   onNavigateToMachine,
 }) => {
+  // Sensor Kit Provisioning Modal State
+  const [isProvisioningModalOpen, setIsProvisioningModalOpen] = useState<boolean>(false);
+  const [provisioningMachine, setProvisioningMachine] = useState<FloorMachineAsset | null>(null);
   // Load saved layout from localStorage or fallback to initial
   const [machines, setMachines] = useState<FloorMachineAsset[]>(() => {
     try {
@@ -261,8 +265,59 @@ export const FloorPlanVisualizer: React.FC<FloorPlanVisualizerProps> = ({
           onNavigateToMachine={onNavigateToMachine}
           onRemoveAsset={handleRemoveAsset}
           onUpdateAsset={handleUpdateAsset}
+          onOpenSensorProvisioning={(m) => {
+            setProvisioningMachine(m);
+            setIsProvisioningModalOpen(true);
+          }}
         />
       </div>
+
+      {/* Sensor Kit Provisioning & Live Signal Verification Modal */}
+      <SensorKitProvisioningModal
+        isOpen={isProvisioningModalOpen}
+        machine={provisioningMachine}
+        onClose={() => setIsProvisioningModalOpen(false)}
+        onBindKit={(machineId, kit) => {
+          setMachines((prev) => {
+            const next = prev.map((m) => {
+              if (m.id === machineId) {
+                const tempSensor = kit.sensors.find((s) => s.type === 'temperature');
+                const vibSensor = kit.sensors.find((s) => s.type === 'vibration');
+                return {
+                  ...m,
+                  isConfigured: true,
+                  provisioningStatus: 'provisioned' as const,
+                  status: 'healthy' as const,
+                  sensorKit: kit,
+                  sensors: kit.sensors,
+                  oee: 94.8,
+                  telemetry: {
+                    temperature: tempSensor ? tempSensor.currentValue : 42.4,
+                    vibration: vibSensor ? vibSensor.currentValue : 1.18,
+                    healthScore: 96,
+                    powerConsumptionKw: 3.4,
+                    rulHours: 1620,
+                  },
+                  customNotes: `NFC Tag: ${kit.nfcTagSerial} | Kit: ${kit.kitModel} (Bound: ${new Date().toLocaleDateString()})`,
+                };
+              }
+              return m;
+            });
+
+            try {
+              localStorage.setItem(STORAGE_KEY, JSON.stringify({
+                machines: next,
+                zones,
+                structures,
+                junctions,
+              }));
+            } catch (e) {
+              console.error(e);
+            }
+            return next;
+          });
+        }}
+      />
 
       {/* Bottom Bar: Floor & Area Selectors, Minimap, Status Legend, Grid Controls */}
       <FloorBottomBar

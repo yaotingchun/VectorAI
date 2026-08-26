@@ -615,8 +615,38 @@ export const FloorCanvas: React.FC<FloorCanvasProps> = ({
                   height={machine.height}
                   className="fp-machine-card-base"
                   rx="2"
+                  stroke={machine.isConfigured === false ? '#D97706' : '#121315'}
+                  strokeDasharray={machine.isConfigured === false ? '3 2' : 'none'}
+                  strokeWidth={machine.isConfigured === false ? '1.8' : '1.5'}
                   style={{ pointerEvents: 'none' }}
                 />
+
+                {/* Unprovisioned Empty Instance Badge */}
+                {machine.isConfigured === false && (
+                  <g style={{ pointerEvents: 'none' }}>
+                    <rect
+                      x="2"
+                      y="2"
+                      width="20"
+                      height="8"
+                      fill="#FEF3C7"
+                      stroke="#D97706"
+                      strokeWidth="0.8"
+                      rx="1"
+                    />
+                    <text
+                      x="12"
+                      y="8"
+                      textAnchor="middle"
+                      fontSize="5.5"
+                      fontFamily="var(--font-mono)"
+                      fontWeight="800"
+                      fill="#92400E"
+                    >
+                      NFC?
+                    </text>
+                  </g>
+                )}
 
                 {/* SVG Icon Illustration */}
                 <foreignObject
@@ -636,7 +666,7 @@ export const FloorCanvas: React.FC<FloorCanvasProps> = ({
                   cx={machine.width - 6}
                   cy="6"
                   r="3"
-                  fill={getStatusColor(machine.status)}
+                  fill={machine.isConfigured === false ? '#F59E0B' : getStatusColor(machine.status)}
                   stroke="#121315"
                   strokeWidth="1"
                   style={{ pointerEvents: 'none' }}
@@ -653,7 +683,7 @@ export const FloorCanvas: React.FC<FloorCanvasProps> = ({
                   className="fp-machine-id-label"
                   style={{ pointerEvents: 'none' }}
                 >
-                  {machine.id}
+                  {machine.id}{machine.isConfigured === false ? '*' : ''}
                 </text>
 
                 {/* Direct Click Hit-Test Target */}

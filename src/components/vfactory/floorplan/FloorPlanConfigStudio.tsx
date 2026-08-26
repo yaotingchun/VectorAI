@@ -9,12 +9,14 @@ import {
   StructureType,
   AssetLibraryItem,
   LayoutPresetId,
+  RegisteredSensorKit,
 } from '../../../types/floorPlan';
 import { LAYOUT_PRESETS } from '../../../data/floorPlanData';
 import { AssetLibrarySidebar } from './AssetLibrarySidebar';
 import { FloorCanvasToolbar } from './FloorCanvasToolbar';
 import { FloorCanvas } from './FloorCanvas';
 import { FloorIcon } from './FloorIcons';
+import { SensorKitProvisioningModal } from './SensorKitProvisioningModal';
 import {
   ArrowLeft,
   Check,
@@ -29,6 +31,7 @@ import {
   Sparkles,
   FileCode,
   Box,
+  Radio,
 } from 'lucide-react';
 import '../../../styles/floorplan.css';
 
@@ -128,7 +131,11 @@ export const FloorPlanConfigStudio: React.FC<FloorPlanConfigStudioProps> = ({
     );
   };
 
-  // Add Machine from Library Drop
+  // Provisioning Modal State
+  const [isProvisioningModalOpen, setIsProvisioningModalOpen] = useState(false);
+  const [provisioningTargetMachine, setProvisioningTargetMachine] = useState<FloorMachineAsset | null>(null);
+
+  // Add Machine from Library Drop (Creates Empty Machine Instance)
   const handleAddMachine = (item: AssetLibraryItem, x: number, y: number) => {
     const count = machines.filter((m) => m.type === item.type).length + 1;
     const newId = `${item.code}-${String(count).padStart(2, '0')}`;
@@ -145,27 +152,69 @@ export const FloorPlanConfigStudio: React.FC<FloorPlanConfigStudioProps> = ({
       footprint: item.defaultFootprint,
       power: item.defaultPower,
       utility: item.defaultUtility,
-      status: 'healthy',
-      oee: 95.0,
+      status: 'offline',
+      oee: 0,
+      isConfigured: false,
+      provisioningStatus: 'unprovisioned',
+      sensorKit: null,
+      sensors: [],
       telemetry: {
-        temperature: 42.0,
-        vibration: 1.0,
-        healthScore: 95,
-        powerConsumptionKw: 3.5,
-        rulHours: 1500,
+        temperature: 0,
+        vibration: 0,
+        healthScore: 0,
+        powerConsumptionKw: 0,
+        rulHours: 0,
       },
       connections: {
-        input: 'Staging Area',
+        input: 'Direct Staging',
         output: 'Process Queue',
         conveyor: 'CV-01',
         agvAccess: true,
       },
+      customNotes: 'Empty Machine Instance // Awaiting NFC Sensor Kit pairing',
     };
 
     setMachines((prev) => [...prev, newMachine]);
     setSelectedAssetId(newId);
     setActiveTab('asset-props');
-    showNotice(`Added ${newMachine.id} to floor plan`);
+    showNotice(`Placed empty instance ${newMachine.id} (Ready for NFC Sensor Kit scan)`);
+  };
+
+  // Sensor Kit Binding Handler (from NFC Scanner)
+  const handleBindSensorKit = (machineId: string, kit: RegisteredSensorKit) => {
+    setMachines((prev) =>
+      prev.map((m) => {
+        if (m.id === machineId) {
+          const tempSensor = kit.sensors.find((s) => s.type === 'temperature');
+          const vibSensor = kit.sensors.find((s) => s.type === 'vibration');
+          return {
+            ...m,
+            isConfigured: true,
+            provisioningStatus: 'provisioned',
+            status: 'healthy',
+            sensorKit: kit,
+            sensors: kit.sensors,
+            oee: 94.8,
+            telemetry: {
+              temperature: tempSensor ? tempSensor.currentValue : 42.4,
+              vibration: vibSensor ? vibSensor.currentValue : 1.18,
+              healthScore: 96,
+              powerConsumptionKw: 3.4,
+              rulHours: 1620,
+            },
+            customNotes: `NFC Tag: ${kit.nfcTagSerial} | Kit: ${kit.kitModel} (Bound: ${new Date().toLocaleDateString()})`,
+          };
+        }
+        return m;
+      })
+    );
+    showNotice(`Sensor Kit ${kit.kitId} successfully bound to ${machineId}!`);
+  };
+
+  // Open NFC Provisioning Scanner
+  const handleOpenProvisioning = (machine: FloorMachineAsset) => {
+    setProvisioningTargetMachine(machine);
+    setIsProvisioningModalOpen(true);
   };
 
   // Asset selection
@@ -608,6 +657,53 @@ export const FloorPlanConfigStudio: React.FC<FloorPlanConfigStudioProps> = ({
                     />
                   </div>
 
+                  {/* SENSOR REGISTRY & NFC KIT STATUS CARD */}
+                  <div className="studio-sensor-registry-box">
+                    <div className="studio-sensor-reg-header">
+                      <div className="studio-sensor-reg-title">
+                        <Radio size={13} className="studio-icon" />
+                        <span>SENSOR REGISTRY (NFC PAIRING)</span>
+                      </div>
+                      {selectedAsset.sensorKit ? (
+                        <span className="sensor-chip-dot green" title="Provisioned & Live" />
+                      ) : (
+                        <span className="sensor-chip-dot amber" title="Unprovisioned Empty Instance" />
+                      )}
+                    </div>
+
+                    {selectedAsset.sensorKit ? (
+                      <div className="studio-bound-kit-info">
+                        <div className="bound-kit-name">{selectedAsset.sensorKit.kitModel}</div>
+                        <div className="bound-kit-serial">TAG SN: <code>{selectedAsset.sensorKit.nfcTagSerial}</code></div>
+                        <div className="bound-kit-stats">
+                          <span>{selectedAsset.sensorKit.sensors.length} ACTIVE SENSORS</span>
+                          <span>•</span>
+                          <span>{selectedAsset.sensorKit.telemetryProtocol}</span>
+                        </div>
+                        <button
+                          onClick={() => handleOpenProvisioning(selectedAsset)}
+                          className="studio-nfc-scan-cta-btn rebind"
+                        >
+                          <Radio size={13} />
+                          <span>RESCAN / ADD SENSORS</span>
+                        </button>
+                      </div>
+                    ) : (
+                      <div className="studio-unbound-kit-info">
+                        <div className="unbound-text">
+                          This is an empty machine instance. Scan pre-provisioned NFC kit to bind telemetry and calibrate sensors.
+                        </div>
+                        <button
+                          onClick={() => handleOpenProvisioning(selectedAsset)}
+                          className="studio-nfc-scan-cta-btn"
+                        >
+                          <Radio size={14} />
+                          <span>SCAN NFC SENSOR KIT</span>
+                        </button>
+                      </div>
+                    )}
+                  </div>
+
                   <div className="studio-asset-action-buttons">
                     <button onClick={handleDuplicateSelected} className="studio-action-btn secondary">
                       <Copy size={13} />
@@ -668,6 +764,14 @@ export const FloorPlanConfigStudio: React.FC<FloorPlanConfigStudioProps> = ({
           )}
         </aside>
       </div>
+
+      {/* Sensor Kit NFC Provisioning & Live Signal Verification Modal */}
+      <SensorKitProvisioningModal
+        isOpen={isProvisioningModalOpen}
+        machine={provisioningTargetMachine}
+        onClose={() => setIsProvisioningModalOpen(false)}
+        onBindKit={handleBindSensorKit}
+      />
     </div>
   );
 };

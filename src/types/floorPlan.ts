@@ -25,8 +25,33 @@ export type StructureType =
   | 'shipping-pallet';
 
 export type MachineHealthStatus = 'healthy' | 'warning' | 'critical' | 'offline';
+export type ProvisioningStatus = 'unprovisioned' | 'scanning' | 'verified' | 'provisioned';
+export type SensorType = 'vibration' | 'temperature' | 'acoustic' | 'current' | 'pressure' | 'speed';
 
 export type ToolMode = 'select' | 'pan' | 'fit' | 'zoom' | 'link' | 'text';
+
+export interface RegisteredSensor {
+  id: string; // e.g. "SEN-VIB-01"
+  name: string; // e.g. "Spindle Tri-Axial Accelerometer"
+  type: SensorType;
+  samplingRate: string; // e.g. "20 kHz"
+  range: string; // e.g. "±50g"
+  status: 'active' | 'syncing' | 'offline';
+  currentValue: number;
+  unit: string; // e.g. "mm/s", "°C", "A", "kHz"
+}
+
+export interface RegisteredSensorKit {
+  kitId: string; // e.g. "KIT-VEC-9482-TRI"
+  nfcTagSerial: string; // e.g. "NFC-7E4A-9921-00FF"
+  kitModel: string; // e.g. "Vector Edge Sentinel Tri-Axial Kit v2"
+  description: string;
+  provisionDate: string; // ISO or formatted date
+  signalStrength: number; // 0 - 100 (%)
+  firmwareVersion: string; // e.g. "v2.4.1-rc3"
+  telemetryProtocol: 'OPC-UA' | 'MQTT-SN' | 'Modbus-TCP';
+  sensors: RegisteredSensor[];
+}
 
 export interface FloorMachineAsset {
   id: string; // e.g. "WB-05"
@@ -43,6 +68,10 @@ export interface FloorMachineAsset {
   utility: string; // e.g. "Compressed Air, N₂"
   status: MachineHealthStatus;
   oee: number; // e.g. 92.4
+  isConfigured?: boolean; // false for newly placed empty machine instances
+  provisioningStatus?: ProvisioningStatus;
+  sensorKit?: RegisteredSensorKit | null;
+  sensors?: RegisteredSensor[];
   telemetry: {
     temperature: number; // °C
     vibration: number; // mm/s
