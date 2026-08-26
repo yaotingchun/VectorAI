@@ -260,7 +260,23 @@ export const MachineDetail: React.FC<MachineDetailProps> = ({
         {/* Anomalies Tab */}
         {activeTab === 'anomalies' && (
           <AnomalySummary
-            anomalies={machine.anomalies}
+            anomalies={
+              machine.anomalies && machine.anomalies.length > 0
+                ? machine.anomalies
+                : machine.sensors
+                    .filter((s) => s.status === 'critical' || s.status === 'warning' || (s as any).deviation >= 60)
+                    .map((s, idx) => ({
+                      id: `dynamic-ano-${machine.id}-${s.sensorId || s.name}-${idx}`,
+                      timestamp: 'Live Telemetry Alert',
+                      type: `${s.name} Deviation Alert`,
+                      severity: (s.status === 'critical' || (s as any).deviation >= 85 ? 'critical' : 'medium') as 'critical' | 'medium',
+                      description: `${s.name} is reading ${s.value}${s.unit}, exceeding the nominal safe baseline. Automated diagnostic reasoning invoked.`,
+                      sensor: s.name,
+                      confidence: 0.94,
+                      status: 'active' as const,
+                      recommendedAction: `Inspect sensor calibration and corresponding mechanical subsystem on ${machine.id}.`
+                    }))
+            }
             machine={machine}
             onAcknowledge={(anoId) => console.log('Acknowledge anomaly:', anoId)}
           />

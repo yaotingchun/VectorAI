@@ -37,7 +37,7 @@ export const App: React.FC = () => {
     }
   };
 
-  const handleNavigate = (tab: TabId | string, machineId?: string) => {
+  const handleNavigate = (tab: TabId | string, machineId?: string, subTab?: DetailTab | string) => {
     if (tab === 'prediction') {
       setActiveTab('machines');
       if (machineId) {
@@ -50,7 +50,11 @@ export const App: React.FC = () => {
     if (machineId) {
       setFocusedMachineId(machineId);
     }
-    setFocusedDetailTab(undefined);
+    if (subTab) {
+      setFocusedDetailTab(subTab as DetailTab);
+    } else {
+      setFocusedDetailTab(undefined);
+    }
   };
 
   const renderActivePage = () => {

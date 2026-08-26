@@ -4,7 +4,7 @@ import { NotificationPanel } from './NotificationPanel';
 
 interface HeaderProps {
   activeTab: TabId;
-  onNavigate: (tab: string, machineId?: string) => void;
+  onNavigate: (tab: string, machineId?: string, subTab?: string) => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({ activeTab, onNavigate }) => {

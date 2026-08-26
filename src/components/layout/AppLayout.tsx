@@ -6,7 +6,7 @@ import { Header } from './Header';
 interface AppLayoutProps {
   activeTab: TabId;
   onSelectTab: (tab: TabId) => void;
-  onNavigate: (tab: string, machineId?: string) => void;
+  onNavigate: (tab: string, machineId?: string, subTab?: string) => void;
   children: React.ReactNode;
 }
 
