@@ -3,6 +3,7 @@ import { useFactory } from '../context/FactoryContext';
 import { MaintenanceTask, ProgressStep, CommunicationChannelType } from '../types/factory';
 import {
   Calendar,
+  CalendarDays,
   CheckCircle2,
   History,
   ShieldCheck,
@@ -18,6 +19,11 @@ import {
   Copy,
   Check,
   Cpu,
+  ChevronLeft,
+  ChevronRight,
+  Bell,
+  Clock,
+  Wrench,
 } from 'lucide-react';
 
 // ─── Formatting Helpers ───────────────────────────────────────────────────────
@@ -873,6 +879,10 @@ export const MaintenancePage: React.FC = () => {
     deleteMaintenanceTask,
   } = useFactory();
 
+  // Calendar State
+  const [currentCalendarDate, setCurrentCalendarDate] = useState<Date>(new Date());
+  const [selectedDay, setSelectedDay] = useState<number | null>(new Date().getDate());
+
   const activeTasks = maintenanceQueue.filter((t) => t.status !== 'COMPLETED');
   const completedTasks = maintenanceQueue.filter((t) => t.status === 'COMPLETED');
 
@@ -892,6 +902,103 @@ export const MaintenancePage: React.FC = () => {
     if (rul <= 72) return { label: 'OPTIMAL WINDOW', color: 'var(--accent-green)', desc: 'Optimal trade-off: max wear utilization without risk.', urgency: 2 };
     return { label: 'PREVENTIVE (SUFFICIENT RUL)', color: 'var(--accent-blue)', desc: 'Early schedule. Lifespan remaining.', urgency: 1 };
   };
+
+  // Calendar Helpers
+  const year = currentCalendarDate.getFullYear();
+  const month = currentCalendarDate.getMonth();
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const firstDayOfWeek = (new Date(year, month, 1).getDay() + 6) % 7; // Monday start (0: Mon, 6: Sun)
+
+  const handlePrevMonth = () => {
+    setCurrentCalendarDate(new Date(year, month - 1, 1));
+    setSelectedDay(null);
+  };
+
+  const handleNextMonth = () => {
+    setCurrentCalendarDate(new Date(year, month + 1, 1));
+    setSelectedDay(null);
+  };
+
+  // Collect scheduled reminders for each date
+  interface DayReminder {
+    machineId: string;
+    machineName: string;
+    type: 'CRITICAL' | 'OPTIMAL' | 'PREVENTIVE' | 'SCHEDULED';
+    title: string;
+    parts: string[];
+    dateStr: string;
+    urgencyText: string;
+  }
+
+  const getRemindersForDate = (dayNum: number): DayReminder[] => {
+    const targetDate = new Date(year, month, dayNum);
+    const reminders: DayReminder[] = [];
+
+    // Map active tasks by estimated scheduled time
+    activeTasks.forEach((task) => {
+      const machine = machines.find((m) => m.id === task.machineId);
+      const rulHours = machine?.currentRul || 48;
+      const scheduledDate = new Date(Date.now() + rulHours * 3600 * 1000);
+
+      if (
+        scheduledDate.getFullYear() === targetDate.getFullYear() &&
+        scheduledDate.getMonth() === targetDate.getMonth() &&
+        scheduledDate.getDate() === dayNum
+      ) {
+        reminders.push({
+          machineId: task.machineId,
+          machineName: task.machineName,
+          type: task.priority === 'CRITICAL' ? 'CRITICAL' : task.priority === 'HIGH' ? 'OPTIMAL' : 'PREVENTIVE',
+          title: `Predicted Service Window (RUL: ${rulHours}h)`,
+          parts: task.partsRequired,
+          dateStr: scheduledDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+          urgencyText: task.priority === 'CRITICAL' ? 'IMMINENT BREAKDOWN RISK' : 'OPTIMAL REPLACEMENT WINDOW',
+        });
+      }
+    });
+
+    // Also check machines requiring calibration
+    machines.forEach((m) => {
+      if (m.currentRul <= 250 && !activeTasks.some(t => t.machineId === m.id)) {
+        const estDate = new Date(Date.now() + m.currentRul * 3600 * 1000);
+        if (
+          estDate.getFullYear() === targetDate.getFullYear() &&
+          estDate.getMonth() === targetDate.getMonth() &&
+          estDate.getDate() === dayNum
+        ) {
+          reminders.push({
+            machineId: m.id,
+            machineName: m.name,
+            type: m.currentRul <= 48 ? 'CRITICAL' : 'OPTIMAL',
+            title: `Recommended Service (RUL: ${m.currentRul}h)`,
+            parts: ['Standard Calibration Kit'],
+            dateStr: estDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+            urgencyText: m.currentRul <= 48 ? 'CRITICAL' : 'OPTIMAL PREVENTIVE',
+          });
+        }
+      }
+    });
+
+    return reminders;
+  };
+
+  // Find all dates in the current month that have maintenance events
+  const monthMaintenanceDays = new Set<number>();
+  for (let d = 1; d <= daysInMonth; d++) {
+    if (getRemindersForDate(d).length > 0) {
+      monthMaintenanceDays.add(d);
+    }
+  }
+
+  // Selected date reminders list
+  const selectedDateReminders = selectedDay ? getRemindersForDate(selectedDay) : [];
+
+  // Next upcoming reminder
+  const allUpcomingReminders: (DayReminder & { day: number })[] = [];
+  for (let d = 1; d <= daysInMonth; d++) {
+    const rems = getRemindersForDate(d);
+    rems.forEach(r => allUpcomingReminders.push({ ...r, day: d }));
+  }
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
@@ -936,8 +1043,8 @@ export const MaintenancePage: React.FC = () => {
         </div>
       </div>
 
-      {/* ── Main Grid ────────────────────────────────────────────────────────── */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1.8fr 1fr', gap: '20px' }}>
+      {/* ── Main Grid: Active Scheduler Timeline vs Right Column (Calendar + Historical Log) ── */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1.5fr 1.2fr', gap: '20px' }}>
 
         {/* LEFT: AUTO-DISPATCH CONSOLE — PREDICTIVE TIMELINE & OPTIMAL WINDOW BOARD */}
         <div className="tech-card" style={{ display: 'flex', flexDirection: 'column' }}>
@@ -985,107 +1092,317 @@ export const MaintenancePage: React.FC = () => {
           </div>
         </div>
 
-        {/* RIGHT: SERVICE HISTORY ARCHIVE (Completed Shift & Maintenance Archive) */}
-        <div className="tech-card" style={{ display: 'flex', flexDirection: 'column' }}>
-          <div className="corner-tl">+</div><div className="corner-tr">+</div>
-          <div className="corner-bl">+</div><div className="corner-br">+</div>
-
-          <div className="tech-card-header">
-            <span className="tech-card-title">
-              <History size={14} />
-              SERVICE HISTORY ARCHIVE
-            </span>
-            <span style={{
-              fontSize: '9.5px',
-              fontWeight: 700,
-              color: 'var(--accent-green)',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '4px',
-            }}>
-              <CheckCheck size={12} />
-              {completedTasks.length} RESOLVED
-            </span>
-          </div>
-
-          <div
-            className="tech-card-body"
-            style={{
-              padding: '12px 14px',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '12px',
-              maxHeight: '620px',
-              overflowY: 'auto',
-            }}
-          >
-            {completedTasks.length === 0 ? (
-              <div style={{ color: 'var(--text-secondary)', fontStyle: 'italic', fontSize: '11px', textAlign: 'center', padding: '28px' }}>
-                No maintenance tasks completed in this shift yet.
-              </div>
-            ) : (
-              completedTasks.map((task) => (
-                <div
-                  key={task.id}
-                  style={{
-                    border: '1px solid var(--border-light)',
-                    borderLeft: '3px solid var(--accent-green)',
-                    backgroundColor: 'var(--bg-surface)',
-                    padding: '12px',
-                    fontSize: '11px',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: '6px',
-                  }}
+        {/* RIGHT: CALENDAR REMINDERS & SERVICE HISTORY ARCHIVE */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+          
+          {/* 1. Maintenance Calendar & Schedule Reminder Card (ABOVE ARCHIVE) */}
+          <div className="tech-card" style={{ display: 'flex', flexDirection: 'column' }}>
+            <div className="corner-tl">+</div>
+            <div className="corner-tr">+</div>
+            <div className="corner-bl">+</div>
+            <div className="corner-br">+</div>
+            <div className="tech-card-header">
+              <span className="tech-card-title">
+                <CalendarDays size={14} />
+                MAINTENANCE SCHEDULE CALENDAR
+              </span>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                <button
+                  onClick={handlePrevMonth}
+                  className="tech-btn"
+                  style={{ padding: '2px 6px', fontSize: '10px' }}
+                  title="Previous Month"
                 >
+                  <ChevronLeft size={12} />
+                </button>
+                <span style={{ fontFamily: 'var(--font-display)', fontSize: '11px', fontWeight: 700, minWidth: '90px', textAlign: 'center' }}>
+                  {currentCalendarDate.toLocaleDateString('en-US', { month: 'short', year: 'numeric' }).toUpperCase()}
+                </span>
+                <button
+                  onClick={handleNextMonth}
+                  className="tech-btn"
+                  style={{ padding: '2px 6px', fontSize: '10px' }}
+                  title="Next Month"
+                >
+                  <ChevronRight size={12} />
+                </button>
+              </div>
+            </div>
+
+            <div className="tech-card-body" style={{ padding: '14px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              {/* Calendar Days of Week Header */}
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: '4px', textAlign: 'center' }}>
+                {['MO', 'TU', 'WE', 'TH', 'FR', 'SA', 'SU'].map((d) => (
+                  <span key={d} style={{ fontSize: '9px', fontWeight: 800, color: 'var(--text-muted)' }}>
+                    {d}
+                  </span>
+                ))}
+              </div>
+
+              {/* Calendar Days Grid */}
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: '4px' }}>
+                {/* Empty cells before the first day */}
+                {Array.from({ length: firstDayOfWeek }).map((_, i) => (
+                  <div key={`empty-${i}`} style={{ height: '32px', opacity: 0.2 }} />
+                ))}
+
+                {/* Days of the month */}
+                {Array.from({ length: daysInMonth }).map((_, i) => {
+                  const dayNum = i + 1;
+                  const isToday =
+                    new Date().getDate() === dayNum &&
+                    new Date().getMonth() === month &&
+                    new Date().getFullYear() === year;
+
+                  const isSelected = selectedDay === dayNum;
+                  const hasEvent = monthMaintenanceDays.has(dayNum);
+                  const reminders = getRemindersForDate(dayNum);
+                  const hasCritical = reminders.some(r => r.type === 'CRITICAL');
+
+                  return (
+                    <button
+                      key={`day-${dayNum}`}
+                      onClick={() => setSelectedDay(dayNum)}
+                      style={{
+                        height: '32px',
+                        border: isSelected
+                          ? '1.5px solid var(--border-strong)'
+                          : isToday
+                          ? '1px dashed var(--accent-blue)'
+                          : '1px solid var(--border-light)',
+                        backgroundColor: isSelected
+                          ? 'var(--bg-dark)'
+                          : isToday
+                          ? 'rgba(37, 99, 235, 0.08)'
+                          : 'var(--bg-surface)',
+                        color: isSelected
+                          ? 'var(--text-inverted)'
+                          : 'var(--text-primary)',
+                        fontFamily: 'var(--font-mono)',
+                        fontSize: '11px',
+                        fontWeight: isSelected || isToday || hasEvent ? 800 : 500,
+                        cursor: 'pointer',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        position: 'relative',
+                        transition: 'all 0.1s ease',
+                      }}
+                    >
+                      <span>{dayNum}</span>
+
+                      {/* Event Dot Badge */}
+                      {hasEvent && (
+                        <div
+                          style={{
+                            position: 'absolute',
+                            bottom: '3px',
+                            width: '4px',
+                            height: '4px',
+                            borderRadius: '50%',
+                            backgroundColor: hasCritical
+                              ? 'var(--accent-red)'
+                              : isSelected
+                              ? '#00ff66'
+                              : 'var(--accent-amber)',
+                          }}
+                        />
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+
+              <div className="ruler-divider" style={{ opacity: 0.4, margin: '2px 0' }} />
+
+              {/* Selected Day Reminders Box */}
+              {selectedDay !== null && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <strong style={{ fontFamily: 'var(--font-display)', fontSize: '12px' }}>
-                      {task.machineId} // {task.machineName}
-                    </strong>
-                    <span style={{ color: 'var(--accent-green)', fontWeight: 700, fontSize: '9px', border: '1px solid var(--accent-green)', padding: '1px 5px', display: 'flex', alignItems: 'center', gap: '3px' }}>
-                      <CheckCheck size={9} />
-                      RESOLVED
+                    <span style={{ fontSize: '10px', fontWeight: 800, color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                      <Bell size={11} style={{ color: 'var(--accent-amber)' }} />
+                      REMINDERS FOR {currentCalendarDate.toLocaleDateString('en-US', { month: 'short' }).toUpperCase()} {selectedDay}
+                    </span>
+                    <span style={{ fontSize: '9px', color: 'var(--text-secondary)' }}>
+                      {selectedDateReminders.length} event{selectedDateReminders.length === 1 ? '' : 's'}
                     </span>
                   </div>
 
-                  <div className="ruler-divider" style={{ opacity: 0.3, margin: '2px 0' }} />
-
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '3px', fontSize: '10.5px' }}>
-                    <div><span style={{ color: 'var(--text-muted)' }}>Technician:</span> <strong>{task.technician}</strong></div>
-                    <div><span style={{ color: 'var(--text-muted)' }}>Parts Replaced:</span> {task.partsRequired.join(', ')}</div>
-                    <div><span style={{ color: 'var(--text-muted)' }}>Channel Dispatched:</span> <span style={{ color: CHANNEL_CONFIG[task.communicationChannel?.type || 'EMAIL'].color, fontWeight: 700 }}>{task.communicationChannel?.label}</span></div>
-                    <div><span style={{ color: 'var(--text-muted)' }}>Ticket ID:</span> <span style={{ opacity: 0.8, fontFamily: 'var(--font-mono)' }}>{task.id}</span></div>
-                  </div>
-
-                  {/* Step resolution pill list */}
-                  <div style={{ marginTop: '4px', borderTop: '1px dashed var(--border-light)', paddingTop: '6px' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '9.5px', color: 'var(--accent-green)', fontWeight: 700 }}>
-                      <CheckCheck size={11} />
-                      <span>All 7 service stages verified &amp; signed off</span>
+                  {selectedDateReminders.length === 0 ? (
+                    <div style={{ fontSize: '10.5px', color: 'var(--text-muted)', fontStyle: 'italic', padding: '6px 0' }}>
+                      No scheduled maintenance or calibration windows on this date.
                     </div>
-                    <div style={{ display: 'flex', gap: '4px', flexWrap: 'wrap', marginTop: '5px' }}>
-                      {task.progressSteps?.map((step, i) => (
-                        <span
-                          key={i}
-                          title={step.label}
-                          style={{
-                            fontSize: '8px',
-                            padding: '1px 4px',
-                            backgroundColor: 'rgba(22, 163, 74, 0.08)',
-                            border: '1px solid rgba(22, 163, 74, 0.25)',
-                            color: 'var(--accent-green)',
-                            fontWeight: 600,
-                          }}
-                        >
-                          ✓ Step {i + 1}
-                        </span>
-                      ))}
-                    </div>
+                  ) : (
+                    selectedDateReminders.map((rem, idx) => (
+                      <div
+                        key={idx}
+                        style={{
+                          border: `1px solid ${rem.type === 'CRITICAL' ? 'var(--accent-red)' : 'var(--accent-amber)'}`,
+                          backgroundColor: rem.type === 'CRITICAL' ? 'rgba(220, 38, 38, 0.06)' : 'rgba(217, 119, 6, 0.06)',
+                          padding: '8px 10px',
+                          display: 'flex',
+                          flexDirection: 'column',
+                          gap: '3px',
+                          borderLeft: `3px solid ${rem.type === 'CRITICAL' ? 'var(--accent-red)' : 'var(--accent-amber)'}`,
+                        }}
+                      >
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                          <span style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: '11px' }}>
+                            {rem.machineId} • {rem.machineName}
+                          </span>
+                          <span
+                            style={{
+                              fontSize: '8px',
+                              fontWeight: 800,
+                              color: rem.type === 'CRITICAL' ? 'var(--accent-red)' : 'var(--accent-amber)',
+                              border: `1px solid ${rem.type === 'CRITICAL' ? 'var(--accent-red)' : 'var(--accent-amber)'}`,
+                              padding: '0 4px',
+                            }}
+                          >
+                            {rem.urgencyText}
+                          </span>
+                        </div>
+                        <div style={{ fontSize: '10px', color: 'var(--text-secondary)' }}>
+                          {rem.title}
+                        </div>
+                        <div style={{ fontSize: '9.5px', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                          <Wrench size={10} /> Spares: <strong>{rem.parts.join(', ')}</strong>
+                        </div>
+                      </div>
+                    ))
+                  )}
+                </div>
+              )}
+
+              {/* Next Upcoming Reminder Ticker */}
+              {allUpcomingReminders.length > 0 && (
+                <div
+                  style={{
+                    backgroundColor: 'var(--bg-surface)',
+                    border: '1px solid var(--border-light)',
+                    padding: '8px 10px',
+                    fontSize: '10px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                  }}
+                >
+                  <Clock size={12} style={{ color: 'var(--accent-blue)', flexShrink: 0 }} />
+                  <div style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                    <span style={{ fontWeight: 800, color: 'var(--text-primary)' }}>NEXT SERVICE: </span>
+                    <span style={{ color: 'var(--text-secondary)' }}>
+                      {allUpcomingReminders[0].dateStr} — {allUpcomingReminders[0].machineId} ({allUpcomingReminders[0].urgencyText})
+                    </span>
                   </div>
                 </div>
-              ))
-            )}
+              )}
+            </div>
           </div>
+
+          {/* 2. Service History Archive Card */}
+          <div className="tech-card" style={{ display: 'flex', flexDirection: 'column' }}>
+            <div className="corner-tl">+</div>
+            <div className="corner-tr">+</div>
+            <div className="corner-bl">+</div>
+            <div className="corner-br">+</div>
+
+            <div className="tech-card-header">
+              <span className="tech-card-title">
+                <History size={14} />
+                SERVICE HISTORY ARCHIVE
+              </span>
+              <span style={{
+                fontSize: '9.5px',
+                fontWeight: 700,
+                color: 'var(--accent-green)',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '4px',
+              }}>
+                <CheckCheck size={12} />
+                {completedTasks.length} RESOLVED
+              </span>
+            </div>
+
+            <div
+              className="tech-card-body"
+              style={{
+                padding: '12px 14px',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '12px',
+                maxHeight: '420px',
+                overflowY: 'auto',
+              }}
+            >
+              {completedTasks.length === 0 ? (
+                <div style={{ color: 'var(--text-secondary)', fontStyle: 'italic', fontSize: '11px', textAlign: 'center', padding: '24px' }}>
+                  No maintenance tasks completed in this shift yet.
+                </div>
+              ) : (
+                completedTasks.map((task) => (
+                  <div
+                    key={task.id}
+                    style={{
+                      border: '1px solid var(--border-light)',
+                      borderLeft: '3px solid var(--accent-green)',
+                      backgroundColor: 'var(--bg-surface)',
+                      padding: '12px',
+                      fontSize: '11px',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: '6px',
+                    }}
+                  >
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <strong style={{ fontFamily: 'var(--font-display)', fontSize: '12px' }}>
+                        {task.machineId} // {task.machineName}
+                      </strong>
+                      <span style={{ color: 'var(--accent-green)', fontWeight: 700, fontSize: '9px', border: '1px solid var(--accent-green)', padding: '1px 5px', display: 'flex', alignItems: 'center', gap: '3px' }}>
+                        <CheckCheck size={9} />
+                        RESOLVED
+                      </span>
+                    </div>
+
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '3px', fontSize: '10.5px' }}>
+                      <div><span style={{ color: 'var(--text-muted)' }}>Technician:</span> <strong>{task.technician}</strong></div>
+                      <div><span style={{ color: 'var(--text-muted)' }}>Parts Replaced:</span> {task.partsRequired.join(', ')}</div>
+                      <div><span style={{ color: 'var(--text-muted)' }}>Channel Dispatched:</span> <span style={{ color: CHANNEL_CONFIG[task.communicationChannel?.type || 'EMAIL'].color, fontWeight: 700 }}>{task.communicationChannel?.label}</span></div>
+                      <div><span style={{ color: 'var(--text-muted)' }}>Ticket ID:</span> <span style={{ opacity: 0.8, fontFamily: 'var(--font-mono)' }}>{task.id}</span></div>
+                    </div>
+
+                    {/* Step resolution pill list */}
+                    <div style={{ marginTop: '4px', borderTop: '1px dashed var(--border-light)', paddingTop: '6px' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '9.5px', color: 'var(--accent-green)', fontWeight: 700 }}>
+                        <CheckCheck size={11} />
+                        <span>All 7 service stages verified &amp; signed off</span>
+                      </div>
+                      <div style={{ display: 'flex', gap: '4px', flexWrap: 'wrap', marginTop: '5px' }}>
+                        {task.progressSteps?.map((step, i) => (
+                          <span
+                            key={i}
+                            title={step.label}
+                            style={{
+                              fontSize: '8px',
+                              padding: '1px 4px',
+                              backgroundColor: 'rgba(22, 163, 74, 0.08)',
+                              border: '1px solid rgba(22, 163, 74, 0.25)',
+                              color: 'var(--accent-green)',
+                              fontWeight: 600,
+                            }}
+                          >
+                            ✓ Step {i + 1}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
+
         </div>
       </div>
 
