@@ -262,7 +262,6 @@ export const MachineDetail: React.FC<MachineDetailProps> = ({
           <AnomalySummary
             anomalies={machine.anomalies}
             machine={machine}
-            onAcknowledge={(anoId) => console.log('Acknowledge anomaly:', anoId)}
           />
         )}
 
