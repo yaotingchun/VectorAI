@@ -180,7 +180,7 @@ export const NotificationPanel: React.FC<NotificationPanelProps> = ({ onNavigate
   };
 
   return (
-    <div ref={panelRef} style={{ position: 'relative' }}>
+    <div ref={panelRef} style={{ position: 'relative', zIndex: 10002 }}>
       {/* Bell Button */}
       <button
         id="notification-bell-btn"
@@ -244,10 +244,10 @@ export const NotificationPanel: React.FC<NotificationPanelProps> = ({ onNavigate
             maxHeight: '540px',
             backgroundColor: 'var(--bg-card)',
             border: '1.5px solid var(--border-strong)',
-            boxShadow: '4px 4px 0px rgba(0,0,0,0.12)',
+            boxShadow: '6px 6px 0px rgba(0,0,0,0.2), 0 16px 40px rgba(0,0,0,0.2)',
             display: 'flex',
             flexDirection: 'column',
-            zIndex: 9999,
+            zIndex: 10005,
             animation: 'notif-panel-in 0.18s cubic-bezier(0.4,0,0.2,1)',
           }}
         >

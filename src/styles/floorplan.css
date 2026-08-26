@@ -1090,7 +1090,7 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  z-index: 2000;
+  z-index: 9990;
   display: flex;
   align-items: center;
   gap: 14px;
