@@ -1,14 +1,17 @@
-import React from 'react';
-import { ToolMode } from '../../../types/floorPlan';
+import React, { useState } from 'react';
+import { ToolMode, LayerVisibilityState } from '../../../types/floorPlan';
 import {
   MousePointer,
   Hand,
   Focus,
   Maximize2,
-  Link2,
-  Type,
   ZoomIn,
   ZoomOut,
+  Layers,
+  Activity,
+  Zap,
+  Wind,
+  Truck,
 } from 'lucide-react';
 
 interface FloorCanvasToolbarProps {
@@ -19,6 +22,8 @@ interface FloorCanvasToolbarProps {
   onZoomOut: () => void;
   onResetView: () => void;
   scale?: number;
+  layers?: Partial<LayerVisibilityState>;
+  onToggleLayer?: (layerKey: keyof LayerVisibilityState) => void;
 }
 
 export const FloorCanvasToolbar: React.FC<FloorCanvasToolbarProps> = ({
@@ -29,15 +34,20 @@ export const FloorCanvasToolbar: React.FC<FloorCanvasToolbarProps> = ({
   onZoomOut,
   onResetView,
   scale = 1,
+  layers,
+  onToggleLayer,
 }) => {
+  const [isLayerMenuOpen, setIsLayerMenuOpen] = useState(false);
+
   return (
     <div className="floor-canvas-floating-toolbar" role="toolbar" aria-label="Floor Plan Canvas Tools">
+      {/* 1. Selection & Pan Tools */}
       <button
         onClick={() => onSelectTool('select')}
         className={`canvas-tool-btn ${activeTool === 'select' ? 'active' : ''}`}
         title="Select & Move (V)"
       >
-        <MousePointer size={16} />
+        <MousePointer size={15} />
       </button>
 
       <button
@@ -45,17 +55,18 @@ export const FloorCanvasToolbar: React.FC<FloorCanvasToolbarProps> = ({
         className={`canvas-tool-btn ${activeTool === 'pan' ? 'active' : ''}`}
         title="Pan Canvas (H / Spacebar)"
       >
-        <Hand size={16} />
+        <Hand size={15} />
       </button>
 
       <div className="canvas-tool-divider" />
 
+      {/* 2. Fit & Zoom */}
       <button
         onClick={onFitView}
         className="canvas-tool-btn"
         title="Fit Floor Plan to Screen (F)"
       >
-        <Focus size={16} />
+        <Focus size={15} />
       </button>
 
       <button
@@ -63,35 +74,71 @@ export const FloorCanvasToolbar: React.FC<FloorCanvasToolbarProps> = ({
         className="canvas-tool-btn"
         title="Reset 100% Zoom (0)"
       >
-        <Maximize2 size={16} />
+        <Maximize2 size={15} />
       </button>
 
       <div className="canvas-tool-divider" />
 
-      <button
-        onClick={() => onSelectTool('link')}
-        className={`canvas-tool-btn ${activeTool === 'link' ? 'active' : ''}`}
-        title="Connect Nodes / Draw Line (L)"
-      >
-        <Link2 size={16} />
-      </button>
+      {/* 3. Layer Visibility Overlays Menu */}
+      {layers && onToggleLayer && (
+        <div style={{ position: 'relative' }}>
+          <button
+            onClick={() => setIsLayerMenuOpen(!isLayerMenuOpen)}
+            className={`canvas-tool-btn ${isLayerMenuOpen || layers.showUtilities || layers.showOHT ? 'active' : ''}`}
+            title="Cleanroom Engineering Overlays (OHT, Sub-Fab Utilities, Zones)"
+          >
+            <Layers size={15} />
+          </button>
 
-      <button
-        onClick={() => onSelectTool('text')}
-        className={`canvas-tool-btn ${activeTool === 'text' ? 'active' : ''}`}
-        title="Add Text / Area Annotation (T)"
-      >
-        <Type size={16} />
-      </button>
+          {isLayerMenuOpen && (
+            <div className="canvas-layers-dropdown-menu">
+              <div className="layers-dropdown-title">// CLEANROOM OVERLAYS</div>
+              
+              <button
+                onClick={() => onToggleLayer('showZones')}
+                className={`layer-toggle-menu-item ${layers.showZones !== false ? 'active' : ''}`}
+              >
+                <Wind size={13} />
+                <span>Production Zones</span>
+              </button>
+
+              <button
+                onClick={() => onToggleLayer('showOHT')}
+                className={`layer-toggle-menu-item ${layers.showOHT ? 'active' : ''}`}
+              >
+                <Truck size={13} />
+                <span>OHT AMHS Rail Carriers</span>
+              </button>
+
+              <button
+                onClick={() => onToggleLayer('showUtilities')}
+                className={`layer-toggle-menu-item ${layers.showUtilities ? 'active' : ''}`}
+              >
+                <Zap size={13} />
+                <span>Sub-Fab Process Piping</span>
+              </button>
+
+              <button
+                onClick={() => onToggleLayer('showAGV')}
+                className={`layer-toggle-menu-item ${layers.showAGV !== false ? 'active' : ''}`}
+              >
+                <Activity size={13} />
+                <span>AGV/AMR Guide Lanes</span>
+              </button>
+            </div>
+          )}
+        </div>
+      )}
 
       <div className="canvas-tool-divider" />
 
+      {/* 4. Zoom Controls */}
       <button
         onClick={onZoomOut}
         className="canvas-tool-btn"
         title="Zoom Out (-)"
       >
-        <ZoomOut size={15} />
+        <ZoomOut size={14} />
       </button>
 
       <span className="canvas-zoom-percentage">
@@ -103,8 +150,10 @@ export const FloorCanvasToolbar: React.FC<FloorCanvasToolbarProps> = ({
         className="canvas-tool-btn"
         title="Zoom In (+)"
       >
-        <ZoomIn size={15} />
+        <ZoomIn size={14} />
       </button>
     </div>
   );
 };
+
+export default FloorCanvasToolbar;

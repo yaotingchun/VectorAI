@@ -145,10 +145,11 @@ export const FloorPlanConfigStudio: React.FC<FloorPlanConfigStudioProps> = ({
       name: `${item.name} ${newId}`,
       type: item.type as FloorAssetType,
       area: 'Backend Assembly',
+      cleanroomClass: item.cleanroomClass || 'ISO 6 (Class 1,000)',
       x,
       y,
-      width: 44,
-      height: 48,
+      width: item.type === 'stocker' ? 64 : item.type === 'molding-press' ? 60 : 54,
+      height: item.type === 'stocker' ? 60 : item.type === 'molding-press' ? 58 : 52,
       footprint: item.defaultFootprint,
       power: item.defaultPower,
       utility: item.defaultUtility,
@@ -168,16 +169,17 @@ export const FloorPlanConfigStudio: React.FC<FloorPlanConfigStudioProps> = ({
       connections: {
         input: 'Direct Staging',
         output: 'Process Queue',
-        conveyor: 'CV-01',
+        conveyor: 'SMEMA 9851',
         agvAccess: true,
+        ohtAccess: true,
       },
-      customNotes: 'Empty Machine Instance // Awaiting NFC Sensor Kit pairing',
+      customNotes: 'Empty Cleanroom Machine Instance // Awaiting NFC Sensor Kit pairing',
     };
 
     setMachines((prev) => [...prev, newMachine]);
     setSelectedAssetId(newId);
     setActiveTab('asset-props');
-    showNotice(`Placed empty instance ${newMachine.id} (Ready for NFC Sensor Kit scan)`);
+    showNotice(`Placed cleanroom instance ${newMachine.id} (Ready for NFC Sensor Kit scan)`);
   };
 
   // Sensor Kit Binding Handler (from NFC Scanner)

@@ -1,3 +1,4 @@
+import React from 'react';
 import { FloorMachineAsset, RoomZone } from '../../../types/floorPlan';
 import { ChevronDown } from 'lucide-react';
 
@@ -50,21 +51,21 @@ export const FloorBottomBar: React.FC<FloorBottomBarProps> = ({
   };
 
   return (
-    <footer className="floor-bottom-bar" aria-label="Floor Controls & Status">
-      {/* 1. Left Selectors */}
+    <footer className="floor-bottom-bar" aria-label="Floor Controls & Cleanroom Status">
+      {/* 1. Left Cleanroom Selectors & Environmental Microclimate */}
       <div className="bottom-bar-left">
         {/* Floor Dropdown */}
         <div className="bottom-select-group">
-          <span className="bottom-select-label">FLOOR</span>
+          <span className="bottom-select-label">LEVEL</span>
           <div className="bottom-custom-select">
             <select
               value={floor}
               onChange={(e) => onFloorChange(Number(e.target.value))}
               className="bottom-native-select"
             >
-              <option value={1}>1</option>
-              <option value={2}>2</option>
-              <option value={3}>3</option>
+              <option value={1}>L1 Cleanroom Fab</option>
+              <option value={2}>L2 Sub-Fab Utility</option>
+              <option value={3}>L3 AMHS Plenum</option>
             </select>
             <ChevronDown size={13} className="bottom-select-arrow" />
           </div>
@@ -72,17 +73,20 @@ export const FloorBottomBar: React.FC<FloorBottomBarProps> = ({
 
         {/* Area Dropdown */}
         <div className="bottom-select-group">
-          <span className="bottom-select-label">AREA</span>
+          <span className="bottom-select-label">BAY</span>
           <div className="bottom-custom-select area-select">
             <select
               value={area}
               onChange={(e) => onAreaChange(e.target.value)}
               className="bottom-native-select"
             >
-              <option value="Backend Assembly">Backend Assembly</option>
-              <option value="Front-End Fab">Front-End Fab</option>
-              <option value="Packaging & Test">Packaging & Test</option>
-              <option value="SMT Line 01">SMT Line 01</option>
+              <option value="Backend Assembly">Full Packaging Cleanroom</option>
+              <option value="Bay 1: Wafer Dicing">Bay 1: Wafer Dicing</option>
+              <option value="Bay 2: Die Attach">Bay 2: Die Attach</option>
+              <option value="Bay 3: Wire Bonding">Bay 3: Wire Bonding</option>
+              <option value="Bay 4: Molding Chase">Bay 4: Molding Chase</option>
+              <option value="Bay 5: 3D Metrology">Bay 5: 3D Metrology</option>
+              <option value="Bay 6: Tape & Reel">Bay 6: Tape & Reel</option>
             </select>
             <ChevronDown size={13} className="bottom-select-arrow" />
           </div>
@@ -130,7 +134,7 @@ export const FloorBottomBar: React.FC<FloorBottomBarProps> = ({
                   width={m.width}
                   height={m.height}
                   fill={color}
-                  rx="4"
+                  rx="3"
                 />
               );
             })}
@@ -155,7 +159,7 @@ export const FloorBottomBar: React.FC<FloorBottomBarProps> = ({
         <div className="bottom-legend-group">
           <div className="legend-item">
             <span className="legend-dot green" />
-            <span className="legend-text">Healthy</span>
+            <span className="legend-text">Operational</span>
           </div>
 
           <div className="legend-item">
@@ -165,7 +169,7 @@ export const FloorBottomBar: React.FC<FloorBottomBarProps> = ({
 
           <div className="legend-item">
             <span className="legend-dot red" />
-            <span className="legend-text">Critical</span>
+            <span className="legend-text">Alarm</span>
           </div>
 
           <div className="legend-item">
@@ -178,7 +182,7 @@ export const FloorBottomBar: React.FC<FloorBottomBarProps> = ({
 
         {/* Snap to Grid Toggle */}
         <div className="bottom-toggle-group">
-          <span className="toggle-label">Snap to Grid</span>
+          <span className="toggle-label">Snap</span>
           <button
             onClick={onToggleSnapToGrid}
             className={`toggle-switch-btn ${snapToGrid ? 'on' : 'off'}`}
@@ -194,7 +198,7 @@ export const FloorBottomBar: React.FC<FloorBottomBarProps> = ({
           <button
             onClick={onToggleGridVisible}
             className={`toggle-switch-btn ${gridVisible ? 'on' : 'off'}`}
-            title="Toggle background CAD blueprint grid"
+            title="Toggle background cleanroom ESD grid"
           >
             <span className="toggle-knob" />
           </button>
@@ -202,7 +206,7 @@ export const FloorBottomBar: React.FC<FloorBottomBarProps> = ({
 
         {/* Grid Size Selector */}
         <div className="bottom-select-group">
-          <span className="bottom-select-label" style={{ fontSize: '10px' }}>Grid Size</span>
+          <span className="bottom-select-label" style={{ fontSize: '10px' }}>Grid</span>
           <div className="bottom-custom-select grid-size-select">
             <select
               value={gridSize}
@@ -220,3 +224,5 @@ export const FloorBottomBar: React.FC<FloorBottomBarProps> = ({
     </footer>
   );
 };
+
+export default FloorBottomBar;

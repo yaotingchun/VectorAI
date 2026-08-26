@@ -2664,3 +2664,243 @@
   cursor: not-allowed;
 }
 
+/* ==========================================================================
+   SEMICONDUCTOR CLEANROOM INDUSTRIAL STYLING & ANIMATIONS
+   ========================================================================== */
+
+/* Andon Signal Light Tower Glow */
+.andon-glow-pulse {
+  animation: andonPulse 1.4s ease-in-out infinite alternate;
+}
+
+@keyframes andonPulse {
+  0% {
+    r: 3px;
+    fill-opacity: 0.3;
+  }
+  100% {
+    r: 5px;
+    fill-opacity: 0.85;
+  }
+}
+
+/* RF Plasma Ionization Glow */
+.plasma-glow-pulse {
+  animation: plasmaIonize 2s ease-in-out infinite alternate;
+}
+
+@keyframes plasmaIonize {
+  0% {
+    fill-opacity: 0.5;
+    transform: scale(0.95);
+  }
+  100% {
+    fill-opacity: 0.9;
+    transform: scale(1.05);
+  }
+}
+
+/* Air Shower High-Velocity Nozzle Stream */
+.air-shower-pulse {
+  animation: airStreamFlow 0.8s linear infinite;
+}
+
+@keyframes airStreamFlow {
+  0% {
+    stroke-dashoffset: 0;
+  }
+  100% {
+    stroke-dashoffset: -12;
+  }
+}
+
+/* Sub-Fab Process Piping Dash Motion */
+.pipe-flow-dash {
+  animation: pipeDashMotion 1.5s linear infinite;
+}
+
+@keyframes pipeDashMotion {
+  0% {
+    stroke-dashoffset: 0;
+  }
+  100% {
+    stroke-dashoffset: -24;
+  }
+}
+
+/* Laser Dot Pulse */
+.laser-dot-pulse {
+  animation: laserPulse 1s ease-in-out infinite alternate;
+}
+
+@keyframes laserPulse {
+  0% {
+    r: 2px;
+    fill: #EF4444;
+  }
+  100% {
+    r: 4px;
+    fill: #FDE047;
+  }
+}
+
+/* Cleanroom Climate Bar in Bottom Bar */
+.cleanroom-climate-strip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.climate-item {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  background-color: var(--bg-card, #FFFFFF);
+  border: 1px solid var(--border-strong, #121315);
+  border-radius: 2px;
+  padding: 2px 6px;
+  font-family: var(--font-mono, monospace);
+  font-size: 10px;
+  font-weight: 800;
+  color: var(--text-primary, #121315);
+  box-shadow: 1px 1px 0px var(--border-strong);
+}
+
+.climate-icon {
+  color: #0284C7;
+}
+
+.cleanroom-class-tag {
+  font-family: var(--font-mono, monospace);
+  font-size: 9px;
+  font-weight: 800;
+  background-color: #E0F2FE;
+  color: #0369A1;
+  border: 1px solid #0284C7;
+  padding: 1px 5px;
+  border-radius: 2px;
+}
+
+/* Active Production Job Card */
+.inspector-job-card {
+  background-color: var(--bg-card, #FFFFFF);
+  border: 1.5px solid var(--border-strong, #121315);
+  border-radius: 2px;
+  padding: 8px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  box-shadow: 2px 2px 0px var(--border-strong);
+}
+
+.job-card-top-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.job-lot-id {
+  font-family: var(--font-mono, monospace);
+  font-size: 11px;
+  font-weight: 800;
+  color: #0284C7;
+}
+
+.job-progress-badge {
+  font-family: var(--font-mono, monospace);
+  font-size: 9px;
+  font-weight: 800;
+  background-color: #DCFCE7;
+  color: #166534;
+  padding: 1px 5px;
+  border-radius: 2px;
+  border: 1px solid #16A34A;
+}
+
+.job-product-name {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-primary, #121315);
+}
+
+.job-progress-bar-bg {
+  width: 100%;
+  height: 6px;
+  background-color: #E2E8F0;
+  border-radius: 3px;
+  overflow: hidden;
+  border: 1px solid #CBD5E1;
+}
+
+.job-progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #0284C7, #10B981);
+  transition: width 0.3s ease;
+}
+
+.job-meta-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 10px;
+  color: var(--text-secondary, #374151);
+  font-family: var(--font-mono, monospace);
+}
+
+/* Floating Layer Visibility Menu in Canvas */
+.canvas-layers-dropdown-menu {
+  position: absolute;
+  top: 36px;
+  left: 0;
+  width: 185px;
+  background-color: var(--bg-surface, #FAF9F5);
+  border: 1.5px solid var(--border-strong, #121315);
+  border-radius: 2px;
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  box-shadow: 3px 3px 0px var(--border-strong, #121315);
+  z-index: 50;
+}
+
+.layers-dropdown-title {
+  font-family: var(--font-display, inherit);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  color: var(--text-muted, #6b7280);
+  padding: 2px 4px;
+  text-transform: uppercase;
+}
+
+.layer-toggle-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 6px;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 2px;
+  font-family: var(--font-mono, monospace);
+  font-size: 10.5px;
+  font-weight: 700;
+  color: var(--text-secondary, #374151);
+  cursor: pointer;
+  text-align: left;
+  transition: all var(--transition-fast);
+}
+
+.layer-toggle-menu-item:hover {
+  background-color: var(--bg-muted, #EBE9DF);
+  border-color: var(--border-strong);
+  color: var(--text-primary);
+}
+
+.layer-toggle-menu-item.active {
+  background-color: #E0F2FE;
+  border-color: #0284C7;
+  color: #0369A1;
+}
+
+

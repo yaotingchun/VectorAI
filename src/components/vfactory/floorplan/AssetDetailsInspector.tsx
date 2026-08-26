@@ -12,6 +12,9 @@ import {
   X,
   Cpu,
   Radio,
+  Layers,
+  Gauge,
+  Boxes,
 } from 'lucide-react';
 
 interface AssetDetailsInspectorProps {
@@ -43,7 +46,7 @@ export const AssetDetailsInspector: React.FC<AssetDetailsInspectorProps> = ({
           </div>
           <div className="inspector-empty-title">ASSET DETAILS</div>
           <p className="inspector-empty-desc">
-            Click any equipment or node on the blueprint floor plan to inspect telemetry, connections, and operating properties.
+            Click any semiconductor machine or cleanroom node on the blueprint floor plan to inspect telemetry, cleanroom class, process jobs, and utilities.
           </p>
         </div>
       </aside>
@@ -56,7 +59,7 @@ export const AssetDetailsInspector: React.FC<AssetDetailsInspectorProps> = ({
         return (
           <span className="status-pill status-healthy">
             <span className="status-dot green" />
-            <span>Healthy</span>
+            <span>Operational</span>
           </span>
         );
       case 'warning':
@@ -70,7 +73,7 @@ export const AssetDetailsInspector: React.FC<AssetDetailsInspectorProps> = ({
         return (
           <span className="status-pill status-critical">
             <span className="status-dot red" />
-            <span>Critical</span>
+            <span>Critical Alarm</span>
           </span>
         );
       default:
@@ -105,29 +108,56 @@ export const AssetDetailsInspector: React.FC<AssetDetailsInspectorProps> = ({
           <div className="inspector-machine-title-group">
             <div className="inspector-machine-name">{selectedAsset.name}</div>
             <div className="inspector-machine-id">{selectedAsset.id}</div>
-            <div style={{ marginTop: '4px' }}>
+            <div style={{ marginTop: '4px', display: 'flex', gap: '6px', alignItems: 'center' }}>
               {getStatusBadge(selectedAsset.status)}
+              {selectedAsset.cleanroomClass && (
+                <span className="cleanroom-class-tag">{selectedAsset.cleanroomClass.split(' (')[0]}</span>
+              )}
             </div>
           </div>
         </div>
 
-        {/* SECTION 1: INFORMATION */}
+        {/* ACTIVE LOT / WAFER PRODUCTION JOB */}
+        {selectedAsset.activeJob && (
+          <div className="inspector-section">
+            <div className="inspector-section-header">
+              <Boxes size={11} />
+              <span>ACTIVE WAFER / LEADFRAME JOB</span>
+            </div>
+
+            <div className="inspector-job-card">
+              <div className="job-card-top-row">
+                <span className="job-lot-id">{selectedAsset.activeJob.lotId}</span>
+                <span className="job-progress-badge">{selectedAsset.activeJob.progressPercentage}% COMPLETE</span>
+              </div>
+              <div className="job-product-name">{selectedAsset.activeJob.productType}</div>
+              
+              {/* Progress Bar */}
+              <div className="job-progress-bar-bg">
+                <div
+                  className="job-progress-bar-fill"
+                  style={{ width: `${selectedAsset.activeJob.progressPercentage}%` }}
+                />
+              </div>
+
+              <div className="job-meta-row">
+                <span>Units: <b>{selectedAsset.activeJob.completedUnits}</b> / {selectedAsset.activeJob.batchSize}</span>
+                <span>Est: <b>{selectedAsset.activeJob.estimatedCompletion}</b></span>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* SECTION 1: SPECIFICATIONS & CLEANROOM ENVIRONMENT */}
         <div className="inspector-section">
-          <div className="inspector-section-header">INFORMATION</div>
+          <div className="inspector-section-header">
+            <Layers size={11} />
+            <span>EQUIPMENT SPECIFICATIONS</span>
+          </div>
 
           <div className="inspector-info-list">
             <div className="inspector-info-row">
-              <span className="inspector-info-label">Type</span>
-              <span className="inspector-info-value">{selectedAsset.code === 'WB' ? 'Wire Bonding' : selectedAsset.name.split(' 0')[0]}</span>
-            </div>
-
-            <div className="inspector-info-row">
-              <span className="inspector-info-label">ID</span>
-              <span className="inspector-info-value">{selectedAsset.id}</span>
-            </div>
-
-            <div className="inspector-info-row">
-              <span className="inspector-info-label">Area</span>
+              <span className="inspector-info-label">Bay Zone</span>
               <span className="inspector-info-value">{selectedAsset.area}</span>
             </div>
 
@@ -137,41 +167,69 @@ export const AssetDetailsInspector: React.FC<AssetDetailsInspectorProps> = ({
             </div>
 
             <div className="inspector-info-row">
-              <span className="inspector-info-label">Power</span>
+              <span className="inspector-info-label">Power Rating</span>
               <span className="inspector-info-value">{selectedAsset.power}</span>
             </div>
 
             <div className="inspector-info-row">
-              <span className="inspector-info-label">Utility</span>
-              <span className="inspector-info-value">{selectedAsset.utility}</span>
+              <span className="inspector-info-label">Utility Hookups</span>
+              <span className="inspector-info-value" style={{ fontSize: '9.5px' }}>{selectedAsset.utility}</span>
             </div>
 
             <div className="inspector-info-row">
-              <span className="inspector-info-label">Status</span>
-              <span className="inspector-info-value">
-                <span style={{
-                  color: selectedAsset.status === 'healthy' ? '#16A34A' : selectedAsset.status === 'warning' ? '#D97706' : '#DC2626',
-                  fontWeight: 700,
-                  textTransform: 'capitalize'
-                }}>
-                  {selectedAsset.status}
-                </span>
-              </span>
-            </div>
-
-            <div className="inspector-info-row">
-              <span className="inspector-info-label">OEE</span>
-              <span className="inspector-info-value" style={{ fontWeight: 800 }}>
+              <span className="inspector-info-label">Overall OEE</span>
+              <span className="inspector-info-value" style={{ fontWeight: 800, color: selectedAsset.oee >= 90 ? '#16A34A' : '#D97706' }}>
                 {selectedAsset.oee.toFixed(1)}%
               </span>
             </div>
           </div>
         </div>
 
-        {/* SECTION 2: SENSOR REGISTRY & NFC TAG BINDING */}
+        {/* SECTION 2: LIVE TELEMETRY STREAM (OPC-UA / MQTT) */}
         <div className="inspector-section">
           <div className="inspector-section-header">
-            <span>SENSOR REGISTRY & HARDWARE BINDING</span>
+            <Gauge size={11} />
+            <span>REAL-TIME SENSOR TELEMETRY (OPC-UA)</span>
+          </div>
+
+          <div className="inspector-telemetry-mini-grid">
+            <div className="telemetry-box">
+              <span className="telemetry-box-label">
+                <Thermometer size={11} /> Temp
+              </span>
+              <span className="telemetry-box-val">{selectedAsset.telemetry.temperature.toFixed(1)}°C</span>
+            </div>
+
+            <div className="telemetry-box">
+              <span className="telemetry-box-label">
+                <Activity size={11} /> Vibration
+              </span>
+              <span className="telemetry-box-val">{selectedAsset.telemetry.vibration.toFixed(2)} mm/s</span>
+            </div>
+
+            <div className="telemetry-box">
+              <span className="telemetry-box-label">
+                <Zap size={11} /> Health Score
+              </span>
+              <span className="telemetry-box-val" style={{ color: selectedAsset.telemetry.healthScore > 90 ? '#16A34A' : '#D97706' }}>
+                {selectedAsset.telemetry.healthScore}/100
+              </span>
+            </div>
+
+            <div className="telemetry-box">
+              <span className="telemetry-box-label">
+                <Clock size={11} /> Remaining Life
+              </span>
+              <span className="telemetry-box-val">{selectedAsset.telemetry.rulHours} hrs</span>
+            </div>
+          </div>
+        </div>
+
+        {/* SECTION 3: SENSOR REGISTRY & NFC TAG BINDING */}
+        <div className="inspector-section">
+          <div className="inspector-section-header">
+            <Radio size={11} />
+            <span>HARDWARE NFC SENSOR KIT</span>
           </div>
 
           {selectedAsset.sensorKit ? (
@@ -203,10 +261,10 @@ export const AssetDetailsInspector: React.FC<AssetDetailsInspectorProps> = ({
               <button
                 onClick={() => onOpenSensorProvisioning?.(selectedAsset)}
                 className="sensor-kit-rebind-btn"
-                title="Scan another NFC kit or add extra sensors"
+                title="Scan another NFC kit or calibrate sensors"
               >
                 <Radio size={12} />
-                <span>+ ADD SENSOR / REPAIR NFC KIT</span>
+                <span>+ SCAN / REBIND SENSORS</span>
               </button>
             </div>
           ) : (
@@ -229,71 +287,41 @@ export const AssetDetailsInspector: React.FC<AssetDetailsInspectorProps> = ({
           )}
         </div>
 
-        {/* SECTION 3: REAL-TIME TELEMETRY (OPC-UA) */}
+        {/* SECTION 4: SMEMA & AMHS CONNECTIONS */}
         <div className="inspector-section">
-          <div className="inspector-section-header">LIVE SENSORS (OPC-UA STREAM)</div>
-
-          <div className="inspector-telemetry-mini-grid">
-            <div className="telemetry-box">
-              <span className="telemetry-box-label">
-                <Thermometer size={11} /> Temp
-              </span>
-              <span className="telemetry-box-val">{selectedAsset.telemetry.temperature.toFixed(1)}°C</span>
-            </div>
-
-            <div className="telemetry-box">
-              <span className="telemetry-box-label">
-                <Activity size={11} /> Vibration
-              </span>
-              <span className="telemetry-box-val">{selectedAsset.telemetry.vibration.toFixed(2)} mm/s</span>
-            </div>
-
-            <div className="telemetry-box">
-              <span className="telemetry-box-label">
-                <Zap size={11} /> Health
-              </span>
-              <span className="telemetry-box-val" style={{ color: selectedAsset.telemetry.healthScore > 90 ? '#16A34A' : '#D97706' }}>
-                {selectedAsset.telemetry.healthScore}/100
-              </span>
-            </div>
-
-            <div className="telemetry-box">
-              <span className="telemetry-box-label">
-                <Clock size={11} /> RUL
-              </span>
-              <span className="telemetry-box-val">{selectedAsset.telemetry.rulHours} hrs</span>
-            </div>
-          </div>
-        </div>
-
-        {/* SECTION 2: CONNECTIONS */}
-        <div className="inspector-section">
-          <div className="inspector-section-header">CONNECTIONS</div>
+          <div className="inspector-section-header">LOGISTICS & SMEMA CONNECTIONS</div>
 
           <div className="inspector-info-list">
             <div className="inspector-info-row">
-              <span className="inspector-info-label">Input</span>
+              <span className="inspector-info-label">Upstream Source</span>
               <span className="inspector-info-value">{selectedAsset.connections.input || 'Direct Staging'}</span>
             </div>
 
             <div className="inspector-info-row">
-              <span className="inspector-info-label">Output</span>
+              <span className="inspector-info-label">Downstream Queue</span>
               <span className="inspector-info-value">{selectedAsset.connections.output || 'Downstream Queue'}</span>
             </div>
 
             <div className="inspector-info-row">
-              <span className="inspector-info-label">Conveyor</span>
-              <span className="inspector-info-value">{selectedAsset.connections.conveyor || 'CV-01'}</span>
+              <span className="inspector-info-label">Conveyor Standard</span>
+              <span className="inspector-info-value">{selectedAsset.connections.conveyor || 'SMEMA 9851'}</span>
             </div>
 
             <div className="inspector-info-row">
-              <span className="inspector-info-label">AGV Access</span>
-              <span className="inspector-info-value">{selectedAsset.connections.agvAccess ? 'Yes' : 'No'}</span>
+              <span className="inspector-info-label">AMHS OHT Access</span>
+              <span className="inspector-info-value" style={{ color: '#0284C7' }}>
+                {selectedAsset.connections.ohtAccess !== false ? 'Enabled (Ceiling Spur)' : 'Manual Only'}
+              </span>
+            </div>
+
+            <div className="inspector-info-row">
+              <span className="inspector-info-label">AGV / AMR Access</span>
+              <span className="inspector-info-value">{selectedAsset.connections.agvAccess ? 'Dock Available' : 'No'}</span>
             </div>
           </div>
         </div>
 
-        {/* SECTION 3: ACTIONS */}
+        {/* SECTION 5: ACTIONS */}
         <div className="inspector-section">
           <div className="inspector-section-header">ACTIONS</div>
 
@@ -304,7 +332,7 @@ export const AssetDetailsInspector: React.FC<AssetDetailsInspectorProps> = ({
               title="Navigate to comprehensive machine diagnostics"
             >
               <ExternalLink size={14} />
-              <span>View Machine Dashboard</span>
+              <span>View Machine Diagnostics</span>
             </button>
 
             <button
@@ -313,16 +341,16 @@ export const AssetDetailsInspector: React.FC<AssetDetailsInspectorProps> = ({
               title="Edit asset metadata or notes"
             >
               <Edit3 size={14} />
-              <span>{isEditing ? 'Close Editing' : 'Edit Properties'}</span>
+              <span>{isEditing ? 'Close Editing' : 'Edit Notes & Maintenance'}</span>
             </button>
 
             {isEditing && (
               <div className="inspector-edit-panel">
-                <label className="inspector-edit-label">Custom Notes / Maintenance Tag:</label>
+                <label className="inspector-edit-label">Custom Maintenance Notes / Calibration Tag:</label>
                 <textarea
                   value={editNotes}
                   onChange={(e) => setEditNotes(e.target.value)}
-                  placeholder="Enter maintenance schedule or asset allocation note..."
+                  placeholder="Enter maintenance notes or process calibration tag..."
                   className="inspector-edit-textarea"
                 />
                 <button
@@ -346,7 +374,7 @@ export const AssetDetailsInspector: React.FC<AssetDetailsInspectorProps> = ({
             <button
               onClick={() => onRemoveAsset?.(selectedAsset.id)}
               className="inspector-action-btn danger"
-              title="Remove or unlink this asset from the layout"
+              title="Remove or unlink this asset from the cleanroom"
             >
               <Trash2 size={14} />
               <span>Remove Asset</span>
@@ -357,3 +385,5 @@ export const AssetDetailsInspector: React.FC<AssetDetailsInspectorProps> = ({
     </aside>
   );
 };
+
+export default AssetDetailsInspector;

@@ -5,6 +5,7 @@ import {
   StructureAsset,
   ConveyorJunction,
   ToolMode,
+  LayerVisibilityState,
 } from '../../../types/floorPlan';
 import {
   INITIAL_FLOOR_MACHINES,
@@ -25,7 +26,7 @@ interface FloorPlanVisualizerProps {
   onNavigateToMachine?: (machineId: string) => void;
 }
 
-const STORAGE_KEY = 'vector_vfactory_floorplan_v1';
+const STORAGE_KEY = 'vector_vfactory_cleanroom_v5';
 
 export const FloorPlanVisualizer: React.FC<FloorPlanVisualizerProps> = ({
   onNavigateToMachine,
@@ -33,13 +34,14 @@ export const FloorPlanVisualizer: React.FC<FloorPlanVisualizerProps> = ({
   // Sensor Kit Provisioning Modal State
   const [isProvisioningModalOpen, setIsProvisioningModalOpen] = useState<boolean>(false);
   const [provisioningMachine, setProvisioningMachine] = useState<FloorMachineAsset | null>(null);
-  // Load saved layout from localStorage or fallback to initial
+
+  // Load saved layout from localStorage or fallback to initial semiconductor fab layout
   const [machines, setMachines] = useState<FloorMachineAsset[]>(() => {
     try {
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved) {
         const parsed = JSON.parse(saved);
-        if (parsed.machines && Array.isArray(parsed.machines)) return parsed.machines;
+        if (parsed.machines && Array.isArray(parsed.machines) && parsed.machines.length > 0) return parsed.machines;
       }
     } catch {}
     return INITIAL_FLOOR_MACHINES;
@@ -50,7 +52,7 @@ export const FloorPlanVisualizer: React.FC<FloorPlanVisualizerProps> = ({
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved) {
         const parsed = JSON.parse(saved);
-        if (parsed.zones && Array.isArray(parsed.zones)) return parsed.zones;
+        if (parsed.zones && Array.isArray(parsed.zones) && parsed.zones.length > 0) return parsed.zones;
       }
     } catch {}
     return INITIAL_ROOM_ZONES;
@@ -78,11 +80,29 @@ export const FloorPlanVisualizer: React.FC<FloorPlanVisualizerProps> = ({
     return INITIAL_CONVEYOR_JUNCTIONS;
   });
 
+  // Cleanroom Engineering Layers Toggle State
+  const [layers, setLayers] = useState<LayerVisibilityState>({
+    showZones: true,
+    showOHT: false,
+    showAGV: true,
+    showUtilities: false,
+    showSensors: true,
+    showHeatmap: false,
+    showLeadframeFlow: true,
+  });
+
+  const handleToggleLayer = (layerKey: keyof LayerVisibilityState) => {
+    setLayers((prev) => ({
+      ...prev,
+      [layerKey]: !prev[layerKey],
+    }));
+  };
+
   // Dedicated Studio Page Mode
   const [isStudioOpen, setIsStudioOpen] = useState<boolean>(false);
 
-  // Selected machine in Live View
-  const [selectedAssetId, setSelectedAssetId] = useState<string | null>('WB-05');
+  // Selected machine in Live View (Default to Wafer Dicing Saw or Die Attach)
+  const [selectedAssetId, setSelectedAssetId] = useState<string | null>('WS-01');
   const [activeTool, setActiveTool] = useState<ToolMode>('select');
 
   // Floor & Grid Controls
@@ -189,7 +209,6 @@ export const FloorPlanVisualizer: React.FC<FloorPlanVisualizerProps> = ({
     setJunctions(config.junctions);
     setIsStudioOpen(false);
 
-    // Save to localStorage
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(config));
     } catch (e) {
@@ -211,14 +230,13 @@ export const FloorPlanVisualizer: React.FC<FloorPlanVisualizerProps> = ({
     );
   }
 
-  // Otherwise, render the Main Clean v-Factory Monitoring View (Asset Library hidden for clean view)
   return (
     <div className="vfactory-floorplan-root live-view">
       {/* Main 2-Column Live Workspace (Canvas + Inspector) */}
       <div className="floorplan-workspace-grid live-mode">
         {/* Center Column: Interactive Blueprint Canvas */}
         <div className="floorplan-canvas-column">
-          {/* Top Left Floating Canvas Toolbar */}
+          {/* Top Left Floating Canvas Toolbar with Layer Toggles */}
           <FloorCanvasToolbar
             activeTool={activeTool}
             onSelectTool={setActiveTool}
@@ -227,6 +245,8 @@ export const FloorPlanVisualizer: React.FC<FloorPlanVisualizerProps> = ({
             onZoomOut={handleZoomOut}
             onResetView={handleResetZoom}
             scale={transform.scale}
+            layers={layers}
+            onToggleLayer={handleToggleLayer}
           />
 
           {/* Top Right Configure Layout Button -> Opens Studio Page */}
@@ -234,7 +254,7 @@ export const FloorPlanVisualizer: React.FC<FloorPlanVisualizerProps> = ({
             <button
               onClick={() => setIsStudioOpen(true)}
               className="canvas-settings-btn"
-              title="Open Floor Plan Configuration Studio (Initialize layout, drag & drop assets)"
+              title="Open Floor Plan Configuration Studio (Initialize layout, drag & drop cleanroom assets)"
             >
               <Settings size={14} />
               <span>Configure Layout</span>
@@ -254,6 +274,7 @@ export const FloorPlanVisualizer: React.FC<FloorPlanVisualizerProps> = ({
             gridSize={gridSize}
             transform={transform}
             onTransformChange={setTransform}
+            layers={layers}
             isConfigMode={false}
           />
         </div>
@@ -290,13 +311,14 @@ export const FloorPlanVisualizer: React.FC<FloorPlanVisualizerProps> = ({
                   status: 'healthy' as const,
                   sensorKit: kit,
                   sensors: kit.sensors,
-                  oee: 94.8,
+                  oee: 96.4,
                   telemetry: {
-                    temperature: tempSensor ? tempSensor.currentValue : 42.4,
-                    vibration: vibSensor ? vibSensor.currentValue : 1.18,
-                    healthScore: 96,
-                    powerConsumptionKw: 3.4,
-                    rulHours: 1620,
+                    ...m.telemetry,
+                    temperature: tempSensor ? tempSensor.currentValue : 32.4,
+                    vibration: vibSensor ? vibSensor.currentValue : 0.42,
+                    healthScore: 98,
+                    powerConsumptionKw: 3.8,
+                    rulHours: 2400,
                   },
                   customNotes: `NFC Tag: ${kit.nfcTagSerial} | Kit: ${kit.kitModel} (Bound: ${new Date().toLocaleDateString()})`,
                 };
@@ -319,7 +341,7 @@ export const FloorPlanVisualizer: React.FC<FloorPlanVisualizerProps> = ({
         }}
       />
 
-      {/* Bottom Bar: Floor & Area Selectors, Minimap, Status Legend, Grid Controls */}
+      {/* Bottom Bar: Cleanroom Environment & Level Selectors, Minimap, Status Legend, Grid Controls */}
       <FloorBottomBar
         floor={floor}
         onFloorChange={setFloor}
