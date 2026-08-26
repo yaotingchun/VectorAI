@@ -136,11 +136,11 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
         <div className="dash-quick-nav-links">
           <button
             type="button"
-            onClick={() => onNavigate?.('monitoring')}
+            onClick={() => onNavigate?.('vfactory')}
             className="dash-quick-nav-btn"
-            title="Open Factory Floor Command Center"
+            title="Open Digital Twin Factory Floor Visualizer"
           >
-            <span>View Monitoring Floor</span>
+            <span>View v-Factory Floor</span>
             <ArrowRight size={12} />
           </button>
 

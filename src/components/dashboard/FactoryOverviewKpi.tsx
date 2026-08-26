@@ -9,8 +9,6 @@ import {
   TrendingUp,
   TrendingDown,
   ArrowRight,
-  ShieldCheck,
-  AlertTriangle,
 } from 'lucide-react';
 
 interface FactoryOverviewKpiProps {
@@ -36,7 +34,7 @@ export const FactoryOverviewKpi: React.FC<FactoryOverviewKpiProps> = ({
       {/* 1. FACTORY HEALTH SCORE */}
       <div
         className="kpi-card interactive"
-        onClick={() => onNavigate?.('monitoring')}
+        onClick={() => onNavigate?.('machines')}
         title="View live plant health and fleet metrics"
       >
         <span className="corner-tl">+</span>
@@ -82,7 +80,7 @@ export const FactoryOverviewKpi: React.FC<FactoryOverviewKpiProps> = ({
 
         <div className="kpi-sub-strip">
           <span>Target Index: <strong>90.0</strong></span>
-          <span className="kpi-nav-cue">Monitoring <ArrowRight size={10} /></span>
+          <span className="kpi-nav-cue">Machines <ArrowRight size={10} /></span>
         </div>
       </div>
 

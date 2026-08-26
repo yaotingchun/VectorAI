@@ -3,11 +3,7 @@ import { ProcessRiskItem } from '../../types/dashboard';
 import { TabId } from '../../types/navigation';
 import {
   Layers,
-  AlertTriangle,
   ArrowRight,
-  ShieldCheck,
-  Flame,
-  CheckCircle2,
 } from 'lucide-react';
 
 interface MachineRiskByProcessProps {
@@ -34,11 +30,11 @@ export const MachineRiskByProcess: React.FC<MachineRiskByProcessProps> = ({
 
         <button
           type="button"
-          onClick={() => onNavigate?.('monitoring')}
+          onClick={() => onNavigate?.('machines')}
           className="tech-btn"
           style={{ padding: '4px 10px', fontSize: '10px' }}
         >
-          <span>Line Monitoring</span>
+          <span>Line Equipment</span>
           <ArrowRight size={12} />
         </button>
       </div>

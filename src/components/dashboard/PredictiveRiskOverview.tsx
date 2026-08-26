@@ -6,8 +6,6 @@ import {
   AlertTriangle,
   Clock,
   ArrowRight,
-  ShieldCheck,
-  Flame,
   Calendar,
   AlertOctagon,
   CheckCircle2,

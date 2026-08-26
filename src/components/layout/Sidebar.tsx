@@ -3,7 +3,6 @@ import { TabId, NAV_ITEMS } from '../../types/navigation';
 import { Logo } from '../common/Logo';
 import {
   LayoutDashboard,
-  Radio,
   Factory,
   Route,
   Cpu,
@@ -32,8 +31,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
     switch (id) {
       case 'dashboard':
         return <LayoutDashboard size={size} />;
-      case 'monitoring':
-        return <Radio size={size} />;
       case 'vfactory':
         return <Factory size={size} />;
       case 'rerouting':

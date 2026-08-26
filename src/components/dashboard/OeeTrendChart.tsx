@@ -4,8 +4,6 @@ import {
   Gauge,
   TrendingUp,
   TrendingDown,
-  Layers,
-  CheckCircle2,
 } from 'lucide-react';
 
 interface OeeTrendChartProps {

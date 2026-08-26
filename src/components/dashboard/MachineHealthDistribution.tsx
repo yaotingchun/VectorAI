@@ -54,7 +54,6 @@ export const MachineHealthDistribution: React.FC<MachineHealthDistributionProps>
 
   const typeBreakdowns: MachineTypeBreakdown[] = machineTypes.map((type) => {
     const list = machines.filter((m) => m.type === type);
-    const total = list.length || 1;
     const healthy = list.filter((m) => m.status === 'healthy').length;
     const warning = list.filter((m) => m.status === 'warning').length;
     const critical = list.filter((m) => m.status === 'critical').length;
@@ -113,11 +112,11 @@ export const MachineHealthDistribution: React.FC<MachineHealthDistributionProps>
 
         <button
           type="button"
-          onClick={() => onNavigate?.('monitoring')}
+          onClick={() => onNavigate?.('machines')}
           className="tech-btn"
           style={{ padding: '4px 10px', fontSize: '10px' }}
         >
-          <span>View Monitoring Floor</span>
+          <span>View Machine Fleet</span>
           <ArrowRight size={12} />
         </button>
       </div>
