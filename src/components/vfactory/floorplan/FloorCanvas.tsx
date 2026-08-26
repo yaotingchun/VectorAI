@@ -93,6 +93,7 @@ export const FloorCanvas: React.FC<FloorCanvasProps> = ({
 
   // Machine dragging tracking (pointer capture)
   const [activeDraggingId, setActiveDraggingId] = useState<string | null>(null);
+  const [hoveredMachine, setHoveredMachine] = useState<FloorMachineAsset | null>(null);
   const dragMachineRef = useRef<{
     id: string;
     startX: number;
@@ -1170,6 +1171,7 @@ export const FloorCanvas: React.FC<FloorCanvasProps> = ({
               ========================================================================= */}
           {machines.map((machine) => {
             const isSelected = selectedAssetId === machine.id;
+            const isHovered = hoveredMachine?.id === machine.id;
             const isDraggingThis = activeDraggingId === machine.id;
             const isFiltered = filterType ? machine.type === filterType : true;
 
@@ -1177,13 +1179,26 @@ export const FloorCanvas: React.FC<FloorCanvasProps> = ({
               <g
                 key={machine.id}
                 transform={`translate(${machine.x}, ${machine.y})`}
-                className={`fp-machine-node ${isSelected ? 'selected' : ''} ${isConfigMode ? 'draggable' : ''} ${isDraggingThis ? 'is-dragging' : ''}`}
+                className={`fp-machine-node ${isSelected ? 'selected' : ''} ${isHovered ? 'hovered' : ''} ${isConfigMode ? 'draggable' : ''} ${isDraggingThis ? 'is-dragging' : ''}`}
                 style={{
                   cursor: isConfigMode ? (isDraggingThis ? 'grabbing' : 'grab') : 'pointer',
                   opacity: isFiltered ? 1 : 0.25,
                   pointerEvents: 'all',
                 }}
-                onPointerDown={(e) => handleMachinePointerDown(e, machine)}
+                onPointerDown={(e) => {
+                  setHoveredMachine(null);
+                  handleMachinePointerDown(e, machine);
+                }}
+                onPointerEnter={() => {
+                  if (!dragMachineRef.current && !activeDraggingId) {
+                    setHoveredMachine(machine);
+                  }
+                }}
+                onPointerLeave={() => {
+                  if (hoveredMachine?.id === machine.id) {
+                    setHoveredMachine(null);
+                  }
+                }}
                 onPointerMove={handleMachinePointerMove}
                 onPointerUp={(e) => handleMachinePointerUp(e, machine.id)}
               >
@@ -1199,6 +1214,23 @@ export const FloorCanvas: React.FC<FloorCanvasProps> = ({
                     strokeWidth="2.5"
                     strokeDasharray="4 2"
                     rx="5"
+                    style={{ pointerEvents: 'none' }}
+                  />
+                )}
+
+                {/* Hover Blueprint Halo Ring (Active on cursor hover) */}
+                {isHovered && !isSelected && (
+                  <rect
+                    x="-4"
+                    y="-4"
+                    width={machine.width + 8}
+                    height={machine.height + 8}
+                    fill="rgba(2, 132, 199, 0.08)"
+                    stroke="#0284C7"
+                    strokeWidth="2"
+                    strokeDasharray="4 2"
+                    rx="5"
+                    className="machine-hover-halo"
                     style={{ pointerEvents: 'none' }}
                   />
                 )}
@@ -1231,7 +1263,7 @@ export const FloorCanvas: React.FC<FloorCanvasProps> = ({
                     height="11"
                     rx="1.5"
                     fill="#121315"
-                    stroke={isSelected ? '#0284C7' : '#475569'}
+                    stroke={isSelected ? '#0284C7' : isHovered ? '#38BDF8' : '#475569'}
                     strokeWidth="0.8"
                   />
                   <text
@@ -1288,6 +1320,85 @@ export const FloorCanvas: React.FC<FloorCanvasProps> = ({
           })}
         </svg>
       </div>
+
+      {/* =========================================================================
+          FLOATING ASSET HOVER INFO CARD (BRIEF INFO: ID, TYPE, HEALTH STATUS)
+          ========================================================================= */}
+      {hoveredMachine && !isConfigMode && !activeDraggingId && (
+        <div
+          className="asset-hover-card-portal"
+          style={{
+            position: 'absolute',
+            left: `${transform.x + (hoveredMachine.x + hoveredMachine.width / 2) * transform.scale}px`,
+            top: `${transform.y + hoveredMachine.y * transform.scale - 10}px`,
+            transform: 'translate(-50%, -100%)',
+            pointerEvents: 'none',
+            zIndex: 160,
+          }}
+        >
+          <div className="asset-hover-card-content">
+            {/* Top Bar: ID badge & Health Status Pill */}
+            <div className="hover-card-header">
+              <div className="hover-card-id-badge">
+                <span className="hover-card-code">{hoveredMachine.code}</span>
+                <span className="hover-card-id">{hoveredMachine.id}</span>
+              </div>
+              <div className={`hover-card-status-pill status-${hoveredMachine.status}`}>
+                <span className={`status-dot ${hoveredMachine.status === 'healthy' ? 'green' : hoveredMachine.status === 'warning' ? 'amber' : 'red'}`} />
+                <span className="status-text">{hoveredMachine.status.toUpperCase()}</span>
+              </div>
+            </div>
+
+            {/* Machine Name & Cleanroom Bay Zone */}
+            <div className="hover-card-name">{hoveredMachine.name}</div>
+            <div className="hover-card-area">{hoveredMachine.area}</div>
+
+            {/* Key Telemetry & Performance Snapshot */}
+            <div className="hover-card-metrics-grid">
+              <div className="hover-metric-item">
+                <span className="hover-metric-label">HEALTH</span>
+                <span
+                  className="hover-metric-val"
+                  style={{
+                    color: (hoveredMachine.telemetry?.healthScore ?? 95) >= 90 ? '#4ADE80' : '#FBBF24',
+                  }}
+                >
+                  {hoveredMachine.telemetry?.healthScore ?? 98}/100
+                </span>
+              </div>
+              <div className="hover-metric-item">
+                <span className="hover-metric-label">OEE</span>
+                <span className="hover-metric-val">
+                  {hoveredMachine.oee > 0 ? `${hoveredMachine.oee.toFixed(1)}%` : 'Standby'}
+                </span>
+              </div>
+              <div className="hover-metric-item">
+                <span className="hover-metric-label">TEMP</span>
+                <span className="hover-metric-val">
+                  {hoveredMachine.telemetry?.temperature ? `${hoveredMachine.telemetry.temperature.toFixed(1)}°C` : '24.0°C'}
+                </span>
+              </div>
+              <div className="hover-metric-item">
+                <span className="hover-metric-label">VIBRATION</span>
+                <span className="hover-metric-val">
+                  {hoveredMachine.telemetry?.vibration ? `${hoveredMachine.telemetry.vibration.toFixed(2)} mm/s` : '0.25 mm/s'}
+                </span>
+              </div>
+            </div>
+
+            {/* Active Lot Progress (if processing) */}
+            {hoveredMachine.activeJob && (
+              <div className="hover-card-job-pill">
+                <span className="job-lot">{hoveredMachine.activeJob.lotId}</span>
+                <span className="job-progress">{hoveredMachine.activeJob.progressPercentage}% done</span>
+              </div>
+            )}
+
+            {/* Pointer Caret */}
+            <div className="hover-card-arrow" />
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -2903,4 +2903,217 @@
   color: #0369A1;
 }
 
+/* ==========================================================================
+   INTERACTIVE ASSET HOVER CARD & HALO
+   ========================================================================== */
+
+.fp-machine-node {
+  transition: transform 0.15s ease, filter 0.15s ease;
+}
+
+.fp-machine-node:hover {
+  filter: drop-shadow(0 4px 12px rgba(2, 132, 199, 0.25));
+}
+
+.machine-hover-halo {
+  animation: machineHaloPulse 1.8s infinite ease-in-out;
+}
+
+@keyframes machineHaloPulse {
+  0% {
+    stroke-opacity: 0.6;
+    stroke-width: 1.5px;
+  }
+  50% {
+    stroke-opacity: 1;
+    stroke-width: 2.2px;
+  }
+  100% {
+    stroke-opacity: 0.6;
+    stroke-width: 1.5px;
+  }
+}
+
+.asset-hover-card-portal {
+  pointer-events: none;
+  animation: hoverCardPopIn 0.18s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  z-index: 150;
+}
+
+@keyframes hoverCardPopIn {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, calc(-100% + 6px)) scale(0.96);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(-50%, -100%) scale(1);
+  }
+}
+
+.asset-hover-card-content {
+  position: relative;
+  background-color: rgba(18, 19, 21, 0.95);
+  backdrop-filter: blur(10px);
+  color: #F4F3EE;
+  border: 1.5px solid #0284C7;
+  border-radius: 4px;
+  padding: 9px 12px;
+  min-width: 210px;
+  max-width: 260px;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45), 0 0 12px rgba(2, 132, 199, 0.25);
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.hover-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.hover-card-id-badge {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.hover-card-code {
+  font-family: var(--font-mono, monospace);
+  font-size: 8.5px;
+  font-weight: 800;
+  background-color: #0284C7;
+  color: #FFFFFF;
+  padding: 1px 4px;
+  border-radius: 2px;
+  letter-spacing: 0.04em;
+}
+
+.hover-card-id {
+  font-family: var(--font-mono, monospace);
+  font-size: 13px;
+  font-weight: 800;
+  color: #F4F3EE;
+  letter-spacing: 0.05em;
+}
+
+.hover-card-status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 6px;
+  border-radius: 2px;
+  font-family: var(--font-mono, monospace);
+  font-size: 8.5px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.hover-card-status-pill.status-healthy {
+  background-color: rgba(22, 163, 74, 0.2);
+  color: #4ADE80;
+  border: 1px solid rgba(74, 222, 128, 0.4);
+}
+
+.hover-card-status-pill.status-warning {
+  background-color: rgba(217, 119, 6, 0.2);
+  color: #FBBF24;
+  border: 1px solid rgba(251, 191, 36, 0.4);
+}
+
+.hover-card-status-pill.status-critical {
+  background-color: rgba(220, 38, 38, 0.2);
+  color: #F87171;
+  border: 1px solid rgba(248, 113, 113, 0.4);
+}
+
+.hover-card-status-pill.status-offline {
+  background-color: rgba(148, 163, 184, 0.2);
+  color: #94A3B8;
+  border: 1px solid rgba(148, 163, 184, 0.4);
+}
+
+.hover-card-name {
+  font-size: 11px;
+  font-weight: 700;
+  color: #F4F3EE;
+  line-height: 1.25;
+}
+
+.hover-card-area {
+  font-size: 9.5px;
+  color: #94A3B8;
+  font-family: var(--font-mono, monospace);
+}
+
+.hover-card-metrics-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px 8px;
+  background-color: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 3px;
+  padding: 5px 6px;
+  margin-top: 2px;
+}
+
+.hover-metric-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 9px;
+}
+
+.hover-metric-label {
+  color: #94A3B8;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.hover-metric-val {
+  font-family: var(--font-mono, monospace);
+  font-weight: 800;
+  color: #F4F3EE;
+}
+
+.hover-card-job-pill {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 9px;
+  background-color: rgba(2, 132, 199, 0.15);
+  border: 1px solid rgba(2, 132, 199, 0.35);
+  border-radius: 2px;
+  padding: 2px 6px;
+  font-family: var(--font-mono, monospace);
+}
+
+.hover-card-job-pill .job-lot {
+  color: #38BDF8;
+  font-weight: 700;
+}
+
+.hover-card-job-pill .job-progress {
+  color: #4ADE80;
+  font-weight: 800;
+}
+
+.hover-card-arrow {
+  position: absolute;
+  bottom: -5px;
+  left: 50%;
+  transform: translateX(-50%) rotate(45deg);
+  width: 9px;
+  height: 9px;
+  background-color: rgba(18, 19, 21, 0.95);
+  border-right: 1.5px solid #0284C7;
+  border-bottom: 1.5px solid #0284C7;
+}
+
+
 
