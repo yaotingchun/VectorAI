@@ -1,12 +1,17 @@
 import React from 'react';
-import { VFactoryLiveView } from '../components/vfactory/VFactoryLiveView';
+import { FloorPlanVisualizer } from '../components/vfactory/floorplan/FloorPlanVisualizer';
 
-export const VFactoryPage: React.FC = () => {
+interface VFactoryPageProps {
+  onNavigateToMachine?: (machineId: string) => void;
+}
+
+export const VFactoryPage: React.FC<VFactoryPageProps> = ({ onNavigateToMachine }) => {
   return (
     <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column' }}>
-      <VFactoryLiveView />
+      <FloorPlanVisualizer onNavigateToMachine={onNavigateToMachine} />
     </div>
   );
 };
 
 export default VFactoryPage;
+
