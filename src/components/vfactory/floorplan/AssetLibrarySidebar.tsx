@@ -10,6 +10,7 @@ interface AssetLibrarySidebarProps {
   onSelectLibraryItem?: (item: AssetLibraryItem) => void;
   onFilterByType?: (type: FloorAssetType | StructureType | null) => void;
   activeFilterType?: FloorAssetType | StructureType | null;
+  isConfigMode?: boolean;
 }
 
 export const AssetLibrarySidebar: React.FC<AssetLibrarySidebarProps> = ({
@@ -18,6 +19,7 @@ export const AssetLibrarySidebar: React.FC<AssetLibrarySidebarProps> = ({
   onSelectLibraryItem,
   onFilterByType,
   activeFilterType,
+  isConfigMode = false,
 }) => {
   const [equipmentExpanded, setEquipmentExpanded] = useState(true);
   const [structuresExpanded, setStructuresExpanded] = useState(true);
@@ -58,6 +60,12 @@ export const AssetLibrarySidebar: React.FC<AssetLibrarySidebarProps> = ({
             {filteredEquipment.length + filteredStructures.length}
           </span>
         </div>
+
+        {isConfigMode && (
+          <div className="asset-lib-config-cue">
+            <span>⚡ Drag items to place on canvas</span>
+          </div>
+        )}
 
         {/* Search Box */}
         <div className="asset-search-box">
@@ -105,8 +113,16 @@ export const AssetLibrarySidebar: React.FC<AssetLibrarySidebarProps> = ({
                   <div
                     key={item.id}
                     onClick={() => handleItemClick(item)}
-                    className={`asset-card-item ${isActive ? 'active' : ''}`}
-                    title={`${item.name} (${item.code})\n${item.description}`}
+                    className={`asset-card-item ${isActive ? 'active' : ''} ${isConfigMode ? 'draggable' : ''}`}
+                    title={isConfigMode ? `Drag to place ${item.name} on canvas` : `${item.name} (${item.code})\n${item.description}`}
+                    draggable={isConfigMode}
+                    onDragStart={(e) => {
+                      if (isConfigMode) {
+                        e.dataTransfer.setData('application/json', JSON.stringify(item));
+                        e.dataTransfer.setData('text/plain', JSON.stringify(item));
+                        e.dataTransfer.effectAllowed = 'copy';
+                      }
+                    }}
                   >
                     <div className="asset-icon-box">
                       <FloorIcon type={item.type} size={28} />
@@ -149,8 +165,16 @@ export const AssetLibrarySidebar: React.FC<AssetLibrarySidebarProps> = ({
                   <div
                     key={item.id}
                     onClick={() => handleItemClick(item)}
-                    className={`asset-card-item ${isActive ? 'active' : ''}`}
-                    title={`${item.name} (${item.code})\n${item.description}`}
+                    className={`asset-card-item ${isActive ? 'active' : ''} ${isConfigMode ? 'draggable' : ''}`}
+                    title={isConfigMode ? `Drag to place ${item.name} on canvas` : `${item.name} (${item.code})\n${item.description}`}
+                    draggable={isConfigMode}
+                    onDragStart={(e) => {
+                      if (isConfigMode) {
+                        e.dataTransfer.setData('application/json', JSON.stringify(item));
+                        e.dataTransfer.setData('text/plain', JSON.stringify(item));
+                        e.dataTransfer.effectAllowed = 'copy';
+                      }
+                    }}
                   >
                     <div className="asset-icon-box">
                       <FloorIcon type={item.type} size={28} />

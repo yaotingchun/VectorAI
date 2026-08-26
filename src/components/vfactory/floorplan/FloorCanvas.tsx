@@ -1,10 +1,11 @@
-import React, { useRef, useCallback } from 'react';
+import React, { useRef, useCallback, useState } from 'react';
 import {
   FloorMachineAsset,
   RoomZone,
   StructureAsset,
   ConveyorJunction,
   ToolMode,
+  AssetLibraryItem,
 } from '../../../types/floorPlan';
 import { FloorIcon } from './FloorIcons';
 
@@ -22,6 +23,9 @@ interface FloorCanvasProps {
   transform: { x: number; y: number; scale: number };
   onTransformChange: (t: { x: number; y: number; scale: number }) => void;
   filterType?: string | null;
+  isConfigMode?: boolean;
+  onMoveMachine?: (id: string, x: number, y: number) => void;
+  onAddMachine?: (item: AssetLibraryItem, x: number, y: number) => void;
 }
 
 export const FloorCanvas: React.FC<FloorCanvasProps> = ({
@@ -33,19 +37,36 @@ export const FloorCanvas: React.FC<FloorCanvasProps> = ({
   onSelectAsset,
   activeTool,
   gridVisible,
+  snapToGrid,
   gridSize,
   transform,
   onTransformChange,
   filterType,
+  isConfigMode = false,
+  onMoveMachine,
+  onAddMachine,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const isDraggingRef = useRef(false);
-  const dragStartRef = useRef<{ clientX: number; clientY: number; startX: number; startY: number }>({
+  
+  // Panning tracking
+  const isPanningRef = useRef(false);
+  const panStartRef = useRef<{ clientX: number; clientY: number; startX: number; startY: number }>({
     clientX: 0,
     clientY: 0,
     startX: 0,
     startY: 0,
   });
+
+  // Machine dragging tracking (pointer capture)
+  const [activeDraggingId, setActiveDraggingId] = useState<string | null>(null);
+  const dragMachineRef = useRef<{
+    id: string;
+    startX: number;
+    startY: number;
+    machineStartX: number;
+    machineStartY: number;
+    hasMoved: boolean;
+  } | null>(null);
 
   // Wheel Zoom centered on cursor
   const handleWheel = useCallback((e: React.WheelEvent<HTMLDivElement>) => {
@@ -69,13 +90,14 @@ export const FloorCanvas: React.FC<FloorCanvasProps> = ({
     });
   }, [transform, onTransformChange]);
 
-  // Mouse Down for Panning
+  // Mouse Down for Panning canvas
   const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
-    // Only primary button or middle button
+    // Only primary button or middle button on background
     if (e.button !== 0 && e.button !== 1) return;
+    if (dragMachineRef.current) return;
 
-    isDraggingRef.current = true;
-    dragStartRef.current = {
+    isPanningRef.current = true;
+    panStartRef.current = {
       clientX: e.clientX,
       clientY: e.clientY,
       startX: transform.x,
@@ -85,26 +107,26 @@ export const FloorCanvas: React.FC<FloorCanvasProps> = ({
 
   // Mouse Move for Smooth Panning
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!isDraggingRef.current) return;
+    if (!isPanningRef.current) return;
 
-    const deltaX = e.clientX - dragStartRef.current.clientX;
-    const deltaY = e.clientY - dragStartRef.current.clientY;
+    const deltaX = e.clientX - panStartRef.current.clientX;
+    const deltaY = e.clientY - panStartRef.current.clientY;
 
     onTransformChange({
       ...transform,
-      x: dragStartRef.current.startX + deltaX,
-      y: dragStartRef.current.startY + deltaY,
+      x: panStartRef.current.startX + deltaX,
+      y: panStartRef.current.startY + deltaY,
     });
   };
 
-  // Mouse Up
+  // Mouse Up for canvas
   const handleMouseUp = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!isDraggingRef.current) return;
-    isDraggingRef.current = false;
+    if (!isPanningRef.current) return;
+    isPanningRef.current = false;
 
     // If click was stationary (< 4px movement) on background, deselect
-    const deltaX = Math.abs(e.clientX - dragStartRef.current.clientX);
-    const deltaY = Math.abs(e.clientY - dragStartRef.current.clientY);
+    const deltaX = Math.abs(e.clientX - panStartRef.current.clientX);
+    const deltaY = Math.abs(e.clientY - panStartRef.current.clientY);
     if (deltaX < 4 && deltaY < 4) {
       const target = e.target as HTMLElement;
       if (
@@ -114,6 +136,115 @@ export const FloorCanvas: React.FC<FloorCanvasProps> = ({
       ) {
         onSelectAsset(null);
       }
+    }
+  };
+
+  // Machine Pointer Down (for Config Mode Dragging & Click Selection)
+  const handleMachinePointerDown = (
+    e: React.PointerEvent<SVGGElement>,
+    machine: FloorMachineAsset
+  ) => {
+    e.stopPropagation();
+
+    if (!isConfigMode) {
+      onSelectAsset(machine.id);
+      return;
+    }
+
+    // In config mode, enable drag
+    (e.target as Element).setPointerCapture(e.pointerId);
+    dragMachineRef.current = {
+      id: machine.id,
+      startX: e.clientX,
+      startY: e.clientY,
+      machineStartX: machine.x,
+      machineStartY: machine.y,
+      hasMoved: false,
+    };
+    setActiveDraggingId(machine.id);
+  };
+
+  // Machine Pointer Move (while dragging in config mode)
+  const handleMachinePointerMove = (e: React.PointerEvent<SVGGElement>) => {
+    if (!dragMachineRef.current || !onMoveMachine) return;
+    e.stopPropagation();
+
+    const info = dragMachineRef.current;
+    const deltaX = (e.clientX - info.startX) / transform.scale;
+    const deltaY = (e.clientY - info.startY) / transform.scale;
+
+    if (Math.hypot(deltaX, deltaY) > 3) {
+      info.hasMoved = true;
+    }
+
+    let nextX = info.machineStartX + deltaX;
+    let nextY = info.machineStartY + deltaY;
+
+    // Constrain within factory walls
+    nextX = Math.max(50, Math.min(1060, nextX));
+    nextY = Math.max(50, Math.min(800, nextY));
+
+    if (snapToGrid) {
+      nextX = Math.round(nextX / gridSize) * gridSize;
+      nextY = Math.round(nextY / gridSize) * gridSize;
+    }
+
+    onMoveMachine(info.id, nextX, nextY);
+  };
+
+  // Machine Pointer Up
+  const handleMachinePointerUp = (
+    e: React.PointerEvent<SVGGElement>,
+    machineId: string
+  ) => {
+    e.stopPropagation();
+
+    if (dragMachineRef.current) {
+      const { hasMoved } = dragMachineRef.current;
+      dragMachineRef.current = null;
+      setActiveDraggingId(null);
+
+      // If user clicked without dragging, select asset
+      if (!hasMoved) {
+        onSelectAsset(machineId);
+      }
+    } else {
+      onSelectAsset(machineId);
+    }
+  };
+
+  // Handle Drag Over & Drop from Asset Library
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+    if (isConfigMode) {
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'copy';
+    }
+  };
+
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    if (!isConfigMode || !onAddMachine || !containerRef.current) return;
+    e.preventDefault();
+
+    const dataStr = e.dataTransfer.getData('application/json') || e.dataTransfer.getData('text/plain');
+    if (!dataStr) return;
+
+    try {
+      const item: AssetLibraryItem = JSON.parse(dataStr);
+      const rect = containerRef.current.getBoundingClientRect();
+      let dropX = (e.clientX - rect.left - transform.x) / transform.scale - 22;
+      let dropY = (e.clientY - rect.top - transform.y) / transform.scale - 24;
+
+      dropX = Math.max(50, Math.min(1060, dropX));
+      dropY = Math.max(50, Math.min(800, dropY));
+
+      if (snapToGrid) {
+        dropX = Math.round(dropX / gridSize) * gridSize;
+        dropY = Math.round(dropY / gridSize) * gridSize;
+      }
+
+      onAddMachine(item, dropX, dropY);
+    } catch (err) {
+      console.error('Failed to parse dropped asset data', err);
     }
   };
 
@@ -134,12 +265,14 @@ export const FloorCanvas: React.FC<FloorCanvasProps> = ({
   return (
     <div
       ref={containerRef}
-      className={`floor-canvas-container ${activeTool === 'pan' ? 'panning' : ''}`}
+      className={`floor-canvas-container ${activeTool === 'pan' ? 'panning' : ''} ${isConfigMode ? 'config-mode' : ''}`}
       onWheel={handleWheel}
       onMouseDown={handleMouseDown}
       onMouseMove={handleMouseMove}
       onMouseUp={handleMouseUp}
       onMouseLeave={handleMouseUp}
+      onDragOver={handleDragOver}
+      onDrop={handleDrop}
     >
       <div
         className="floor-canvas-transform-layer"
@@ -156,21 +289,21 @@ export const FloorCanvas: React.FC<FloorCanvasProps> = ({
           className="floor-blueprint-svg"
         >
           <defs>
-            {/* Fine Grid Pattern */}
+            {/* Fine Industrial Schematic Grid Pattern */}
             <pattern
               id="blueprint-grid-pattern"
               width={gridSize}
               height={gridSize}
               patternUnits="userSpaceOnUse"
             >
-              <rect width={gridSize} height={gridSize} fill="#FFFFFF" />
+              <rect width={gridSize} height={gridSize} fill="#F4F3EE" />
               <path
                 d={`M ${gridSize} 0 L 0 0 0 ${gridSize}`}
                 fill="none"
-                stroke="#E2E8F0"
-                strokeWidth="0.8"
+                stroke={isConfigMode ? '#D1D5DB' : '#E2E8F0'}
+                strokeWidth={isConfigMode ? '1' : '0.8'}
               />
-              <circle cx="0" cy="0" r="0.7" fill="#CBD5E1" />
+              <circle cx="0" cy="0" r="0.8" fill="#9CA3AF" />
             </pattern>
           </defs>
 
@@ -195,8 +328,8 @@ export const FloorCanvas: React.FC<FloorCanvasProps> = ({
             y="40"
             width="1080"
             height="820"
-            fill="#FFFFFF"
-            stroke="#1E293B"
+            fill="#FAF9F5"
+            stroke="#121315"
             strokeWidth="3.5"
             className="room-zone-boundary"
           />
@@ -206,7 +339,7 @@ export const FloorCanvas: React.FC<FloorCanvasProps> = ({
             width="1072"
             height="812"
             fill="none"
-            stroke="#334155"
+            stroke="#2E3033"
             strokeWidth="1.2"
             style={{ pointerEvents: 'none' }}
           />
@@ -223,8 +356,8 @@ export const FloorCanvas: React.FC<FloorCanvasProps> = ({
                   y={zone.y}
                   width={zone.width}
                   height={zone.height}
-                  fill="#FAFAFA"
-                  stroke="#1E293B"
+                  fill="#FAF9F5"
+                  stroke="#121315"
                   strokeWidth="2"
                   className="room-zone-boundary"
                 />
@@ -256,7 +389,7 @@ export const FloorCanvas: React.FC<FloorCanvasProps> = ({
                     width={str.width}
                     height={str.height}
                     fill="#FFFFFF"
-                    stroke="#1E293B"
+                    stroke="#121315"
                     strokeWidth="1.5"
                   />
                   {/* Shelves dividers */}
@@ -267,7 +400,7 @@ export const FloorCanvas: React.FC<FloorCanvasProps> = ({
                       y1={str.y + ((str.height) / (str.rows || 3)) * (idx + 1)}
                       x2={str.x + str.width}
                       y2={str.y + ((str.height) / (str.rows || 3)) * (idx + 1)}
-                      stroke="#475569"
+                      stroke="#2E3033"
                       strokeWidth="1"
                     />
                   ))}
@@ -276,7 +409,7 @@ export const FloorCanvas: React.FC<FloorCanvasProps> = ({
                     y1={str.y}
                     x2={str.x + str.width / 2}
                     y2={str.y + str.height}
-                    stroke="#64748B"
+                    stroke="#6b7280"
                     strokeWidth="1"
                     strokeDasharray="2 2"
                   />
@@ -292,13 +425,13 @@ export const FloorCanvas: React.FC<FloorCanvasProps> = ({
                     y={str.y}
                     width={str.width}
                     height={str.height}
-                    fill="#F1F5F9"
-                    stroke="#1E293B"
+                    fill="#EBE9DF"
+                    stroke="#121315"
                     strokeWidth="1.5"
                   />
-                  <line x1={str.x} y1={str.y + 20} x2={str.x + str.width} y2={str.y + 20} stroke="#1E293B" strokeWidth="1.2" />
-                  <line x1={str.x} y1={str.y + 40} x2={str.x + str.width} y2={str.y + 40} stroke="#1E293B" strokeWidth="1.2" />
-                  <line x1={str.x} y1={str.y + 60} x2={str.x + str.width} y2={str.y + 60} stroke="#1E293B" strokeWidth="1.2" />
+                  <line x1={str.x} y1={str.y + 20} x2={str.x + str.width} y2={str.y + 20} stroke="#121315" strokeWidth="1.2" />
+                  <line x1={str.x} y1={str.y + 40} x2={str.x + str.width} y2={str.y + 40} stroke="#121315" strokeWidth="1.2" />
+                  <line x1={str.x} y1={str.y + 60} x2={str.x + str.width} y2={str.y + 60} stroke="#121315" strokeWidth="1.2" />
                 </g>
               );
             }
@@ -311,8 +444,8 @@ export const FloorCanvas: React.FC<FloorCanvasProps> = ({
                     y={str.y}
                     width={str.width}
                     height={str.height}
-                    fill="#F8FAFC"
-                    stroke="#1E293B"
+                    fill="#FFFFFF"
+                    stroke="#121315"
                     strokeWidth="1.5"
                     rx="2"
                   />
@@ -323,7 +456,7 @@ export const FloorCanvas: React.FC<FloorCanvasProps> = ({
                     fontSize="9"
                     fontFamily="var(--font-mono)"
                     fontWeight="700"
-                    fill="#475569"
+                    fill="#374151"
                   >
                     {str.label}
                   </text>
@@ -335,11 +468,11 @@ export const FloorCanvas: React.FC<FloorCanvasProps> = ({
               return (
                 <g key={str.id} className="structure-door-group" style={{ pointerEvents: 'none' }}>
                   {/* Door Opening Gap & Swing Arc */}
-                  <rect x={str.x} y={str.y - 2} width={str.width} height={4} fill="#FFFFFF" />
-                  <line x1={str.x} y1={str.y} x2={str.x + 8} y2={str.y - 12} stroke="#1E293B" strokeWidth="1.8" />
+                  <rect x={str.x} y={str.y - 2} width={str.width} height={4} fill="#FAF9F5" />
+                  <line x1={str.x} y1={str.y} x2={str.x + 8} y2={str.y - 12} stroke="#121315" strokeWidth="1.8" />
                   <path
                     d={`M ${str.x + 8} ${str.y - 12} A 14 14 0 0 1 ${str.x + str.width} ${str.y}`}
-                    stroke="#94A3B8"
+                    stroke="#9CA3AF"
                     strokeWidth="1"
                     strokeDasharray="2 2"
                     fill="none"
@@ -359,13 +492,13 @@ export const FloorCanvas: React.FC<FloorCanvasProps> = ({
               width="60"
               height="60"
               fill="#FFFFFF"
-              stroke="#1E293B"
+              stroke="#121315"
               strokeWidth="1.8"
-              rx="4"
+              rx="2"
             />
             {/* AGV Vehicle Icon in Pad */}
-            <rect x="1048" y="332" width="44" height="24" rx="3" fill="#E2E8F0" stroke="#1E293B" strokeWidth="1.2" />
-            <path d="M1066 324 L1062 334 H1068 L1064 344 L1074 332 H1068 L1072 324 Z" fill="#EAB308" stroke="#CA8A04" strokeWidth="0.8" />
+            <rect x="1048" y="332" width="44" height="24" rx="2" fill="#EBE9DF" stroke="#121315" strokeWidth="1.2" />
+            <path d="M1066 324 L1062 334 H1068 L1064 344 L1074 332 H1068 L1072 324 Z" fill="#D97706" stroke="#92400E" strokeWidth="0.8" />
           </g>
 
           {/* =========================================================================
@@ -373,33 +506,33 @@ export const FloorCanvas: React.FC<FloorCanvasProps> = ({
               ========================================================================= */}
           {/* Die Attach Top Conveyor Line */}
           <g style={{ pointerEvents: 'none' }}>
-            <rect x="428" y="166" width="372" height="18" fill="#F1F5F9" stroke="#1E293B" strokeWidth="1.5" />
-            <line x1="428" y1="175" x2="800" y2="175" stroke="#3B82F6" strokeWidth="1.5" strokeDasharray="6 3" />
-            <rect x="428" y="166" width="18" height="44" fill="#F1F5F9" stroke="#1E293B" strokeWidth="1.5" />
-            <rect x="782" y="166" width="18" height="44" fill="#F1F5F9" stroke="#1E293B" strokeWidth="1.5" />
+            <rect x="428" y="166" width="372" height="18" fill="#EBE9DF" stroke="#121315" strokeWidth="1.5" />
+            <line x1="428" y1="175" x2="800" y2="175" stroke="#D97706" strokeWidth="1.5" strokeDasharray="6 3" />
+            <rect x="428" y="166" width="18" height="44" fill="#EBE9DF" stroke="#121315" strokeWidth="1.5" />
+            <rect x="782" y="166" width="18" height="44" fill="#EBE9DF" stroke="#121315" strokeWidth="1.5" />
 
             {/* Middle Main Hall Conveyor Loop (Plasma -> WB -> MP -> AOI -> XR -> LM) */}
-            <rect x="74" y="271" width="826" height="18" fill="#F1F5F9" stroke="#1E293B" strokeWidth="1.5" />
-            <line x1="74" y1="280" x2="900" y2="280" stroke="#3B82F6" strokeWidth="1.5" strokeDasharray="6 3" />
+            <rect x="74" y="271" width="826" height="18" fill="#EBE9DF" stroke="#121315" strokeWidth="1.5" />
+            <line x1="74" y1="280" x2="900" y2="280" stroke="#D97706" strokeWidth="1.5" strokeDasharray="6 3" />
 
-            <rect x="74" y="471" width="826" height="18" fill="#F1F5F9" stroke="#1E293B" strokeWidth="1.5" />
-            <line x1="74" y1="480" x2="900" y2="480" stroke="#3B82F6" strokeWidth="1.5" strokeDasharray="6 3" />
+            <rect x="74" y="471" width="826" height="18" fill="#EBE9DF" stroke="#121315" strokeWidth="1.5" />
+            <line x1="74" y1="480" x2="900" y2="480" stroke="#D97706" strokeWidth="1.5" strokeDasharray="6 3" />
 
-            <rect x="74" y="656" width="826" height="18" fill="#F1F5F9" stroke="#1E293B" strokeWidth="1.5" />
-            <line x1="74" y1="665" x2="900" y2="665" stroke="#3B82F6" strokeWidth="1.5" strokeDasharray="6 3" />
+            <rect x="74" y="656" width="826" height="18" fill="#EBE9DF" stroke="#121315" strokeWidth="1.5" />
+            <line x1="74" y1="665" x2="900" y2="665" stroke="#D97706" strokeWidth="1.5" strokeDasharray="6 3" />
 
             {/* Vertical Connectors */}
-            <rect x="74" y="280" width="18" height="385" fill="#F1F5F9" stroke="#1E293B" strokeWidth="1.5" />
-            <line x1="83" y1="280" x2="83" y2="665" stroke="#3B82F6" strokeWidth="1.5" strokeDasharray="6 3" />
+            <rect x="74" y="280" width="18" height="385" fill="#EBE9DF" stroke="#121315" strokeWidth="1.5" />
+            <line x1="83" y1="280" x2="83" y2="665" stroke="#D97706" strokeWidth="1.5" strokeDasharray="6 3" />
 
-            <rect x="341" y="280" width="18" height="385" fill="#F1F5F9" stroke="#1E293B" strokeWidth="1.5" />
-            <line x1="350" y1="280" x2="350" y2="665" stroke="#3B82F6" strokeWidth="1.5" strokeDasharray="6 3" />
+            <rect x="341" y="280" width="18" height="385" fill="#EBE9DF" stroke="#121315" strokeWidth="1.5" />
+            <line x1="350" y1="280" x2="350" y2="665" stroke="#D97706" strokeWidth="1.5" strokeDasharray="6 3" />
 
-            <rect x="651" y="280" width="18" height="385" fill="#F1F5F9" stroke="#1E293B" strokeWidth="1.5" />
-            <line x1="660" y1="280" x2="660" y2="665" stroke="#3B82F6" strokeWidth="1.5" strokeDasharray="6 3" />
+            <rect x="651" y="280" width="18" height="385" fill="#EBE9DF" stroke="#121315" strokeWidth="1.5" />
+            <line x1="660" y1="280" x2="660" y2="665" stroke="#D97706" strokeWidth="1.5" strokeDasharray="6 3" />
 
-            <rect x="891" y="280" width="18" height="385" fill="#F1F5F9" stroke="#1E293B" strokeWidth="1.5" />
-            <line x1="900" y1="280" x2="900" y2="665" stroke="#3B82F6" strokeWidth="1.5" strokeDasharray="6 3" />
+            <rect x="891" y="280" width="18" height="385" fill="#EBE9DF" stroke="#121315" strokeWidth="1.5" />
+            <line x1="900" y1="280" x2="900" y2="665" stroke="#D97706" strokeWidth="1.5" strokeDasharray="6 3" />
 
             {/* Junction Transfer Boxes */}
             {junctions.map((j) => (
@@ -410,13 +543,13 @@ export const FloorCanvas: React.FC<FloorCanvasProps> = ({
                   width={j.size}
                   height={j.size}
                   fill="#FFFFFF"
-                  stroke="#0F172A"
+                  stroke="#121315"
                   strokeWidth="1.8"
                   rx="1"
                 />
-                <line x1={j.x - j.size / 2} y1={j.y} x2={j.x + j.size / 2} y2={j.y} stroke="#3B82F6" strokeWidth="1.2" />
-                <line x1={j.x} y1={j.y - j.size / 2} x2={j.x} y2={j.y + j.size / 2} stroke="#3B82F6" strokeWidth="1.2" />
-                <circle cx={j.x} cy={j.y} r="2.5" fill="#1E293B" />
+                <line x1={j.x - j.size / 2} y1={j.y} x2={j.x + j.size / 2} y2={j.y} stroke="#D97706" strokeWidth="1.2" />
+                <line x1={j.x} y1={j.y - j.size / 2} x2={j.x} y2={j.y + j.size / 2} stroke="#D97706" strokeWidth="1.2" />
+                <circle cx={j.x} cy={j.y} r="2.5" fill="#121315" />
               </g>
             ))}
           </g>
@@ -426,22 +559,22 @@ export const FloorCanvas: React.FC<FloorCanvasProps> = ({
               ========================================================================= */}
           {machines.map((machine) => {
             const isSelected = selectedAssetId === machine.id;
+            const isDraggingThis = activeDraggingId === machine.id;
             const isFiltered = filterType ? machine.type === filterType : true;
 
             return (
               <g
                 key={machine.id}
                 transform={`translate(${machine.x}, ${machine.y})`}
-                className={`fp-machine-node ${isSelected ? 'selected' : ''}`}
+                className={`fp-machine-node ${isSelected ? 'selected' : ''} ${isConfigMode ? 'draggable' : ''} ${isDraggingThis ? 'is-dragging' : ''}`}
                 style={{
-                  cursor: 'pointer',
+                  cursor: isConfigMode ? (isDraggingThis ? 'grabbing' : 'grab') : 'pointer',
                   opacity: isFiltered ? 1 : 0.25,
                   pointerEvents: 'all',
                 }}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onSelectAsset(machine.id);
-                }}
+                onPointerDown={(e) => handleMachinePointerDown(e, machine)}
+                onPointerMove={handleMachinePointerMove}
+                onPointerUp={(e) => handleMachinePointerUp(e, machine.id)}
               >
                 {/* Selection Bounding Box */}
                 {isSelected && (
@@ -450,10 +583,26 @@ export const FloorCanvas: React.FC<FloorCanvasProps> = ({
                     y="-3"
                     width={machine.width + 6}
                     height={machine.height + 6}
-                    fill="rgba(37, 99, 235, 0.08)"
-                    stroke="#2563EB"
+                    fill="rgba(217, 119, 6, 0.12)"
+                    stroke="#D97706"
                     strokeWidth="2"
-                    rx="5"
+                    rx="3"
+                    style={{ pointerEvents: 'none' }}
+                  />
+                )}
+
+                {/* In Config Mode: Subtle dashed guide border */}
+                {isConfigMode && !isSelected && (
+                  <rect
+                    x="-2"
+                    y="-2"
+                    width={machine.width + 4}
+                    height={machine.height + 4}
+                    fill="none"
+                    stroke="#9CA3AF"
+                    strokeWidth="1"
+                    strokeDasharray="2 2"
+                    rx="2"
                     style={{ pointerEvents: 'none' }}
                   />
                 )}
@@ -465,7 +614,7 @@ export const FloorCanvas: React.FC<FloorCanvasProps> = ({
                   width={machine.width}
                   height={machine.height}
                   className="fp-machine-card-base"
-                  rx="4"
+                  rx="2"
                   style={{ pointerEvents: 'none' }}
                 />
 
@@ -486,21 +635,21 @@ export const FloorCanvas: React.FC<FloorCanvasProps> = ({
                 <circle
                   cx={machine.width - 6}
                   cy="6"
-                  r="3.2"
+                  r="3"
                   fill={getStatusColor(machine.status)}
-                  stroke="#FFFFFF"
+                  stroke="#121315"
                   strokeWidth="1"
                   style={{ pointerEvents: 'none' }}
                 />
 
-                {/* Subtle ID Label below machine */}
+                {/* ID Label below machine */}
                 <text
                   x={machine.width / 2}
                   y={machine.height + 11}
                   textAnchor="middle"
                   fontSize="8.5"
                   fontFamily="var(--font-mono)"
-                  fontWeight="700"
+                  fontWeight="800"
                   className="fp-machine-id-label"
                   style={{ pointerEvents: 'none' }}
                 >
@@ -514,7 +663,7 @@ export const FloorCanvas: React.FC<FloorCanvasProps> = ({
                   width={machine.width}
                   height={machine.height}
                   fill="transparent"
-                  style={{ cursor: 'pointer' }}
+                  style={{ cursor: isConfigMode ? 'grab' : 'pointer' }}
                 />
               </g>
             );

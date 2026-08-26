@@ -128,3 +128,23 @@ export interface FloorPlanState {
     scale: number;
   };
 }
+
+export type LayoutPresetId =
+  | 'standard'
+  | 'high-density-wb'
+  | 'smt-molding'
+  | 'blank-canvas';
+
+export interface LayoutPreset {
+  id: LayoutPresetId;
+  name: string;
+  category: string;
+  description: string;
+  machineCount: number;
+  zoneCount: number;
+  machines: FloorMachineAsset[];
+  zones: RoomZone[];
+  structures: StructureAsset[];
+  junctions: ConveyorJunction[];
+}
+

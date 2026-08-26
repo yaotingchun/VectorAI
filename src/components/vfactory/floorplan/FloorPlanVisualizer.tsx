@@ -5,8 +5,6 @@ import {
   StructureAsset,
   ConveyorJunction,
   ToolMode,
-  FloorAssetType,
-  StructureType,
 } from '../../../types/floorPlan';
 import {
   INITIAL_FLOOR_MACHINES,
@@ -14,30 +12,73 @@ import {
   INITIAL_STRUCTURES,
   INITIAL_CONVEYOR_JUNCTIONS,
 } from '../../../data/floorPlanData';
-import { AssetLibrarySidebar } from './AssetLibrarySidebar';
 import { FloorCanvasToolbar } from './FloorCanvasToolbar';
 import { FloorCanvas } from './FloorCanvas';
 import { AssetDetailsInspector } from './AssetDetailsInspector';
 import { FloorBottomBar } from './FloorBottomBar';
+import { FloorPlanConfigStudio } from './FloorPlanConfigStudio';
+import { Settings } from 'lucide-react';
 import '../../../styles/floorplan.css';
 
 interface FloorPlanVisualizerProps {
   onNavigateToMachine?: (machineId: string) => void;
 }
 
+const STORAGE_KEY = 'vector_vfactory_floorplan_v1';
+
 export const FloorPlanVisualizer: React.FC<FloorPlanVisualizerProps> = ({
   onNavigateToMachine,
 }) => {
-  // State
-  const [machines, setMachines] = useState<FloorMachineAsset[]>(INITIAL_FLOOR_MACHINES);
-  const [zones] = useState<RoomZone[]>(INITIAL_ROOM_ZONES);
-  const [structures] = useState<StructureAsset[]>(INITIAL_STRUCTURES);
-  const [junctions] = useState<ConveyorJunction[]>(INITIAL_CONVEYOR_JUNCTIONS);
+  // Load saved layout from localStorage or fallback to initial
+  const [machines, setMachines] = useState<FloorMachineAsset[]>(() => {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed.machines && Array.isArray(parsed.machines)) return parsed.machines;
+      }
+    } catch {}
+    return INITIAL_FLOOR_MACHINES;
+  });
 
-  // Default selected machine to WB-05 to match the reference design image
+  const [zones, setZones] = useState<RoomZone[]>(() => {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed.zones && Array.isArray(parsed.zones)) return parsed.zones;
+      }
+    } catch {}
+    return INITIAL_ROOM_ZONES;
+  });
+
+  const [structures, setStructures] = useState<StructureAsset[]>(() => {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed.structures && Array.isArray(parsed.structures)) return parsed.structures;
+      }
+    } catch {}
+    return INITIAL_STRUCTURES;
+  });
+
+  const [junctions, setJunctions] = useState<ConveyorJunction[]>(() => {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed.junctions && Array.isArray(parsed.junctions)) return parsed.junctions;
+      }
+    } catch {}
+    return INITIAL_CONVEYOR_JUNCTIONS;
+  });
+
+  // Dedicated Studio Page Mode
+  const [isStudioOpen, setIsStudioOpen] = useState<boolean>(false);
+
+  // Selected machine in Live View
   const [selectedAssetId, setSelectedAssetId] = useState<string | null>('WB-05');
-  const [searchQuery, setSearchQuery] = useState('');
-  const [activeFilterType, setActiveFilterType] = useState<FloorAssetType | StructureType | null>(null);
   const [activeTool, setActiveTool] = useState<ToolMode>('select');
 
   // Floor & Grid Controls
@@ -81,26 +122,9 @@ export const FloorPlanVisualizer: React.FC<FloorPlanVisualizerProps> = ({
   }, []);
 
   // Zoom In / Out / Reset
-  const handleZoomIn = () => {
-    setTransform((prev) => ({
-      ...prev,
-      scale: Math.min(prev.scale * 1.2, 2.5),
-    }));
-  };
-
-  const handleZoomOut = () => {
-    setTransform((prev) => ({
-      ...prev,
-      scale: Math.max(prev.scale * 0.8, 0.35),
-    }));
-  };
-
-  const handleResetZoom = () => {
-    setTransform((prev) => ({
-      ...prev,
-      scale: 1.0,
-    }));
-  };
+  const handleZoomIn = () => setTransform((prev) => ({ ...prev, scale: Math.min(prev.scale * 1.2, 2.5) }));
+  const handleZoomOut = () => setTransform((prev) => ({ ...prev, scale: Math.max(prev.scale * 0.8, 0.35) }));
+  const handleResetZoom = () => setTransform((prev) => ({ ...prev, scale: 1.0 }));
 
   // Initial fit on mount
   useEffect(() => {
@@ -148,31 +172,71 @@ export const FloorPlanVisualizer: React.FC<FloorPlanVisualizerProps> = ({
     }));
   };
 
-  return (
-    <div className="vfactory-floorplan-root">
-      {/* Top Floating Canvas Toolbar */}
-      <FloorCanvasToolbar
-        activeTool={activeTool}
-        onSelectTool={setActiveTool}
-        onFitView={handleFitView}
-        onZoomIn={handleZoomIn}
-        onZoomOut={handleZoomOut}
-        onResetView={handleResetZoom}
-        scale={transform.scale}
+  // Save from Studio
+  const handleSaveAndApplyFromStudio = (config: {
+    machines: FloorMachineAsset[];
+    zones: RoomZone[];
+    structures: StructureAsset[];
+    junctions: ConveyorJunction[];
+  }) => {
+    setMachines(config.machines);
+    setZones(config.zones);
+    setStructures(config.structures);
+    setJunctions(config.junctions);
+    setIsStudioOpen(false);
+
+    // Save to localStorage
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(config));
+    } catch (e) {
+      console.error('Failed to save layout to localStorage', e);
+    }
+  };
+
+  // If Studio Page is Open, render the Dedicated Configuration Studio Page
+  if (isStudioOpen) {
+    return (
+      <FloorPlanConfigStudio
+        initialMachines={machines}
+        initialZones={zones}
+        initialStructures={structures}
+        initialJunctions={junctions}
+        onSaveAndApply={handleSaveAndApplyFromStudio}
+        onExit={() => setIsStudioOpen(false)}
       />
+    );
+  }
 
-      {/* Main 3-Column Workspace */}
-      <div className="floorplan-workspace-grid">
-        {/* Left Column: Asset Library */}
-        <AssetLibrarySidebar
-          searchQuery={searchQuery}
-          onSearchChange={setSearchQuery}
-          onFilterByType={setActiveFilterType}
-          activeFilterType={activeFilterType}
-        />
-
+  // Otherwise, render the Main Clean v-Factory Monitoring View (Asset Library hidden for clean view)
+  return (
+    <div className="vfactory-floorplan-root live-view">
+      {/* Main 2-Column Live Workspace (Canvas + Inspector) */}
+      <div className="floorplan-workspace-grid live-mode">
         {/* Center Column: Interactive Blueprint Canvas */}
         <div className="floorplan-canvas-column">
+          {/* Top Left Floating Canvas Toolbar */}
+          <FloorCanvasToolbar
+            activeTool={activeTool}
+            onSelectTool={setActiveTool}
+            onFitView={handleFitView}
+            onZoomIn={handleZoomIn}
+            onZoomOut={handleZoomOut}
+            onResetView={handleResetZoom}
+            scale={transform.scale}
+          />
+
+          {/* Top Right Configure Layout Button -> Opens Studio Page */}
+          <div className="canvas-top-right-overlay">
+            <button
+              onClick={() => setIsStudioOpen(true)}
+              className="canvas-settings-btn"
+              title="Open Floor Plan Configuration Studio (Initialize layout, drag & drop assets)"
+            >
+              <Settings size={14} />
+              <span>Configure Layout</span>
+            </button>
+          </div>
+
           <FloorCanvas
             machines={machines}
             zones={zones}
@@ -186,7 +250,7 @@ export const FloorPlanVisualizer: React.FC<FloorPlanVisualizerProps> = ({
             gridSize={gridSize}
             transform={transform}
             onTransformChange={setTransform}
-            filterType={activeFilterType}
+            isConfigMode={false}
           />
         </div>
 
