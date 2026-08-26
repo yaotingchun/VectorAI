@@ -1,19 +1,15 @@
 import React, { useState } from 'react';
 import { TabId } from '../types/navigation';
-import { MachineNode, MachineStatus } from '../types/dashboard';
 import { MOCK_DASHBOARD_DATA } from '../data/mockFactoryData';
+import { DashboardHeader } from '../components/dashboard/DashboardHeader';
 import { FactoryOverviewKpi } from '../components/dashboard/FactoryOverviewKpi';
-import { FactoryFloorMap } from '../components/dashboard/FactoryFloorMap';
-import { MachineContextPanel } from '../components/dashboard/MachineContextPanel';
-import { ProductionStatusSection } from '../components/dashboard/ProductionStatusSection';
-import { AttentionRequiredSection } from '../components/dashboard/AttentionRequiredSection';
 import { FactoryHealthTrend } from '../components/dashboard/FactoryHealthTrend';
+import { OeeTrendChart } from '../components/dashboard/OeeTrendChart';
+import { MachineHealthDistribution } from '../components/dashboard/MachineHealthDistribution';
+import { MachineRiskByProcess } from '../components/dashboard/MachineRiskByProcess';
+import { PredictiveRiskOverview } from '../components/dashboard/PredictiveRiskOverview';
 import { MaintenanceOverviewSection } from '../components/dashboard/MaintenanceOverviewSection';
 import '../styles/dashboard.css';
-import {
-  LayoutDashboard,
-  RefreshCw,
-} from 'lucide-react';
 
 interface DashboardPageProps {
   onNavigate?: (tab: TabId, machineId?: string) => void;
@@ -21,126 +17,66 @@ interface DashboardPageProps {
 
 export const DashboardPage: React.FC<DashboardPageProps> = ({ onNavigate }) => {
   const [dashboardData] = useState(MOCK_DASHBOARD_DATA);
-  const [statusFilter, setStatusFilter] = useState<MachineStatus | 'all'>('all');
-  
-  // Selected machine on the floor map
-  const [selectedMachine, setSelectedMachine] = useState<MachineNode | null>(
-    // Default to WB-04 (most critical machine) to showcase context panel immediately
-    dashboardData.machines.find((m) => m.id === 'WB-04') || dashboardData.machines[0]
-  );
 
-  const handleSelectMachine = (machine: MachineNode) => {
-    setSelectedMachine(machine);
-  };
+  const overview = dashboardData.overview;
 
-  const handleSelectMachineById = (machineId: string) => {
-    const target = dashboardData.machines.find((m) => m.id === machineId);
-    if (target) {
-      setSelectedMachine(target);
-      // Scroll map into view smoothly if needed
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+  const handleSelectCriticalRul = (machineId: string) => {
+    if (onNavigate) {
+      onNavigate('prediction', machineId);
     }
   };
 
-  const handleStatusFilterChange = (status: MachineStatus | 'all') => {
-    setStatusFilter(status);
-  };
-
   return (
-    <div className="dashboard-root">
-      {/* 0. Central Operations Header Strip */}
-      <div className="dash-toolbar">
-        <div className="dash-toolbar-left">
-          <div className="dash-toolbar-title">
-            <LayoutDashboard size={18} />
-            <span>Semiconductor Backend Central Command (OSAT Floor 01)</span>
-          </div>
-          <span className="status-pill">
-            <span className="status-dot pulse" />
-            <span>OPC-UA STREAM: ONLINE</span>
-          </span>
-        </div>
-
-        <div className="dash-toolbar-right">
-          <div className="filter-badge-group">
-            <span style={{ fontSize: '10px', fontWeight: 800, padding: '0 6px', color: 'var(--text-muted)' }}>
-              VIEW FILTER:
-            </span>
-            <button
-              onClick={() => handleStatusFilterChange('all')}
-              className={`filter-badge-btn ${statusFilter === 'all' ? 'active' : ''}`}
-            >
-              ALL
-            </button>
-            <button
-              onClick={() => handleStatusFilterChange('warning')}
-              className={`filter-badge-btn ${statusFilter === 'warning' ? 'active' : ''}`}
-            >
-              WARNINGS ({dashboardData.overview.warningMachines})
-            </button>
-            <button
-              onClick={() => handleStatusFilterChange('critical')}
-              className={`filter-badge-btn ${statusFilter === 'critical' ? 'active' : ''}`}
-            >
-              CRITICAL ({dashboardData.overview.criticalMachines})
-            </button>
-          </div>
-
-          <button
-            onClick={() => {
-              // Refresh or reset filters
-              setStatusFilter('all');
-            }}
-            className="tech-btn"
-            style={{ padding: '5px 8px', fontSize: '11px' }}
-            title="Reset Floor Map Filters"
-          >
-            <RefreshCw size={12} />
-            <span>RESET</span>
-          </button>
-        </div>
-      </div>
-
-      {/* 1. Top Factory Overview KPI Cards (5 Cards) */}
-      <FactoryOverviewKpi
-        data={dashboardData.overview}
-        activeStatusFilter={statusFilter}
-        onFilterStatus={handleStatusFilterChange}
-        onSelectCriticalRul={handleSelectMachineById}
+    <div className="dashboard-root" role="region" aria-label="Vector.ai Factory Executive Dashboard">
+      {/* 0. Factory Overview Header (Plant Identity, Reporting Period, Overall Status) */}
+      <DashboardHeader
+        onNavigate={onNavigate}
+        factoryHealthScore={overview.factoryHealthScore}
+        criticalRiskCount={overview.criticalMachines}
       />
 
-      {/* 2. Main Floor Map & Contextual Information Panel */}
-      <div className="floor-map-container-layout">
-        <FactoryFloorMap
-          machines={dashboardData.machines}
-          selectedMachineId={selectedMachine?.id || null}
-          onSelectMachine={handleSelectMachine}
-          statusFilter={statusFilter}
-          onStatusFilterChange={handleStatusFilterChange}
-        />
+      {/* 1. Factory Overview Top 4 KPI Cards: Factory Health, OEE, Machine Status, Active Alerts */}
+      <FactoryOverviewKpi
+        data={overview}
+        onNavigate={onNavigate}
+        onSelectCriticalRul={handleSelectCriticalRul}
+      />
 
-        <MachineContextPanel
-          machine={selectedMachine}
-          onClose={() => setSelectedMachine(null)}
-          onNavigate={onNavigate}
-        />
-      </div>
-
-      {/* 3. Middle Section: Production Status & Priority Attention Required */}
-      <div className="dash-middle-grid">
-        <ProductionStatusSection data={dashboardData.production} />
-        
-        <AttentionRequiredSection
-          alerts={dashboardData.alerts}
-          onNavigate={onNavigate}
-          onSelectMachine={handleSelectMachineById}
-        />
-      </div>
-
-      {/* 4. Bottom Section: Factory Health Trend & Maintenance Overview */}
-      <div className="dash-bottom-grid">
+      {/* 2. Middle Executive Grid: Two Time-Series Visualizations (Factory Health Trend + OEE Trend) */}
+      <div className="dash-overview-two-col-grid">
+        {/* Factory Health Trend (24H / 7D / 30D) */}
         <FactoryHealthTrend trends={dashboardData.healthTrends} />
-        
+
+        {/* OEE & Production Efficiency Trend (24H / 7D / 30D) */}
+        <OeeTrendChart trends={dashboardData.oeeTrends} />
+      </div>
+
+      {/* 3. Distribution & Process Risk Grid: Equipment Health Distribution + Machine Risk by Process */}
+      <div className="dash-overview-two-col-grid">
+        {/* Equipment Health Distribution (Healthy, Warning, Critical) */}
+        <MachineHealthDistribution
+          overview={overview}
+          machines={dashboardData.machines}
+          onNavigate={onNavigate}
+        />
+
+        {/* Machine Risk by Process (Wafer Dicing, Die Attach, Wire Bonding, Molding, Testing) */}
+        <MachineRiskByProcess
+          processRiskList={dashboardData.processRisk}
+          onNavigate={onNavigate}
+        />
+      </div>
+
+      {/* 4. Full-Width Section: Predictive Maintenance Risk Overview (4-Tier Risk, 7D/30D Horizon, High-Risk Equipment) */}
+      <div className="dash-bottom-full-section">
+        <PredictiveRiskOverview
+          data={dashboardData.predictiveRisk}
+          onNavigate={onNavigate}
+        />
+      </div>
+
+      {/* 5. Bottom Section: Factory Maintenance Workload & Priority Work Orders Summary */}
+      <div className="dash-bottom-full-section">
         <MaintenanceOverviewSection
           data={dashboardData.maintenance}
           onNavigate={onNavigate}
@@ -151,3 +87,5 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onNavigate }) => {
 };
 
 export default DashboardPage;
+
+

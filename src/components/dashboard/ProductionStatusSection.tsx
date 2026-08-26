@@ -1,18 +1,21 @@
 import React from 'react';
 import { ProductionStatusData } from '../../types/dashboard';
+import { TabId } from '../../types/navigation';
 import {
   Gauge,
   Percent,
   CheckCircle2,
   AlertOctagon,
   TrendingUp,
+  ArrowRight,
 } from 'lucide-react';
 
 interface ProductionStatusSectionProps {
   data: ProductionStatusData;
+  onNavigate?: (tab: TabId, machineId?: string) => void;
 }
 
-export const ProductionStatusSection: React.FC<ProductionStatusSectionProps> = ({ data }) => {
+export const ProductionStatusSection: React.FC<ProductionStatusSectionProps> = ({ data, onNavigate }) => {
   const throughputEfficiency = ((data.currentThroughput / data.targetThroughput) * 100).toFixed(1);
 
   return (
@@ -27,9 +30,17 @@ export const ProductionStatusSection: React.FC<ProductionStatusSectionProps> = (
           <Gauge size={16} />
           <span>Production Floor Performance</span>
         </div>
-        <span className="status-pill dark" style={{ fontSize: '10px' }}>
-          OEE LINKED
-        </span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <button
+            type="button"
+            onClick={() => onNavigate?.('monitoring')}
+            className="tech-btn"
+            style={{ padding: '4px 10px', fontSize: '10px' }}
+          >
+            <span>View Monitoring</span>
+            <ArrowRight size={12} />
+          </button>
+        </div>
       </div>
 
       <div className="tech-card-body" style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>

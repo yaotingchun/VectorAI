@@ -1,5 +1,6 @@
-export type TabId = 
+export type TabId =
   | 'dashboard'
+  | 'monitoring'
   | 'vfactory'
   | 'machines'
   | 'prediction'
@@ -21,41 +22,48 @@ export const NAV_ITEMS: NavItem[] = [
     label: 'Dashboard',
     code: 'SYS // DASH',
     num: '01',
-    description: 'Central operations telemetry, real-time metrics, and factory health overview.',
+    description: 'Executive factory overview, health distribution, prediction and maintenance summaries.',
+  },
+  {
+    id: 'monitoring',
+    label: 'Monitoring',
+    code: 'CMD // FLOOR',
+    num: '02',
+    description: 'Factory floor command center, interactive machine map, real-time telemetry, and anomaly queue.',
   },
   {
     id: 'vfactory',
     label: 'v-Factory',
     code: 'TWIN // V-FACT',
-    num: '02',
+    num: '03',
     description: 'Digital twin simulation, spatial floor mapping, and multi-line visualizer.',
   },
   {
     id: 'machines',
     label: 'Machines',
     code: 'NODE // MACH',
-    num: '03',
-    description: 'CNC clusters, sensor node telemetry, spindle vibration, and power monitoring.',
+    num: '04',
+    description: 'Machine cluster telemetry, spindle vibration, and sensor nodes.',
   },
   {
     id: 'prediction',
     label: 'Prediction',
     code: 'AI // PRED',
-    num: '04',
+    num: '05',
     description: 'Neural anomaly detection, predictive failure models, and remaining useful life (RUL).',
   },
   {
     id: 'maintenance',
     label: 'Maintenance',
     code: 'MNTN // SRVC',
-    num: '05',
+    num: '06',
     description: 'Work order automation, scheduled service matrix, and parts replacement registry.',
   },
   {
     id: 'configuration',
     label: 'Configuration',
     code: 'CONF // SYST',
-    num: '06',
+    num: '07',
     description: 'Edge node protocols (MQTT / OPC-UA), security tokens, and system calibration.',
   },
 ];

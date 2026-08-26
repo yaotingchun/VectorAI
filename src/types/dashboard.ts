@@ -2,7 +2,7 @@ import { TabId } from './navigation';
 
 export type MachineStatus = 'healthy' | 'warning' | 'critical' | 'offline';
 
-export type MachineType = 
+export type MachineType =
   | 'Wafer Dicing Machine'
   | 'Die Attacher'
   | 'Wire Bonder'
@@ -103,7 +103,68 @@ export interface TrendDataPoint {
   criticalCount: number;
 }
 
+export interface OeeTrendDataPoint {
+  timestamp: string;
+  label: string;
+  oee: number;
+  availability: number;
+  performance: number;
+  quality: number;
+}
+
 export type TrendTimeRange = '24H' | '7D' | '30D';
+
+export interface ProcessRiskItem {
+  processId: string;
+  processName: string;
+  shortCode: string;
+  bay: string;
+  lines: string;
+  totalMachines: number;
+  healthyCount: number;
+  warningCount: number;
+  criticalCount: number;
+  riskScore: number; // 0 to 100
+  riskLevel: RiskLevel;
+  primaryBottleneck?: string;
+  urgency: string;
+}
+
+export interface PredictiveHorizonData {
+  next7Days: number;
+  next30Days: number;
+  stableBeyond30Days: number;
+}
+
+export interface TopRiskMachineSummary {
+  id: string;
+  name: string;
+  type: MachineType;
+  healthScore: number;
+  rulHours: number;
+  status: MachineStatus;
+  bay: string;
+  line: string;
+  issue: string;
+  actionUrgency: string;
+}
+
+export interface PredictionSummaryData {
+  machinesAtRiskCount: number;
+  imminentFailureCount: number;
+  avgPredictedRulHours: number;
+  enteringDegradationCount: number;
+  topRiskMachines: TopRiskMachineSummary[];
+}
+
+export interface PredictiveRiskOverviewData {
+  criticalCount: number;
+  highRiskCount: number;
+  mediumRiskCount: number;
+  lowRiskCount: number;
+  horizon: PredictiveHorizonData;
+  topRiskMachines: TopRiskMachineSummary[];
+}
 
 export interface MaintenanceTask {
   id: string;
@@ -130,12 +191,31 @@ export interface MaintenanceSummary {
 
 export interface FactoryOverviewKpiData {
   factoryHealthScore: number;
-  healthScoreDelta: number; // e.g. +1.4% vs previous period
+  healthScoreDelta: number; // e.g. +1.2%
+  factoryHealthStatus: 'GOOD' | 'STABLE' | 'ATTENTION' | 'CRITICAL';
+  
+  // OEE Top KPI
+  oeePercentage: number;
+  oeeDelta: number; // e.g. +2.4%
+  oeeAvailability: number;
+  oeePerformance: number;
+  oeeQuality: number;
+
+  // Machine Status Fleet
   totalMachines: number;
   healthyMachines: number;
   warningMachines: number;
   criticalMachines: number;
   offlineMachines: number;
+  onlineMachines: number;
+
+  // Active Alerts Top KPI
+  activeAlertsCount: number;
+  criticalAlertsCount: number;
+  warningAlertsCount: number;
+  imminentSlaCount: number;
+
+  // Legacy / Context compatibility
   criticalRiskCount: number;
   minRulHours: number;
   minRulMachineId: string;
@@ -151,9 +231,14 @@ export interface DashboardData {
   production: ProductionStatusData;
   alerts: AlertItem[];
   healthTrends: Record<TrendTimeRange, TrendDataPoint[]>;
+  oeeTrends: Record<TrendTimeRange, OeeTrendDataPoint[]>;
+  processRisk: ProcessRiskItem[];
+  predictiveRisk: PredictiveRiskOverviewData;
+  predictionSummary?: PredictionSummaryData;
   maintenance: MaintenanceSummary;
 }
 
 export interface DashboardProps {
   onNavigate?: (tab: TabId, machineId?: string) => void;
 }
+

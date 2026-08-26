@@ -1,4 +1,13 @@
-import { DashboardData, MachineNode, AlertItem, MaintenanceTask } from '../types/dashboard';
+import {
+  DashboardData,
+  MachineNode,
+  AlertItem,
+  MaintenanceTask,
+  TrendTimeRange,
+  OeeTrendDataPoint,
+  ProcessRiskItem,
+  PredictiveRiskOverviewData,
+} from '../types/dashboard';
 
 export const MOCK_MACHINES: MachineNode[] = [
   // BAY A: WAFER PREP & DIE ATTACH (Lines 1 & 2)
@@ -810,15 +819,225 @@ export const MOCK_MAINTENANCE_TASKS: MaintenanceTask[] = [
   },
 ];
 
+export const MOCK_OEE_TRENDS: Record<TrendTimeRange, OeeTrendDataPoint[]> = {
+  '24H': [
+    { timestamp: '00:00', label: '00:00', oee: 91.5, availability: 95.0, performance: 97.2, quality: 99.1 },
+    { timestamp: '04:00', label: '04:00', oee: 90.8, availability: 94.8, performance: 96.8, quality: 99.0 },
+    { timestamp: '08:00', label: '08:00', oee: 89.2, availability: 94.0, performance: 95.8, quality: 98.9 },
+    { timestamp: '12:00', label: '12:00', oee: 88.6, availability: 93.6, performance: 95.4, quality: 99.2 },
+    { timestamp: '14:00', label: '14:00', oee: 87.9, availability: 93.2, performance: 95.0, quality: 99.1 },
+    { timestamp: '16:00', label: 'Now',   oee: 89.6, availability: 94.2, performance: 96.1, quality: 98.9 },
+  ],
+  '7D': [
+    { timestamp: 'Aug 17', label: 'Mon 17', oee: 92.1, availability: 95.8, performance: 97.0, quality: 99.2 },
+    { timestamp: 'Aug 18', label: 'Tue 18', oee: 92.8, availability: 96.2, performance: 97.4, quality: 99.1 },
+    { timestamp: 'Aug 19', label: 'Wed 19', oee: 91.2, availability: 95.0, performance: 96.8, quality: 99.0 },
+    { timestamp: 'Aug 20', label: 'Thu 20', oee: 90.4, availability: 94.5, performance: 96.5, quality: 99.2 },
+    { timestamp: 'Aug 21', label: 'Fri 21', oee: 89.8, availability: 94.1, performance: 96.2, quality: 99.1 },
+    { timestamp: 'Aug 22', label: 'Sat 22', oee: 88.0, availability: 93.4, performance: 95.2, quality: 99.0 },
+    { timestamp: 'Aug 23', label: 'Today',  oee: 89.6, availability: 94.2, performance: 96.1, quality: 98.9 },
+  ],
+  '30D': [
+    { timestamp: 'W1', label: 'Week 30', oee: 93.5, availability: 96.5, performance: 97.8, quality: 99.2 },
+    { timestamp: 'W2', label: 'Week 31', oee: 92.2, availability: 95.8, performance: 97.1, quality: 99.1 },
+    { timestamp: 'W3', label: 'Week 32', oee: 90.8, availability: 94.9, performance: 96.6, quality: 99.0 },
+    { timestamp: 'W4', label: 'Week 33', oee: 89.4, availability: 94.0, performance: 96.0, quality: 98.9 },
+    { timestamp: 'W5', label: 'Current', oee: 89.6, availability: 94.2, performance: 96.1, quality: 98.9 },
+  ],
+};
+
+export const MOCK_PROCESS_RISK: ProcessRiskItem[] = [
+  {
+    processId: 'PROC-WD',
+    processName: 'Wafer Dicing',
+    shortCode: 'WD',
+    bay: 'Bay A',
+    lines: 'Line 01, Line 02',
+    totalMachines: 3,
+    healthyCount: 2,
+    warningCount: 1,
+    criticalCount: 0,
+    riskScore: 38,
+    riskLevel: 'moderate',
+    primaryBottleneck: 'WD-02 Spindle vibration harmonic drift at 12.4 kHz',
+    urgency: '< 24h Inspection',
+  },
+  {
+    processId: 'PROC-DA',
+    processName: 'Die Attach',
+    shortCode: 'DA',
+    bay: 'Bay A',
+    lines: 'Line 02',
+    totalMachines: 3,
+    healthyCount: 2,
+    warningCount: 1,
+    criticalCount: 0,
+    riskScore: 42,
+    riskLevel: 'moderate',
+    primaryBottleneck: 'DA-01 Vacuum collet seal pickup timing drift',
+    urgency: '< 48h Calibration',
+  },
+  {
+    processId: 'PROC-WB',
+    processName: 'Wire Bonding',
+    shortCode: 'WB',
+    bay: 'Bay B',
+    lines: 'Line 03, Line 04',
+    totalMachines: 6,
+    healthyCount: 4,
+    warningCount: 1,
+    criticalCount: 1,
+    riskScore: 78,
+    riskLevel: 'critical',
+    primaryBottleneck: 'WB-04 Ultrasonic piezo horn resonance decay (28h RUL)',
+    urgency: '< 12h Emergency SLA',
+  },
+  {
+    processId: 'PROC-MD',
+    processName: 'Molding & Encapsulation',
+    shortCode: 'MD',
+    bay: 'Bay C',
+    lines: 'Line 05',
+    totalMachines: 4,
+    healthyCount: 2,
+    warningCount: 0,
+    criticalCount: 1,
+    riskScore: 72,
+    riskLevel: 'critical',
+    primaryBottleneck: 'MD-03 Hydraulic plunger cylinder #2 pressure loss (34h RUL)',
+    urgency: '< 16h Seal Swap',
+  },
+  {
+    processId: 'PROC-TS',
+    processName: 'IC Testing & Sorting (ATE)',
+    shortCode: 'TS',
+    bay: 'Bay D',
+    lines: 'Line 06',
+    totalMachines: 5,
+    healthyCount: 4,
+    warningCount: 1,
+    criticalCount: 0,
+    riskScore: 32,
+    riskLevel: 'low',
+    primaryBottleneck: 'TS-03 Kelvin test socket probe contact resistance rise',
+    urgency: '< 40h Cleaning',
+  },
+];
+
+export const MOCK_PREDICTIVE_RISK: PredictiveRiskOverviewData = {
+  criticalCount: 2,
+  highRiskCount: 2,
+  mediumRiskCount: 2,
+  lowRiskCount: 14,
+  horizon: {
+    next7Days: 4,      // WB-04 (28h), MD-03 (34h), WD-02 (64h), WB-06 (88h)
+    next30Days: 2,     // TS-03 (94h), DA-01 (112h)
+    stableBeyond30Days: 14, // > 250h RUL
+  },
+  topRiskMachines: [
+    {
+      id: 'WB-04',
+      name: 'Wire Bonder Apex',
+      type: 'Wire Bonder',
+      healthScore: 42,
+      rulHours: 28,
+      status: 'critical',
+      bay: 'Bay B',
+      line: 'Line 04 - High-Density Bond',
+      issue: 'Ultrasonic PZT transducer decay causing imminent bond shear failure',
+      actionUrgency: '< 12 Hours',
+    },
+    {
+      id: 'MD-03',
+      name: 'Auto Molder Vulcan',
+      type: 'Molding Machine',
+      healthScore: 48,
+      rulHours: 34,
+      status: 'critical',
+      bay: 'Bay C',
+      line: 'Line 05 - Encapsulation',
+      issue: 'Hydraulic plunger cylinder pressure drop & ring seal wear',
+      actionUrgency: '< 16 Hours',
+    },
+    {
+      id: 'WD-02',
+      name: 'Wafer Dicer Beta',
+      type: 'Wafer Dicing Machine',
+      healthScore: 71,
+      rulHours: 64,
+      status: 'warning',
+      bay: 'Bay A',
+      line: 'Line 01 - Die Prep',
+      issue: 'High-speed air-bearing spindle radial vibration at 12.4 kHz',
+      actionUrgency: '< 24 Hours',
+    },
+    {
+      id: 'WB-06',
+      name: 'Wire Bonder Zenith',
+      type: 'Wire Bonder',
+      healthScore: 74,
+      rulHours: 88,
+      status: 'warning',
+      bay: 'Bay B',
+      line: 'Line 04 - High-Density Bond',
+      issue: 'Electronic flame-off (EFO) spark voltage fluctuation',
+      actionUrgency: '< 30 Hours',
+    },
+    {
+      id: 'TS-03',
+      name: 'IC Sorter Hyperion',
+      type: 'IC Tester & Sorter',
+      healthScore: 77,
+      rulHours: 94,
+      status: 'warning',
+      bay: 'Bay D',
+      line: 'Line 06 - Final Test & Pack',
+      issue: 'Kelvin RF socket probe contact resistance elevation',
+      actionUrgency: '< 40 Hours',
+    },
+    {
+      id: 'DA-01',
+      name: 'Die Attacher Prime',
+      type: 'Die Attacher',
+      healthScore: 68,
+      rulHours: 112,
+      status: 'warning',
+      bay: 'Bay A',
+      line: 'Line 02 - Die Prep',
+      issue: 'Vacuum collet ejector pin pickup timing drift',
+      actionUrgency: '< 48 Hours',
+    },
+  ],
+};
+
 export const MOCK_DASHBOARD_DATA: DashboardData = {
   overview: {
     factoryHealthScore: 88.4,
     healthScoreDelta: 1.2,
+    factoryHealthStatus: 'GOOD',
+    
+    // OEE Top KPI
+    oeePercentage: 89.6,
+    oeeDelta: 2.4,
+    oeeAvailability: 94.2,
+    oeePerformance: 96.1,
+    oeeQuality: 98.9,
+
+    // Fleet breakdown
     totalMachines: 20,
     healthyMachines: 14,
     warningMachines: 4,
     criticalMachines: 2,
     offlineMachines: 1, // 1 in scheduled tooling changeover
+    onlineMachines: 19,
+
+    // Active alerts
+    activeAlertsCount: 6,
+    criticalAlertsCount: 2,
+    warningAlertsCount: 4,
+    imminentSlaCount: 2,
+
+    // Legacy context
     criticalRiskCount: 2,
     minRulHours: 28,
     minRulMachineId: 'WB-04',
@@ -930,6 +1149,9 @@ export const MOCK_DASHBOARD_DATA: DashboardData = {
       { timestamp: 'W5', label: 'Current', factoryHealth: 88.4, healthyCount: 14, warningCount: 4, criticalCount: 2 },
     ],
   },
+  oeeTrends: MOCK_OEE_TRENDS,
+  processRisk: MOCK_PROCESS_RISK,
+  predictiveRisk: MOCK_PREDICTIVE_RISK,
   maintenance: {
     dueToday: 2,
     dueThisWeek: 5,
@@ -939,3 +1161,4 @@ export const MOCK_DASHBOARD_DATA: DashboardData = {
     priorityTasks: MOCK_MAINTENANCE_TASKS,
   },
 };
+

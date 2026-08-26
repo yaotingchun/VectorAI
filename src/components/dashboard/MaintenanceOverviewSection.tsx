@@ -31,61 +31,55 @@ export const MaintenanceOverviewSection: React.FC<MaintenanceOverviewSectionProp
         </div>
 
         <button
+          type="button"
           onClick={() => onNavigate?.('maintenance')}
           className="tech-btn"
           style={{ padding: '4px 10px', fontSize: '10px' }}
         >
-          <span>View All Work Orders</span>
+          <span>View Maintenance</span>
           <ArrowRight size={12} />
         </button>
       </div>
 
       <div className="tech-card-body" style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-        {/* 5-Column Maintenance KPI Counters */}
-        <div className="maint-metric-grid">
-          {/* Due Today */}
-          <div className="maint-metric-card" style={{ borderColor: 'var(--accent-amber)' }}>
-            <span className="telemetry-label">Due Today</span>
-            <span className="telemetry-value" style={{ color: 'var(--accent-amber)', fontSize: '18px' }}>
-              {data.dueToday}
+        {/* 4-Column Maintenance KPI Counters: Scheduled, In Progress, Completed, Overdue */}
+        <div className="maint-metric-grid four-col">
+          {/* Scheduled */}
+          <div className="maint-metric-card" style={{ borderColor: 'var(--accent-blue)' }}>
+            <span className="telemetry-label">Scheduled</span>
+            <span className="telemetry-value text-blue" style={{ fontSize: '20px' }}>
+              {data.dueToday + data.dueThisWeek}
             </span>
-            <span style={{ fontSize: '9px', color: 'var(--text-muted)' }}>Scheduled</span>
-          </div>
-
-          {/* Due This Week */}
-          <div className="maint-metric-card">
-            <span className="telemetry-label">This Week</span>
-            <span className="telemetry-value" style={{ fontSize: '18px' }}>
-              {data.dueThisWeek}
+            <span style={{ fontSize: '9px', color: 'var(--text-muted)' }}>
+              {data.dueToday} Today • {data.dueThisWeek} This Week
             </span>
-            <span style={{ fontSize: '9px', color: 'var(--text-muted)' }}>Backlog</span>
-          </div>
-
-          {/* Overdue */}
-          <div className="maint-metric-card alert-due">
-            <span className="telemetry-label" style={{ color: 'var(--accent-red)' }}>Overdue</span>
-            <span className="telemetry-value" style={{ color: 'var(--accent-red)', fontSize: '18px' }}>
-              {data.overdue}
-            </span>
-            <span style={{ fontSize: '9px', color: 'var(--accent-red)', fontWeight: 700 }}>Action Req.</span>
           </div>
 
           {/* In Progress */}
-          <div className="maint-metric-card">
+          <div className="maint-metric-card" style={{ borderColor: 'var(--accent-purple)' }}>
             <span className="telemetry-label">In Progress</span>
-            <span className="telemetry-value" style={{ fontSize: '18px' }}>
+            <span className="telemetry-value" style={{ color: 'var(--accent-purple)', fontSize: '20px' }}>
               {data.inProgress}
             </span>
-            <span style={{ fontSize: '9px', color: 'var(--text-muted)' }}>Active Bays</span>
+            <span style={{ fontSize: '9px', color: 'var(--text-muted)' }}>Active Service Bays</span>
           </div>
 
           {/* Completed */}
-          <div className="maint-metric-card">
+          <div className="maint-metric-card" style={{ borderColor: 'var(--accent-green)' }}>
             <span className="telemetry-label">Completed</span>
-            <span className="telemetry-value" style={{ color: 'var(--accent-green)', fontSize: '18px' }}>
+            <span className="telemetry-value text-green" style={{ fontSize: '20px' }}>
               {data.recentlyCompleted}
             </span>
-            <span style={{ fontSize: '9px', color: 'var(--text-muted)' }}>Last 7 Days</span>
+            <span style={{ fontSize: '9px', color: 'var(--text-muted)' }}>Last 7 Days (Closed)</span>
+          </div>
+
+          {/* Overdue */}
+          <div className="maint-metric-card alert-due" style={{ borderColor: 'var(--accent-red)' }}>
+            <span className="telemetry-label" style={{ color: 'var(--accent-red)' }}>Overdue</span>
+            <span className="telemetry-value text-red" style={{ fontSize: '20px' }}>
+              {data.overdue}
+            </span>
+            <span style={{ fontSize: '9px', color: 'var(--accent-red)', fontWeight: 700 }}>Immediate Attention</span>
           </div>
         </div>
 

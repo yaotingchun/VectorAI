@@ -3,6 +3,7 @@ import { TabId } from './types/navigation';
 import { AppLayout } from './components/layout/AppLayout';
 import { IntroScreen } from './components/intro/IntroScreen';
 import { DashboardPage } from './pages/DashboardPage';
+import { MonitoringPage } from './pages/MonitoringPage';
 import { VFactoryPage } from './pages/VFactoryPage';
 import { MachinesPage } from './pages/MachinesPage';
 import { PredictionPage } from './pages/PredictionPage';
@@ -22,14 +23,24 @@ export const App: React.FC = () => {
     }
   };
 
-  const handleNavigate = (tab: TabId, _machineId?: string) => {
+  const handleNavigate = (tab: TabId, machineId?: string) => {
     setActiveTab(tab);
+    if (machineId) {
+      setFocusedMachineId(machineId);
+    }
   };
 
   const renderActivePage = () => {
     switch (activeTab) {
       case 'dashboard':
         return <DashboardPage onNavigate={handleNavigate} />;
+      case 'monitoring':
+        return (
+          <MonitoringPage
+            initialMachineId={focusedMachineId}
+            onNavigate={handleNavigate}
+          />
+        );
       case 'vfactory':
         return <VFactoryPage />;
       case 'machines':
