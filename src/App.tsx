@@ -26,6 +26,10 @@ export const App: React.FC = () => {
       setFocusedDetailTab('prediction');
       return;
     }
+    if (tabId === 'monitoring') {
+      setActiveTab('vfactory');
+      return;
+    }
     setActiveTab(tabId as TabId);
     if (contextId) {
       setFocusedMachineId(contextId);
@@ -44,6 +48,16 @@ export const App: React.FC = () => {
         setFocusedMachineId(machineId);
       }
       setFocusedDetailTab('prediction');
+      return;
+    }
+    if (tab === 'monitoring') {
+      if (machineId) {
+        setActiveTab('machines');
+        setFocusedMachineId(machineId);
+      } else {
+        setActiveTab('vfactory');
+      }
+      setFocusedDetailTab(undefined);
       return;
     }
     setActiveTab(tab as TabId);

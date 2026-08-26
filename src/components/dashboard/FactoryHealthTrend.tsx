@@ -14,7 +14,7 @@ export const FactoryHealthTrend: React.FC<FactoryHealthTrendProps> = ({ trends }
   const [timeRange, setTimeRange] = useState<TrendTimeRange>('7D');
   const [hoveredPoint, setHoveredPoint] = useState<TrendDataPoint | null>(null);
 
-  const currentData = trends[timeRange];
+  const currentData = trends[timeRange] || [];
 
   // Calculate SVG chart coordinates
   const minVal = 70;
@@ -25,11 +25,12 @@ export const FactoryHealthTrend: React.FC<FactoryHealthTrendProps> = ({ trends }
   const paddingY = 20;
 
   const getCoordinates = (points: TrendDataPoint[]) => {
+    if (!points || points.length === 0) return [];
     const usableWidth = chartWidth - paddingX * 2;
     const usableHeight = chartHeight - paddingY * 2;
 
     return points.map((p, idx) => {
-      const x = paddingX + (idx / (points.length - 1)) * usableWidth;
+      const x = paddingX + (idx / Math.max(1, points.length - 1)) * usableWidth;
       const normalizedY = (p.factoryHealth - minVal) / (maxVal - minVal);
       const y = chartHeight - paddingY - normalizedY * usableHeight;
       return { x, y, point: p };

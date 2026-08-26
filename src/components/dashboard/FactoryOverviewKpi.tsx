@@ -1,48 +1,57 @@
 import React from 'react';
-import { FactoryOverviewKpiData, MachineStatus } from '../../types/dashboard';
+import { FactoryOverviewKpiData } from '../../types/dashboard';
+import { TabId } from '../../types/navigation';
 import {
   Activity,
+  Gauge,
   Cpu,
-  AlertTriangle,
-  Clock,
-  TrendingDown,
+  BellRing,
   TrendingUp,
-  ArrowUpRight,
+  TrendingDown,
+  ArrowRight,
+  ShieldCheck,
+  AlertTriangle,
 } from 'lucide-react';
 
 interface FactoryOverviewKpiProps {
   data: FactoryOverviewKpiData;
-  activeStatusFilter?: MachineStatus | 'all';
-  onFilterStatus?: (status: MachineStatus | 'all') => void;
+  onNavigate?: (tab: TabId, machineId?: string) => void;
   onSelectCriticalRul?: (machineId: string) => void;
 }
 
 export const FactoryOverviewKpi: React.FC<FactoryOverviewKpiProps> = ({
   data,
-  activeStatusFilter = 'all',
-  onFilterStatus,
-  onSelectCriticalRul,
+  onNavigate,
 }) => {
-  const healthyPct = (data.healthyMachines / data.totalMachines) * 100;
-  const warningPct = (data.warningMachines / data.totalMachines) * 100;
-  const criticalPct = (data.criticalMachines / data.totalMachines) * 100;
-  const offlinePct = (data.offlineMachines / data.totalMachines) * 100;
+  const healthyPct = Math.round((data.healthyMachines / data.totalMachines) * 100);
+  const warningPct = Math.round((data.warningMachines / data.totalMachines) * 100);
+  const criticalPct = Math.round((data.criticalMachines / data.totalMachines) * 100);
+  const offlinePct = Math.round((data.offlineMachines / data.totalMachines) * 100);
+
+  const isHealthGood = data.factoryHealthScore >= 85;
+  const isOeeWorldClass = data.oeePercentage >= 85;
 
   return (
-    <section className="kpi-grid" aria-label="Factory Top Overview KPIs">
+    <section className="kpi-grid four-col" aria-label="Factory Executive Top KPIs">
       {/* 1. FACTORY HEALTH SCORE */}
-      <div className="kpi-card">
+      <div
+        className="kpi-card interactive"
+        onClick={() => onNavigate?.('monitoring')}
+        title="View live plant health and fleet metrics"
+      >
         <span className="corner-tl">+</span>
         <span className="corner-tr">+</span>
         <span className="corner-bl">+</span>
         <span className="corner-br">+</span>
 
         <div className="kpi-header">
-          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <Activity size={14} color="var(--text-primary)" />
+          <div className="kpi-header-left">
+            <div className="kpi-icon-bubble">
+              <Activity size={15} color="var(--text-primary)" />
+            </div>
             <span className="kpi-title">Factory Health Score</span>
           </div>
-          <span className="kpi-code">INDEX // 0-100</span>
+          <span className="kpi-code">INDEX</span>
         </div>
 
         <div className="kpi-value-row">
@@ -50,117 +59,135 @@ export const FactoryOverviewKpi: React.FC<FactoryOverviewKpiProps> = ({
           <span className="kpi-unit">/ 100</span>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '6px' }}>
-          <span
-            className={`kpi-delta-tag ${data.healthScoreDelta >= 0 ? 'positive' : 'negative'}`}
-          >
-            {data.healthScoreDelta >= 0 ? (
-              <TrendingUp size={11} />
-            ) : (
-              <TrendingDown size={11} />
-            )}
+        <div className="kpi-footer-row">
+          <span className={`kpi-delta-tag ${data.healthScoreDelta >= 0 ? 'positive' : 'negative'}`}>
+            {data.healthScoreDelta >= 0 ? <TrendingUp size={11} /> : <TrendingDown size={11} />}
             <span>
               {data.healthScoreDelta >= 0 ? '+' : ''}
               {data.healthScoreDelta}% vs yesterday
             </span>
           </span>
 
-          <span className="status-pill" style={{ fontSize: '9px', padding: '1px 5px' }}>
-            <span className="status-dot pulse" />
-            <span>OPTIMAL</span>
+          <span
+            className="kpi-status-badge"
+            style={{
+              backgroundColor: isHealthGood ? '#DCFCE7' : '#FEF3C7',
+              color: isHealthGood ? '#166534' : '#92400E',
+              borderColor: isHealthGood ? '#86EFAC' : '#FCD34D',
+            }}
+          >
+            {isHealthGood ? 'GOOD / STABLE' : 'ATTENTION'}
           </span>
+        </div>
+
+        <div className="kpi-sub-strip">
+          <span>Target Index: <strong>90.0</strong></span>
+          <span className="kpi-nav-cue">Monitoring <ArrowRight size={10} /></span>
         </div>
       </div>
 
-      {/* 2. REGISTERED MACHINES BREAKDOWN */}
-      <div className="kpi-card">
+      {/* 2. OVERALL EQUIPMENT EFFECTIVENESS (OEE) */}
+      <div
+        className="kpi-card interactive"
+        onClick={() => onNavigate?.('vfactory')}
+        title="View production line throughput & OEE efficiency"
+      >
         <span className="corner-tl">+</span>
         <span className="corner-tr">+</span>
         <span className="corner-bl">+</span>
         <span className="corner-br">+</span>
 
         <div className="kpi-header">
-          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <Cpu size={14} color="var(--text-primary)" />
-            <span className="kpi-title">Registered Fleet</span>
+          <div className="kpi-header-left">
+            <div className="kpi-icon-bubble">
+              <Gauge size={15} color="var(--accent-blue)" />
+            </div>
+            <span className="kpi-title">Overall Equipment Effectiveness</span>
           </div>
-          <span className="kpi-code">TOTAL // {data.totalMachines}</span>
+          <span className="kpi-code">METRIC</span>
+        </div>
+
+        <div className="kpi-value-row">
+          <span className="kpi-main-value text-blue">{data.oeePercentage.toFixed(1)}</span>
+          <span className="kpi-unit">% OEE</span>
+        </div>
+
+        <div className="kpi-footer-row">
+          <span className={`kpi-delta-tag ${data.oeeDelta >= 0 ? 'positive' : 'negative'}`}>
+            {data.oeeDelta >= 0 ? <TrendingUp size={11} /> : <TrendingDown size={11} />}
+            <span>
+              {data.oeeDelta >= 0 ? '+' : ''}
+              {data.oeeDelta}% vs shift target
+            </span>
+          </span>
+
+          <span
+            className="kpi-status-badge"
+            style={{
+              backgroundColor: isOeeWorldClass ? '#EFF6FF' : '#FEF3C7',
+              color: isOeeWorldClass ? '#1D4ED8' : '#92400E',
+              borderColor: isOeeWorldClass ? '#93C5FD' : '#FCD34D',
+            }}
+          >
+            {isOeeWorldClass ? 'WORLD CLASS' : 'MODERATE'}
+          </span>
+        </div>
+
+        <div className="kpi-sub-strip oee-breakdown">
+          <span>A: <strong>{data.oeeAvailability}%</strong></span>
+          <span className="dot-sep">•</span>
+          <span>P: <strong>{data.oeePerformance}%</strong></span>
+          <span className="dot-sep">•</span>
+          <span>Q: <strong>{data.oeeQuality}%</strong></span>
+        </div>
+      </div>
+
+      {/* 3. MACHINE STATUS */}
+      <div
+        className="kpi-card interactive"
+        onClick={() => onNavigate?.('machines')}
+        title="Inspect machine registry and node statuses"
+      >
+        <span className="corner-tl">+</span>
+        <span className="corner-tr">+</span>
+        <span className="corner-bl">+</span>
+        <span className="corner-br">+</span>
+
+        <div className="kpi-header">
+          <div className="kpi-header-left">
+            <div className="kpi-icon-bubble">
+              <Cpu size={15} color="var(--accent-green)" />
+            </div>
+            <span className="kpi-title">Machine Status</span>
+          </div>
+          <span className="kpi-code">REGISTRY</span>
         </div>
 
         <div className="kpi-value-row">
           <span className="kpi-main-value">{data.totalMachines}</span>
-          <span className="kpi-unit">UNITS</span>
+          <span className="kpi-unit">UNITS ({data.onlineMachines} ONLINE)</span>
         </div>
 
-        {/* Stacked Segment Bar */}
+        {/* Stacked Fleet Bar */}
         <div className="kpi-breakdown-bar" title="Fleet Status Breakdown">
-          <div className="kpi-breakdown-segment seg-healthy" style={{ width: `${healthyPct}%` }} />
-          <div className="kpi-breakdown-segment seg-warning" style={{ width: `${warningPct}%` }} />
-          <div className="kpi-breakdown-segment seg-critical" style={{ width: `${criticalPct}%` }} />
-          <div className="kpi-breakdown-segment seg-offline" style={{ width: `${offlinePct}%` }} />
+          <div className="kpi-breakdown-segment seg-healthy" style={{ width: `${healthyPct}%` }} title={`Healthy: ${data.healthyMachines}`} />
+          <div className="kpi-breakdown-segment seg-warning" style={{ width: `${warningPct}%` }} title={`Warning: ${data.warningMachines}`} />
+          <div className="kpi-breakdown-segment seg-critical" style={{ width: `${criticalPct}%` }} title={`Critical: ${data.criticalMachines}`} />
+          <div className="kpi-breakdown-segment seg-offline" style={{ width: `${offlinePct}%` }} title={`Offline: ${data.offlineMachines}`} />
         </div>
 
-        {/* Status Breakdown Chips (clickable to filter) */}
-        <div className="kpi-status-chips">
-          <button
-            onClick={() => onFilterStatus?.(activeStatusFilter === 'healthy' ? 'all' : 'healthy')}
-            className={`status-chip-mini ${activeStatusFilter === 'healthy' ? 'active' : ''}`}
-            style={{
-              cursor: 'pointer',
-              borderColor: activeStatusFilter === 'healthy' ? 'var(--accent-green)' : 'var(--border-light)',
-            }}
-            title="Filter healthy machines"
-          >
-            <span className="legend-dot healthy" />
-            <span>{data.healthyMachines} OK</span>
-          </button>
-
-          <button
-            onClick={() => onFilterStatus?.(activeStatusFilter === 'warning' ? 'all' : 'warning')}
-            className={`status-chip-mini ${activeStatusFilter === 'warning' ? 'active' : ''}`}
-            style={{
-              cursor: 'pointer',
-              borderColor: activeStatusFilter === 'warning' ? 'var(--accent-amber)' : 'var(--border-light)',
-            }}
-            title="Filter warning machines"
-          >
-            <span className="legend-dot warning" />
-            <span>{data.warningMachines} WARN</span>
-          </button>
-
-          <button
-            onClick={() => onFilterStatus?.(activeStatusFilter === 'critical' ? 'all' : 'critical')}
-            className={`status-chip-mini ${activeStatusFilter === 'critical' ? 'active' : ''}`}
-            style={{
-              cursor: 'pointer',
-              borderColor: activeStatusFilter === 'critical' ? 'var(--accent-red)' : 'var(--border-light)',
-            }}
-            title="Filter critical machines"
-          >
-            <span className="legend-dot critical" />
-            <span>{data.criticalMachines} CRIT</span>
-          </button>
-
-          <button
-            onClick={() => onFilterStatus?.(activeStatusFilter === 'offline' ? 'all' : 'offline')}
-            className={`status-chip-mini ${activeStatusFilter === 'offline' ? 'active' : ''}`}
-            style={{
-              cursor: 'pointer',
-              borderColor: activeStatusFilter === 'offline' ? 'var(--border-strong)' : 'var(--border-light)',
-            }}
-            title="Filter offline machines"
-          >
-            <span className="legend-dot offline" />
-            <span>{data.offlineMachines} OFF</span>
-          </button>
+        <div className="kpi-fleet-counts-row">
+          <span className="count-tag text-green font-bold">{data.healthyMachines} Healthy</span>
+          <span className="count-tag text-amber">{data.warningMachines} Warning</span>
+          <span className="count-tag text-red font-bold">{data.criticalMachines} Critical</span>
         </div>
       </div>
 
-      {/* 3. CRITICAL RISK MACHINES */}
+      {/* 4. ACTIVE ALERTS */}
       <div
-        className={`kpi-card interactive ${data.criticalRiskCount > 0 ? 'alert-border' : ''}`}
-        onClick={() => onFilterStatus?.(activeStatusFilter === 'critical' ? 'all' : 'critical')}
-        title="Click to highlight Critical Risk machines"
+        className={`kpi-card interactive ${data.criticalAlertsCount > 0 ? 'alert-border' : ''}`}
+        onClick={() => onNavigate?.('prediction')}
+        title="View predictive alerts and critical anomalies"
       >
         <span className="corner-tl">+</span>
         <span className="corner-tr">+</span>
@@ -168,122 +195,52 @@ export const FactoryOverviewKpi: React.FC<FactoryOverviewKpiProps> = ({
         <span className="corner-br">+</span>
 
         <div className="kpi-header">
-          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <AlertTriangle size={14} color="var(--accent-red)" />
-            <span className="kpi-title" style={{ color: 'var(--accent-red)' }}>Critical Risk</span>
+          <div className="kpi-header-left">
+            <div className="kpi-icon-bubble alert-pulse">
+              <BellRing size={15} color={data.criticalAlertsCount > 0 ? 'var(--accent-red)' : 'var(--accent-amber)'} />
+            </div>
+            <span className="kpi-title" style={{ color: data.criticalAlertsCount > 0 ? 'var(--accent-red)' : 'var(--accent-amber)' }}>
+              Active Alerts
+            </span>
           </div>
-          <span className="status-pill dark" style={{ fontSize: '9px' }}>URGENT</span>
+          <span className="kpi-code">ALARMS</span>
         </div>
 
         <div className="kpi-value-row">
-          <span className="kpi-main-value" style={{ color: 'var(--accent-red)' }}>
-            {data.criticalRiskCount.toString().padStart(2, '0')}
+          <span className="kpi-main-value" style={{ color: data.criticalAlertsCount > 0 ? 'var(--accent-red)' : 'var(--accent-amber)' }}>
+            {data.activeAlertsCount}
           </span>
-          <span className="kpi-unit">MACHINES</span>
+          <span className="kpi-unit">ACTIVE ALARMS</span>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '6px' }}>
-          <span style={{ fontSize: '10.5px', color: 'var(--text-secondary)', fontWeight: 600 }}>
-            Immediate service required
-          </span>
-          <ArrowUpRight size={14} color="var(--accent-red)" />
-        </div>
-      </div>
-
-      {/* 4. MINIMUM FACTORY RUL */}
-      <div
-        className="kpi-card interactive"
-        onClick={() => onSelectCriticalRul?.(data.minRulMachineId)}
-        title={`Inspect ${data.minRulMachineId} (${data.minRulMachineType})`}
-      >
-        <span className="corner-tl">+</span>
-        <span className="corner-tr">+</span>
-        <span className="corner-bl">+</span>
-        <span className="corner-br">+</span>
-
-        <div className="kpi-header">
+        <div className="kpi-footer-row">
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <Clock size={14} color="var(--text-primary)" />
-            <span className="kpi-title">Min Factory RUL</span>
+            <span className="kpi-alert-pill crit">{data.criticalAlertsCount} Critical</span>
+            <span className="kpi-alert-pill warn">{data.warningAlertsCount} Warning</span>
           </div>
-          <span className="kpi-code">EST // TIME</span>
-        </div>
 
-        <div className="kpi-value-row">
-          <span className="kpi-main-value" style={{ color: 'var(--accent-amber)' }}>
-            {data.minRulHours}
-          </span>
-          <span className="kpi-unit">HOURS</span>
-        </div>
-
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '6px' }}>
           <span
+            className="kpi-status-badge"
             style={{
-              fontFamily: 'var(--font-mono)',
-              fontSize: '10.5px',
-              fontWeight: 700,
-              color: 'var(--text-primary)',
-              backgroundColor: 'var(--bg-muted)',
-              padding: '2px 6px',
-              border: '1px solid var(--border-strong)',
+              backgroundColor: '#FEE2E2',
+              color: '#991B1B',
+              borderColor: '#FCA5A5',
             }}
           >
-            {data.minRulMachineId} • {data.minRulMachineType.split(' ')[0]}
-          </span>
-          <span style={{ fontSize: '9.5px', color: 'var(--accent-red)', fontWeight: 700 }}>
-            CRITICAL
+            ACTION REQ.
           </span>
         </div>
-      </div>
 
-      {/* 5. PRODUCTION RISK */}
-      <div className="kpi-card">
-        <span className="corner-tl">+</span>
-        <span className="corner-tr">+</span>
-        <span className="corner-bl">+</span>
-        <span className="corner-br">+</span>
-
-        <div className="kpi-header">
-          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <TrendingDown size={14} color="var(--accent-amber)" />
-            <span className="kpi-title">Production Risk</span>
-          </div>
-          <span className="kpi-code">THROUGHPUT</span>
-        </div>
-
-        <div className="kpi-value-row">
-          <span className="kpi-main-value" style={{ color: 'var(--accent-amber)' }}>
-            {data.capacityAtRiskPercentage}%
+        <div className="kpi-sub-strip">
+          <span style={{ color: 'var(--accent-red)', fontWeight: 700 }}>
+            {data.imminentSlaCount} Imminent (&lt; 16h SLA)
           </span>
-          <span className="kpi-unit">CAPACITY AT RISK</span>
-        </div>
-
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '6px' }}>
-          <span
-            style={{
-              fontSize: '10px',
-              fontWeight: 700,
-              color: 'var(--text-secondary)',
-              textTransform: 'uppercase',
-            }}
-          >
-            2 Lines Impacted
-          </span>
-          <span
-            style={{
-              fontFamily: 'var(--font-mono)',
-              fontSize: '9.5px',
-              fontWeight: 700,
-              backgroundColor: '#FEF3C7',
-              color: '#92400E',
-              padding: '1px 5px',
-              border: '1px solid #F59E0B',
-            }}
-          >
-            MODERATE RISK
-          </span>
+          <span className="kpi-nav-cue">Predictions <ArrowRight size={10} /></span>
         </div>
       </div>
     </section>
   );
 };
+
+export default FactoryOverviewKpi;
+

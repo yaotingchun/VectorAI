@@ -1,4 +1,4 @@
-export type TabId = 
+export type TabId =
   | 'dashboard'
   | 'vfactory'
   | 'rerouting'
@@ -22,14 +22,14 @@ export const NAV_ITEMS: NavItem[] = [
     label: 'Dashboard',
     code: 'SYS // DASH',
     num: '01',
-    description: 'Central operations telemetry, real-time metrics, and factory health overview.',
+    description: 'Executive factory overview, health distribution, prediction and maintenance summaries.',
   },
   {
     id: 'vfactory',
     label: 'v-Factory',
     code: 'TWIN // V-FACT',
     num: '02',
-    description: 'Virtual factory floor simulation and spatial visualizer.',
+    description: 'Digital twin simulation, spatial floor mapping, and multi-line visualizer.',
   },
   {
     id: 'rerouting',
