@@ -376,8 +376,8 @@
   align-items: start;
 }
 
-/* Machine Floor Node Card */
-.machine-floor-node {
+/* Machine Floor Node Card (Dashboard Map) */
+.dashboard-root .machine-floor-node {
   background-color: var(--bg-card);
   border: 1.5px solid var(--border-strong);
   padding: 8px 10px;
@@ -390,24 +390,24 @@
   box-shadow: 2px 2px 0px rgba(0,0,0,0.08);
 }
 
-.machine-floor-node:hover {
+.dashboard-root .machine-floor-node:hover {
   transform: translateY(-2px);
   box-shadow: 3px 3px 0px var(--border-strong);
   border-color: var(--text-primary);
 }
 
-.machine-floor-node.selected {
+.dashboard-root .machine-floor-node.selected {
   background-color: var(--bg-dark);
   color: var(--text-inverted);
   box-shadow: 3px 3px 0px var(--accent-amber);
   border-color: var(--accent-amber);
 }
 
-.machine-floor-node.status-critical {
+.dashboard-root .machine-floor-node.status-critical {
   border-color: var(--accent-red);
 }
 
-.machine-floor-node.status-warning {
+.dashboard-root .machine-floor-node.status-warning {
   border-color: var(--accent-amber);
 }
 

@@ -1,6 +1,7 @@
 export type TabId = 
   | 'dashboard'
   | 'vfactory'
+  | 'rerouting'
   | 'machines'
   | 'prediction'
   | 'maintenance'
@@ -28,27 +29,34 @@ export const NAV_ITEMS: NavItem[] = [
     label: 'v-Factory',
     code: 'TWIN // V-FACT',
     num: '02',
-    description: 'Digital twin simulation, spatial floor mapping, and multi-line visualizer.',
+    description: 'Virtual factory floor simulation and spatial visualizer.',
+  },
+  {
+    id: 'rerouting',
+    label: 'Rerouting',
+    code: 'ROUTE // DYN-FLOW',
+    num: '03',
+    description: 'Dynamic production rerouting, process line balancing, and automated lot redirection.',
   },
   {
     id: 'machines',
     label: 'Machines',
     code: 'NODE // MACH',
-    num: '03',
+    num: '04',
     description: 'CNC clusters, sensor node telemetry, spindle vibration, and power monitoring.',
   },
   {
     id: 'maintenance',
     label: 'Maintenance',
     code: 'MNTN // SRVC',
-    num: '04',
+    num: '05',
     description: 'Work order automation, scheduled service matrix, and parts replacement registry.',
   },
   {
     id: 'configuration',
     label: 'Configuration',
     code: 'CONF // SYST',
-    num: '05',
+    num: '06',
     description: 'Edge node protocols (MQTT / OPC-UA), security tokens, and system calibration.',
   },
 ];

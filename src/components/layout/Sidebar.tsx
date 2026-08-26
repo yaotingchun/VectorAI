@@ -4,6 +4,7 @@ import { Logo } from '../common/Logo';
 import {
   LayoutDashboard,
   Factory,
+  Route,
   Cpu,
   BrainCircuit,
   Wrench,
@@ -32,6 +33,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
         return <LayoutDashboard size={size} />;
       case 'vfactory':
         return <Factory size={size} />;
+      case 'rerouting':
+        return <Route size={size} />;
       case 'machines':
         return <Cpu size={size} />;
       case 'prediction':
