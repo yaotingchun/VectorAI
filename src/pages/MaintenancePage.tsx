@@ -27,8 +27,9 @@ import {
   ChevronUp,
   ExternalLink,
   Info,
-  AlertOctagon,
+  Activity,
   AlertTriangle,
+  AlertOctagon,
   Sparkles,
 } from 'lucide-react';
 import { runAutoMaintenanceAgent, AgentScenario } from '../features/maintenance/autoMaintenanceAgent';
@@ -320,13 +321,704 @@ const MessageModal: React.FC<{
   );
 };
 
-// ─── Modal 2: Diagnosis Report Modal ──────────────────────────────────────────
+// ─── Sub-component: Mini Sensor Waveform Plot (For Other Channels) ──────────
+
+const SensorMiniWaveformPlot: React.FC<{
+  sensor: {
+    id: string;
+    label: string;
+    value: number;
+    unit: string;
+    baseline: number;
+    threshold: number;
+    deviation: number;
+    status: string;
+    isFaulty: boolean;
+  };
+}> = ({ sensor }) => {
+  const points = React.useMemo(() => {
+    const base = sensor.baseline;
+    return [
+      { time: '-6h', val: parseFloat((base * 1.01).toFixed(1)) },
+      { time: '-5h', val: parseFloat((base * 0.99).toFixed(1)) },
+      { time: '-4h', val: parseFloat((base * 1.03).toFixed(1)) },
+      { time: '-3h', val: parseFloat((base * 0.98).toFixed(1)) },
+      { time: '-2h', val: parseFloat((base * 1.02).toFixed(1)) },
+      { time: '-1h', val: parseFloat((base * 1.01).toFixed(1)) },
+      { time: 'Live', val: parseFloat(sensor.value.toFixed(1)) },
+    ];
+  }, [sensor]);
+
+  const svgW = 280;
+  const svgH = 80;
+  const pad = { top: 10, right: 14, bottom: 18, left: 36 };
+  const plotW = svgW - pad.left - pad.right;
+  const plotH = svgH - pad.top - pad.bottom;
+
+  const vals = points.map((p) => p.val).concat([sensor.baseline, sensor.threshold, sensor.value]);
+  const minVal = Math.min(...vals) * 0.85;
+  const maxVal = Math.max(...vals) * 1.15;
+
+  const getX = (idx: number) => pad.left + (idx / (points.length - 1)) * plotW;
+  const getY = (v: number) => pad.top + plotH - ((v - minVal) / (maxVal - minVal || 1)) * plotH;
+
+  const splinePath = React.useMemo(() => {
+    if (points.length === 0) return '';
+    const pts = points.map((p, idx) => ({ x: getX(idx), y: getY(p.val) }));
+    let path = `M ${pts[0].x} ${pts[0].y}`;
+    for (let i = 0; i < pts.length - 1; i++) {
+      const cur = pts[i];
+      const next = pts[i + 1];
+      const cx = (cur.x + next.x) / 2;
+      path += ` C ${cx} ${cur.y}, ${cx} ${next.y}, ${next.x} ${next.y}`;
+    }
+    return path;
+  }, [points, minVal, maxVal]);
+
+  const lastPt = points.length > 0 ? { x: getX(points.length - 1), y: getY(points[points.length - 1].val) } : null;
+  const areaPath = points.length > 0 && lastPt
+    ? `${splinePath} L ${lastPt.x} ${pad.top + plotH} L ${pad.left} ${pad.top + plotH} Z`
+    : '';
+
+  const strokeColor = sensor.isFaulty ? '#DC2626' : '#2563EB';
+
+  return (
+    <svg viewBox={`0 0 ${svgW} ${svgH}`} style={{ width: '100%', height: 'auto', display: 'block' }}>
+      <defs>
+        <linearGradient id={`miniGrad-${sensor.id}`} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor={strokeColor} stopOpacity={0.18} />
+          <stop offset="100%" stopColor={strokeColor} stopOpacity="0.0" />
+        </linearGradient>
+      </defs>
+
+      {/* Gridlines */}
+      <line
+        x1={pad.left}
+        y1={getY(sensor.baseline)}
+        x2={pad.left + plotW}
+        y2={getY(sensor.baseline)}
+        stroke="#16A34A"
+        strokeWidth="1"
+        strokeDasharray="3 2"
+      />
+      <line
+        x1={pad.left}
+        y1={getY(sensor.threshold)}
+        x2={pad.left + plotW}
+        y2={getY(sensor.threshold)}
+        stroke="#DC2626"
+        strokeWidth="1.2"
+        strokeDasharray="4 2"
+      />
+
+      <text x={pad.left - 3} y={getY(sensor.baseline) + 2.5} textAnchor="end" fontSize="7.5" fontFamily="var(--font-mono)" fill="#16A34A">
+        {sensor.baseline}
+      </text>
+      <text x={pad.left - 3} y={getY(sensor.threshold) + 2.5} textAnchor="end" fontSize="7.5" fontFamily="var(--font-mono)" fill="#DC2626" fontWeight="700">
+        {sensor.threshold}
+      </text>
+
+      <path d={areaPath} fill={`url(#miniGrad-${sensor.id})`} />
+      <path d={splinePath} fill="none" stroke={strokeColor} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+
+      {points.map((pt, idx) => {
+        const x = getX(idx);
+        const y = getY(pt.val);
+        const isLast = idx === points.length - 1;
+
+        return (
+          <g key={idx}>
+            <circle
+              cx={x}
+              cy={y}
+              r={isLast ? 3.5 : 1.8}
+              fill={isLast ? '#111827' : '#FFFFFF'}
+              stroke={strokeColor}
+              strokeWidth="1.4"
+            />
+            {isLast && (
+              <text x={x} y={y - 5} textAnchor="middle" fontSize="8" fontWeight="700" fontFamily="var(--font-mono)" fill="#111827">
+                {pt.val.toFixed(1)} {sensor.unit}
+              </text>
+            )}
+            <text x={x} y={pad.top + plotH + 12} textAnchor="middle" fontSize="7" fontFamily="var(--font-mono)" fill="#6B7280">
+              {pt.time}
+            </text>
+          </g>
+        );
+      })}
+    </svg>
+  );
+};
+
+// ─── Sub-component: Telemetry Diagnosis Graph for Report PDF ─────────────────
+
+const SENSOR_FIXED_DEFAULTS: Record<string, { baseline: number; threshold: number; unit: string }> = {
+  vibration_spindle: { baseline: 1.2, threshold: 4.5, unit: 'mm/s' },
+  temperature_coolant: { baseline: 18.0, threshold: 28.0, unit: '°C' },
+  load_motor: { baseline: 2.5, threshold: 6.0, unit: 'A' },
+  vibration_arm: { baseline: 0.8, threshold: 3.5, unit: 'mm/s' },
+  pressure_vacuum: { baseline: -85.0, threshold: -55.0, unit: 'kPa' },
+  temperature_heater: { baseline: 150.0, threshold: 180.0, unit: '°C' },
+  vibration_ultrasonic: { baseline: 2.0, threshold: 6.0, unit: 'mm/s' },
+  load_clamp: { baseline: 15.0, threshold: 35.0, unit: 'N' },
+  temperature_transducer: { baseline: 45.0, threshold: 85.0, unit: '°C' },
+  temperature_mold: { baseline: 175.0, threshold: 190.0, unit: '°C' },
+  pressure_hydraulic: { baseline: 120.0, threshold: 180.0, unit: 'bar' },
+  load_plunger: { baseline: 8.5, threshold: 15.0, unit: 'kN' },
+  vibration_handler: { baseline: 1.5, threshold: 5.0, unit: 'mm/s' },
+  temperature_chamber: { baseline: 85.0, threshold: 120.0, unit: '°C' },
+  load_actuator: { baseline: 12.0, threshold: 30.0, unit: 'N' },
+};
+
+const TelemetryDiagnosisGraph: React.FC<{
+  task: MaintenanceTask;
+  machine?: any;
+}> = ({ task, machine }) => {
+  const report = task.diagnosisReport;
+
+  // Compile sensor dataset with deterministic, fixed values
+  const sensorItems = React.useMemo(() => {
+    if (machine && machine.sensors && machine.sensors.length > 0) {
+      return machine.sensors.map((s: any, idx: number) => {
+        const lookup = SENSOR_FIXED_DEFAULTS[s.name] || SENSOR_FIXED_DEFAULTS[s.sensorId] || { baseline: 50, threshold: 100, unit: '' };
+        
+        const reportMatch = report.sensorReadings.find(
+          (r) =>
+            r.sensor.toLowerCase() === (s.label || '').toLowerCase() ||
+            r.sensor.toLowerCase() === (s.name || '').toLowerCase() ||
+            (s.label || '').toLowerCase().includes(r.sensor.toLowerCase())
+        );
+
+        const baseline = lookup.baseline;
+        const threshold = lookup.threshold;
+        const unit = s.unit || lookup.unit || '';
+
+        let value: number;
+        let deviation: number;
+        let status: string;
+        let isFaulty: boolean;
+
+        if (reportMatch) {
+          // Parse the fixed value from the report snapshot
+          const numVal = parseFloat(reportMatch.value.replace(/[^0-9.-]/g, '')) || (threshold * 1.15);
+          value = parseFloat(numVal.toFixed(1));
+          status = reportMatch.status;
+          isFaulty = status === 'CRITICAL' || status === 'WARNING';
+          
+          if (isFaulty) {
+             deviation = status === 'CRITICAL' ? 115 : 85;
+          } else {
+             deviation = Math.round((value / threshold) * 100);
+          }
+        } else {
+          // Fixed, deterministic nominal value so it never changes in the PDF
+          const deterministicOffset = ((s.label || s.name || s.id || '').length % 15) / 100; // e.g. 0.05 to 0.14
+          value = parseFloat((baseline * (1 + deterministicOffset)).toFixed(1));
+          status = 'OK';
+          isFaulty = false;
+          deviation = Math.round((value / threshold) * 100) || 15;
+        }
+
+        return {
+          id: s.name || s.sensorId || s.label || `sensor-${idx}`,
+          label: s.label || s.name || 'Sensor',
+          value,
+          unit,
+          baseline,
+          threshold,
+          deviation,
+          status,
+          isFaulty,
+        };
+      });
+    }
+
+    // Fallback using report sensorReadings with fixed calculations
+    return report.sensorReadings.map((r, idx) => {
+      const numVal = parseFloat(r.value.replace(/[^0-9.-]/g, '')) || 50;
+      const unit = r.value.replace(/[0-9.-]/g, '').trim();
+      const isCritical = r.status === 'CRITICAL';
+      const isWarn = r.status === 'WARNING';
+      
+      const lookupKey = Object.keys(SENSOR_FIXED_DEFAULTS).find(k => r.sensor.toLowerCase().includes(k.replace('_', ' '))) 
+                        || Object.keys(SENSOR_FIXED_DEFAULTS)[idx % Object.keys(SENSOR_FIXED_DEFAULTS).length];
+      const lookup = SENSOR_FIXED_DEFAULTS[lookupKey];
+
+      const threshold = isCritical ? parseFloat((numVal * 0.85).toFixed(1)) : (lookup ? lookup.threshold : parseFloat((numVal * 1.25).toFixed(1)));
+      const baseline = lookup ? lookup.baseline : parseFloat((numVal * 0.35).toFixed(1));
+      const dev = isCritical ? 118 : isWarn ? 76 : 28;
+
+      return {
+        id: `sensor-${idx}`,
+        label: r.sensor,
+        value: parseFloat(numVal.toFixed(1)),
+        unit: unit || lookup?.unit || '',
+        baseline,
+        threshold,
+        deviation: dev,
+        status: r.status,
+        isFaulty: isCritical || isWarn,
+      };
+    });
+  }, [machine, report]);
+
+  // Primary problematic sensor that encountered the fault
+  const problemSensors = React.useMemo(() => {
+    return sensorItems.filter((s: any) => s.isFaulty || s.status === 'CRITICAL' || s.status === 'WARNING');
+  }, [sensorItems]);
+
+  const primaryProblemSensor = React.useMemo(() => {
+    return (
+      problemSensors[0] ||
+      [...sensorItems].sort((a: any, b: any) => b.deviation - a.deviation)[0] ||
+      sensorItems[0]
+    );
+  }, [problemSensors, sensorItems]);
+
+  // Other sensor channels (excluding the primary fault channel)
+  const otherSensors = React.useMemo(() => {
+    return sensorItems.filter((s: any) => s.id !== primaryProblemSensor?.id);
+  }, [sensorItems, primaryProblemSensor]);
+
+  // Fixed deterministic time-series progression for the primary fault channel
+  const wavePoints = React.useMemo(() => {
+    if (!primaryProblemSensor) return [];
+    const base = primaryProblemSensor.baseline;
+    const thresh = primaryProblemSensor.threshold;
+    const peak = primaryProblemSensor.value;
+    const span = thresh - base;
+
+    return [
+      { time: '-6h', val: parseFloat(base.toFixed(1)) },
+      { time: '-5h', val: parseFloat((base + span * 0.18).toFixed(1)) },
+      { time: '-4h', val: parseFloat((base + span * 0.38).toFixed(1)) },
+      { time: '-3h', val: parseFloat((base + span * 0.62).toFixed(1)) },
+      { time: '-2h', val: parseFloat((base + span * 0.82).toFixed(1)) },
+      { time: '-1h', val: parseFloat((thresh * 1.02).toFixed(1)) },
+      { time: 'Trigger', val: parseFloat(peak.toFixed(1)) },
+    ];
+  }, [primaryProblemSensor]);
+
+  // SVG Chart Geometry
+  const svgWidth = 630;
+  const svgHeight = 175;
+  const pad = { top: 22, right: 35, bottom: 26, left: 55 };
+  const plotW = svgWidth - pad.left - pad.right;
+  const plotH = svgHeight - pad.top - pad.bottom;
+
+  const vals = wavePoints.map((p) => p.val).concat([primaryProblemSensor.baseline, primaryProblemSensor.threshold, primaryProblemSensor.value]);
+  const minVal = Math.min(...vals) * 0.85;
+  const maxVal = Math.max(...vals) * 1.15;
+
+  const getX = (idx: number) => pad.left + (idx / (wavePoints.length - 1)) * plotW;
+  const getY = (v: number) => pad.top + plotH - ((v - minVal) / (maxVal - minVal || 1)) * plotH;
+
+  const splinePath = React.useMemo(() => {
+    if (wavePoints.length === 0) return '';
+    const pts = wavePoints.map((p, idx) => ({ x: getX(idx), y: getY(p.val) }));
+    let path = `M ${pts[0].x} ${pts[0].y}`;
+    for (let i = 0; i < pts.length - 1; i++) {
+      const cur = pts[i];
+      const next = pts[i + 1];
+      const cx = (cur.x + next.x) / 2;
+      path += ` C ${cx} ${cur.y}, ${cx} ${next.y}, ${next.x} ${next.y}`;
+    }
+    return path;
+  }, [wavePoints, minVal, maxVal]);
+
+  const lastPt = wavePoints.length > 0 ? { x: getX(wavePoints.length - 1), y: getY(wavePoints[wavePoints.length - 1].val) } : null;
+  const areaPath = wavePoints.length > 0 && lastPt
+    ? `${splinePath} L ${lastPt.x} ${pad.top + plotH} L ${pad.left} ${pad.top + plotH} Z`
+    : '';
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', marginBottom: '18px' }}>
+      {/* Section Header */}
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          borderBottom: '1px solid #E5E7EB',
+          paddingBottom: '4px',
+        }}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+          <Activity size={14} color="#DC2626" />
+          <span style={{ fontSize: '11px', fontWeight: 800, color: '#111827', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+            3. MACHINE TELEMETRY SIGNATURE &amp; SENSOR ANOMALY ANALYSIS
+          </span>
+        </div>
+        <span
+          style={{
+            fontSize: '9.5px',
+            fontFamily: 'var(--font-mono)',
+            backgroundColor: primaryProblemSensor.isFaulty ? 'rgba(220,38,38,0.1)' : 'rgba(37,99,235,0.1)',
+            color: primaryProblemSensor.isFaulty ? '#DC2626' : '#2563EB',
+            border: `1px solid ${primaryProblemSensor.isFaulty ? '#DC2626' : '#2563EB'}`,
+            padding: '2px 8px',
+            fontWeight: 800,
+          }}
+        >
+          {primaryProblemSensor.isFaulty ? '⚠️ SENSOR ANOMALY BREACH DETECTED' : 'ALL CHANNELS NOMINAL'}
+        </span>
+      </div>
+
+      {/* Part A: PRIMARY FAULT CHANNEL (Featured Main Graph) */}
+      {primaryProblemSensor && (
+        <div
+          style={{
+            border: '2px solid rgba(220, 38, 38, 0.45)',
+            backgroundColor: '#FFFFFF',
+            padding: '12px 14px',
+            borderRadius: '4px',
+            boxShadow: '0 2px 8px rgba(220, 38, 38, 0.08)',
+          }}
+        >
+          {/* Header */}
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px', marginBottom: '8px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <AlertOctagon size={15} color="#DC2626" />
+              <span style={{ fontSize: '12px', fontWeight: 900, color: '#991B1B', fontFamily: 'var(--font-display)', textTransform: 'uppercase' }}>
+                PRIMARY FAULT CHANNEL: {primaryProblemSensor.label}
+              </span>
+              <span
+                style={{
+                  backgroundColor: '#DC2626',
+                  color: '#FFFFFF',
+                  fontSize: '8.5px',
+                  padding: '2px 6px',
+                  borderRadius: '2px',
+                  fontWeight: 800,
+                  fontFamily: 'var(--font-mono)',
+                }}
+              >
+                CRITICAL THRESHOLD BREACH
+              </span>
+            </div>
+
+            <div style={{ display: 'flex', gap: '10px', fontSize: '9.5px', fontFamily: 'var(--font-mono)', alignItems: 'center' }}>
+              <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', color: '#16A34A' }}>
+                <span style={{ width: '12px', height: '2px', backgroundColor: '#16A34A', borderTop: '1px dashed #16A34A' }} />
+                Baseline ({primaryProblemSensor.baseline} {primaryProblemSensor.unit})
+              </span>
+              <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', color: '#DC2626' }}>
+                <span style={{ width: '12px', height: '2px', backgroundColor: '#DC2626', borderTop: '2px dashed #DC2626' }} />
+                Safety Threshold ({primaryProblemSensor.threshold} {primaryProblemSensor.unit})
+              </span>
+            </div>
+          </div>
+
+          {/* SVG Time-Series Waveform */}
+          <div style={{ width: '100%', overflowX: 'auto' }}>
+            <svg viewBox={`0 0 ${svgWidth} ${svgHeight}`} style={{ width: '100%', height: 'auto', display: 'block' }}>
+              <defs>
+                <linearGradient id="primFaultGrad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="#DC2626" stopOpacity="0.25" />
+                  <stop offset="100%" stopColor="#DC2626" stopOpacity="0.0" />
+                </linearGradient>
+              </defs>
+
+              {/* Threshold Danger Shading */}
+              <rect
+                x={pad.left}
+                y={getY(maxVal)}
+                width={plotW}
+                height={Math.max(0, getY(primaryProblemSensor.threshold) - getY(maxVal))}
+                fill="rgba(220, 38, 38, 0.05)"
+              />
+
+              {/* Gridlines */}
+              {[minVal, primaryProblemSensor.baseline, primaryProblemSensor.threshold, maxVal].map((val, idx) => (
+                <g key={idx}>
+                  <line
+                    x1={pad.left}
+                    y1={getY(val)}
+                    x2={pad.left + plotW}
+                    y2={getY(val)}
+                    stroke="#E5E7EB"
+                    strokeDasharray="3 3"
+                  />
+                  <text
+                    x={pad.left - 6}
+                    y={getY(val) + 3.5}
+                    textAnchor="end"
+                    fontSize="9"
+                    fontFamily="var(--font-mono)"
+                    fill="#6B7280"
+                  >
+                    {val.toFixed(1)} {primaryProblemSensor.unit}
+                  </text>
+                </g>
+              ))}
+
+              {/* Baseline Reference Line (Green dashed) */}
+              <line
+                x1={pad.left}
+                y1={getY(primaryProblemSensor.baseline)}
+                x2={pad.left + plotW}
+                y2={getY(primaryProblemSensor.baseline)}
+                stroke="#16A34A"
+                strokeWidth="1.5"
+                strokeDasharray="4 3"
+              />
+
+              {/* Threshold Reference Line (Red dashed) */}
+              <line
+                x1={pad.left}
+                y1={getY(primaryProblemSensor.threshold)}
+                x2={pad.left + plotW}
+                y2={getY(primaryProblemSensor.threshold)}
+                stroke="#DC2626"
+                strokeWidth="2"
+                strokeDasharray="5 3"
+              />
+              <text
+                x={pad.left + plotW - 4}
+                y={getY(primaryProblemSensor.threshold) - 5}
+                textAnchor="end"
+                fontSize="8.5"
+                fontWeight="800"
+                fontFamily="var(--font-mono)"
+                fill="#DC2626"
+              >
+                SAFETY LIMIT
+              </text>
+
+              {/* Shaded Area */}
+              <path d={areaPath} fill="url(#primFaultGrad)" />
+
+              {/* Spline Path */}
+              <path
+                d={splinePath}
+                fill="none"
+                stroke="#DC2626"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+
+              {/* Data Points */}
+              {wavePoints.map((pt, idx) => {
+                const x = getX(idx);
+                const y = getY(pt.val);
+                const isLast = idx === wavePoints.length - 1;
+
+                return (
+                  <g key={idx}>
+                    <line x1={x} y1={y} x2={x} y2={pad.top + plotH} stroke="#F3F4F6" strokeWidth="1" />
+                    <circle
+                      cx={x}
+                      cy={y}
+                      r={isLast ? 4.5 : 2.8}
+                      fill={isLast ? '#DC2626' : '#FFFFFF'}
+                      stroke="#DC2626"
+                      strokeWidth="1.8"
+                    />
+                    <text
+                      x={x}
+                      y={y - 7}
+                      textAnchor="middle"
+                      fontSize="8.5"
+                      fontWeight={isLast ? '800' : '600'}
+                      fontFamily="var(--font-mono)"
+                      fill={isLast ? '#DC2626' : '#111827'}
+                    >
+                      {pt.val.toFixed(1)}
+                    </text>
+                    <text
+                      x={x}
+                      y={pad.top + plotH + 16}
+                      textAnchor="middle"
+                      fontSize="8.5"
+                      fontFamily="var(--font-mono)"
+                      fill={isLast ? '#111827' : '#6B7280'}
+                      fontWeight={isLast ? '800' : '500'}
+                    >
+                      {pt.time}
+                    </text>
+                  </g>
+                );
+              })}
+            </svg>
+          </div>
+
+          {/* Fault Callout */}
+          <div
+            style={{
+              marginTop: '10px',
+              padding: '8px 10px',
+              backgroundColor: '#FEF2F2',
+              borderLeft: '3px solid #DC2626',
+              fontSize: '10.5px',
+              color: '#7F1D1D',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              flexWrap: 'wrap',
+              gap: '6px',
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <AlertTriangle size={13} color="#DC2626" />
+              <span>
+                <strong>CRITICAL TELEMETRY SPIKE:</strong> {primaryProblemSensor.label} reached{' '}
+                <strong>{primaryProblemSensor.value} {primaryProblemSensor.unit}</strong> (safety threshold: {primaryProblemSensor.threshold} {primaryProblemSensor.unit}). Triggered autonomous work order dispatch.
+              </span>
+            </div>
+            <span style={{ fontSize: '9.5px', fontWeight: 800, fontFamily: 'var(--font-mono)', color: '#DC2626' }}>
+              DEVIATION: +{(primaryProblemSensor.deviation - 100 > 0 ? primaryProblemSensor.deviation - 100 : 0)}% OVER LIMIT
+            </span>
+          </div>
+        </div>
+      )}
+
+      {/* Part B: Other Channels Telemetry Waveform Cards (Smaller Graphs) */}
+      {otherSensors.length > 0 && (
+        <div>
+          <div style={{ fontSize: '10.5px', fontWeight: 800, color: '#111827', textTransform: 'uppercase', marginBottom: '8px', display: 'flex', justifyContent: 'space-between' }}>
+            <span>OTHER SENSOR CHANNELS TELEMETRY ({otherSensors.length} NOMINAL STREAMS)</span>
+            <span style={{ fontSize: '9px', color: '#6B7280', fontFamily: 'var(--font-mono)' }}>Continuous edge sampling</span>
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '10px' }}>
+            {otherSensors.map((s: any) => (
+              <div
+                key={s.id}
+                style={{
+                  padding: '10px 12px',
+                  backgroundColor: '#FFFFFF',
+                  border: '1px solid #E5E7EB',
+                  borderRadius: '4px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '6px',
+                  boxShadow: '0 1px 2px rgba(0,0,0,0.03)',
+                }}
+              >
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span style={{ fontSize: '11px', fontWeight: 700, color: '#111827' }}>
+                    {s.label}
+                  </span>
+                  <span
+                    style={{
+                      fontSize: '8px',
+                      fontWeight: 800,
+                      fontFamily: 'var(--font-mono)',
+                      padding: '1px 5px',
+                      borderRadius: '2px',
+                      backgroundColor: s.deviation >= 60 ? '#D97706' : '#16A34A',
+                      color: '#FFFFFF',
+                    }}
+                  >
+                    {s.deviation >= 60 ? 'WARNING' : 'NOMINAL'}
+                  </span>
+                </div>
+
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '9px', fontFamily: 'var(--font-mono)', color: '#6B7280' }}>
+                  <span>Val: <strong style={{ color: '#111827' }}>{s.value} {s.unit}</strong></span>
+                  <span>Base: {s.baseline}</span>
+                  <span>Limit: <strong style={{ color: '#DC2626' }}>{s.threshold}</strong></span>
+                  <span style={{ color: '#16A34A', fontWeight: 700 }}>Dev: {s.deviation}%</span>
+                </div>
+
+                <SensorMiniWaveformPlot sensor={s} />
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Part C: Multi-Sensor Telemetry Saturation & Status Matrix (All Channels Listed) */}
+      <div
+        style={{
+          border: '1px solid #E5E7EB',
+          backgroundColor: '#FAFAFA',
+          padding: '12px 14px',
+          borderRadius: '4px',
+        }}
+      >
+        <div style={{ fontSize: '10.5px', fontWeight: 800, color: '#111827', textTransform: 'uppercase', marginBottom: '8px', display: 'flex', justifyContent: 'space-between' }}>
+          <span>ALL SENSOR TELEMETRY STATUS &amp; THRESHOLD SATURATION MATRIX ({sensorItems.length} CHANNELS)</span>
+          <span style={{ fontSize: '9px', color: '#6B7280', fontFamily: 'var(--font-mono)' }}>Safety Threshold = 100%</span>
+        </div>
+
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '7px' }}>
+          {sensorItems.map((s: any) => {
+            const isProblem = s.isFaulty;
+            const barPct = Math.min(100, Math.max(8, s.deviation));
+            const barColor = isProblem ? '#DC2626' : s.deviation >= 60 ? '#D97706' : '#16A34A';
+
+            return (
+              <div
+                key={s.id}
+                style={{
+                  padding: '6px 10px',
+                  backgroundColor: isProblem ? '#FEF2F2' : '#FFFFFF',
+                  border: `1px solid ${isProblem ? 'rgba(220,38,38,0.35)' : '#E5E7EB'}`,
+                  borderRadius: '3px',
+                  display: 'grid',
+                  gridTemplateColumns: '150px 1fr 140px',
+                  alignItems: 'center',
+                  gap: '12px',
+                }}
+              >
+                {/* Sensor Name */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                  {isProblem ? <AlertOctagon size={12} color="#DC2626" /> : <CheckCircle2 size={12} color="#16A34A" />}
+                  <span style={{ fontSize: '11px', fontWeight: isProblem ? 800 : 600, color: isProblem ? '#991B1B' : '#111827' }}>
+                    {s.label}
+                  </span>
+                </div>
+
+                {/* Relative Saturation Bar */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <div style={{ flex: 1, height: '7.5px', backgroundColor: '#E5E7EB', borderRadius: '3px', overflow: 'hidden', position: 'relative' }}>
+                    <div style={{ position: 'absolute', right: '15%', top: 0, bottom: 0, width: '1.5px', backgroundColor: '#DC2626', zIndex: 2 }} />
+                    <div style={{ width: `${barPct}%`, height: '100%', backgroundColor: barColor }} />
+                  </div>
+                  <span style={{ fontSize: '10px', fontFamily: 'var(--font-mono)', fontWeight: 700, color: barColor, minWidth: '35px', textAlign: 'right' }}>
+                    {s.deviation}%
+                  </span>
+                </div>
+
+                {/* Fixed Metrics & Status Badge */}
+                <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: '8px' }}>
+                  <span style={{ fontSize: '10px', fontFamily: 'var(--font-mono)', color: '#374151' }}>
+                    <strong>{s.value}</strong> / {s.threshold} {s.unit}
+                  </span>
+                  <span
+                    style={{
+                      fontSize: '8px',
+                      fontWeight: 800,
+                      padding: '1px 5px',
+                      borderRadius: '2px',
+                      backgroundColor: isProblem ? '#DC2626' : s.deviation >= 60 ? '#D97706' : '#16A34A',
+                      color: '#FFFFFF',
+                    }}
+                  >
+                    {isProblem ? 'ANOMALY' : s.deviation >= 60 ? 'WARN' : 'NOMINAL'}
+                  </span>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// ─── Modal 2: Diagnosis Report PDF Modal ──────────────────────────────────────
 
 const DiagnosisModal: React.FC<{
   task: MaintenanceTask;
   onClose: () => void;
 }> = ({ task, onClose }) => {
+  const { machines } = useFactory();
   const report = task.diagnosisReport;
+  const machine = machines.find((m) => m.id === task.machineId);
 
   const handlePrint = () => {
     window.print();
@@ -350,7 +1042,7 @@ const DiagnosisModal: React.FC<{
       <div
         style={{
           width: '100%',
-          maxWidth: '680px',
+          maxWidth: '740px',
           backgroundColor: '#FFFFFF',
           color: '#111827',
           border: '2px solid #111827',
@@ -453,48 +1145,11 @@ const DiagnosisModal: React.FC<{
             </div>
           </div>
 
-          {/* Section 3: Sensor Matrix Table */}
-          {report?.sensorReadings && report.sensorReadings.length > 0 && (
-            <div>
-              <div style={{ fontSize: '11px', fontWeight: 800, color: '#111827', textTransform: 'uppercase', letterSpacing: '0.04em', borderBottom: '1px solid #E5E7EB', paddingBottom: '4px', marginBottom: '6px' }}>
-                3. SENSOR TELEMETRY AT DISPATCH TRIGGER
-              </div>
-              <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '11px', border: '1px solid #E5E7EB' }}>
-                <thead>
-                  <tr style={{ backgroundColor: '#111827', color: '#FFFFFF' }}>
-                    <th style={{ textAlign: 'left', padding: '6px 10px' }}>Sensor Channel</th>
-                    <th style={{ textAlign: 'left', padding: '6px 10px' }}>Captured Value</th>
-                    <th style={{ textAlign: 'left', padding: '6px 10px' }}>Threshold Status</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {report.sensorReadings.map((r, i) => (
-                    <tr key={i} style={{ borderBottom: '1px solid #E5E7EB', backgroundColor: i % 2 === 0 ? '#FFFFFF' : '#F9FAFB' }}>
-                      <td style={{ padding: '6px 10px', fontWeight: 600 }}>{r.sensor}</td>
-                      <td style={{ padding: '6px 10px', fontFamily: 'var(--font-mono)' }}>{r.value}</td>
-                      <td style={{ padding: '6px 10px' }}>
-                        <span
-                          style={{
-                            fontSize: '9.5px',
-                            fontWeight: 800,
-                            padding: '2px 6px',
-                            borderRadius: '2px',
-                            backgroundColor: r.status === 'CRITICAL' ? 'rgba(220,38,38,0.12)' : r.status === 'WARNING' ? 'rgba(217,119,6,0.12)' : 'rgba(22,163,74,0.12)',
-                            color: r.status === 'CRITICAL' ? '#DC2626' : r.status === 'WARNING' ? '#D97706' : '#16A34A',
-                          }}
-                        >
-                          {r.status}
-                        </span>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
+          {/* Section 3: Telemetry Sensor Signature & Anomaly Graph */}
+          <TelemetryDiagnosisGraph task={task} machine={machine} />
 
-          {/* Section 4: Recommended Action Protocols */}
-          <div>
+          {/* Section 4: Required Repair Actions & Consumables */}
+          <div style={{ marginBottom: '16px' }}>
             <div style={{ fontSize: '11px', fontWeight: 800, color: '#111827', textTransform: 'uppercase', letterSpacing: '0.04em', borderBottom: '1px solid #E5E7EB', paddingBottom: '4px', marginBottom: '6px' }}>
               4. REQUIRED REPAIR ACTIONS &amp; CONSUMABLES
             </div>

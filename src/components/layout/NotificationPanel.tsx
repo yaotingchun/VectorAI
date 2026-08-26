@@ -3,7 +3,7 @@ import { Bell, Wrench, AlertTriangle, Zap, ChevronRight, X, CheckCheck } from 'l
 import { useFactory } from '../../context/FactoryContext';
 
 interface NotificationPanelProps {
-  onNavigate: (tab: string, machineId?: string) => void;
+  onNavigate: (tab: string, machineId?: string, subTab?: string) => void;
 }
 
 type NotifCategory = 'maintenance' | 'threshold' | 'anomaly';
@@ -19,6 +19,7 @@ interface AppNotification {
   timestamp: string;
   read: boolean;
   navigateTo?: string;
+  detailTab?: string;
 }
 
 const CATEGORY_META: Record<NotifCategory, { label: string; icon: React.ReactNode; color: string; bg: string }> = {
@@ -114,6 +115,7 @@ export const NotificationPanel: React.FC<NotificationPanelProps> = ({ onNavigate
           timestamp: new Date(Date.now() - Math.random() * 300000).toISOString(),
           read: false,
           navigateTo: 'machines',
+          detailTab: 'sensors',
         });
       });
 
@@ -131,27 +133,50 @@ export const NotificationPanel: React.FC<NotificationPanelProps> = ({ onNavigate
           timestamp: new Date(Date.now() - Math.random() * 600000).toISOString(),
           read: false,
           navigateTo: 'machines',
+          detailTab: 'sensors',
         });
       });
     });
 
     // ── 3. Anomaly / System events (CRITICAL / WARNING status events) ───────
     events
-      .filter((ev) => ev.type === 'CRITICAL' || ev.type === 'REROUTE')
+      .filter((ev) => ev.type === 'CRITICAL' || ev.type === 'REROUTE' || ev.type === 'WARNING')
       .slice(0, 8)
       .forEach((ev) => {
         notifs.push({
           id: `anomaly-${ev.id}`,
           category: 'anomaly',
-          title: ev.type === 'REROUTE' ? 'Dynamic Rerouting' : 'Anomaly Alert',
+          title: ev.type === 'REROUTE' ? `Dynamic Reroute: ${ev.machineId || 'System'}` : `Anomaly Alert: ${ev.machineId || 'Machine Alert'}`,
           message: ev.message,
           machineId: ev.machineId,
           severity: ev.type === 'CRITICAL' ? 'critical' : 'warning',
           timestamp: ev.timestamp,
           read: false,
           navigateTo: ev.machineId ? 'machines' : 'dashboard',
+          detailTab: ev.machineId ? 'anomalies' : undefined,
         });
       });
+
+    // ── 4. Active Machine Alerts (Machine-level anomalies) ──────────────────
+    machines.forEach((m) => {
+      if (m.alerts && m.alerts.length > 0) {
+        m.alerts.forEach((alertMsg, idx) => {
+          notifs.push({
+            id: `anomaly-alert-${m.id}-${idx}`,
+            category: 'anomaly',
+            title: `Anomaly Alert: ${m.id}`,
+            message: alertMsg,
+            machineId: m.id,
+            machineName: m.name,
+            severity: m.status === 'CRITICAL' ? 'critical' : 'warning',
+            timestamp: new Date().toISOString(),
+            read: false,
+            navigateTo: 'machines',
+            detailTab: 'anomalies',
+          });
+        });
+      }
+    });
 
     // Sort: critical first, then by recency
     notifs.sort((a, b) => {
@@ -170,7 +195,7 @@ export const NotificationPanel: React.FC<NotificationPanelProps> = ({ onNavigate
   const handleNotifClick = (notif: AppNotification) => {
     setReadIds((prev) => new Set([...prev, notif.id]));
     if (notif.navigateTo) {
-      onNavigate(notif.navigateTo, notif.machineId);
+      onNavigate(notif.navigateTo, notif.machineId, notif.detailTab);
     }
     setOpen(false);
   };
@@ -529,7 +554,16 @@ export const NotificationPanel: React.FC<NotificationPanelProps> = ({ onNavigate
                       >
                         <ChevronRight size={11} />
                         <span style={{ textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                          Go to {notif.navigateTo === 'machines' ? `Machines${notif.machineId ? ` › ${notif.machineId}` : ''}` : notif.navigateTo === 'maintenance' ? 'Maintenance' : 'Dashboard'}
+                          Go to{' '}
+                          {notif.category === 'anomaly' && notif.machineId
+                            ? `${notif.machineId} Anomaly Site`
+                            : notif.category === 'threshold' && notif.machineId
+                            ? `${notif.machineId} Sensors`
+                            : notif.navigateTo === 'machines'
+                            ? `Machines${notif.machineId ? ` › ${notif.machineId}` : ''}`
+                            : notif.navigateTo === 'maintenance'
+                            ? 'Maintenance'
+                            : 'Dashboard'}
                         </span>
                         {!isRead && (
                           <span
