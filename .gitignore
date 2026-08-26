@@ -39,4 +39,4 @@ dist-ssr
 
 # Credentials
 credentials*
-src/data*
+src/data/machines.json
