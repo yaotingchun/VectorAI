@@ -1,0 +1,737 @@
+{
+  "filename": "ic-tester-sorter",
+  "machine": {
+    "name": "High-Speed Automated IC Tester & Pick-and-Place Sorter",
+    "type": "ic_tester",
+    "prototypeMachineId": "ATE-001",
+    "manualId": "VAI-MAN-ATE-001",
+    "version": "1.0",
+    "generatedDate": "2026-08-26",
+    "documentStatus": "Synthetic Prototype Technical Manual",
+    "purpose": "VectorAI Demonstration and Development",
+    "disclaimer": "SYNTHETIC PROTOTYPE TECHNICAL MANUAL\n\nThis document is artificially generated for the VectorAI demonstration and software development.\n\nThe specifications, thresholds, service-life values, maintenance intervals, and operating parameters are synthetic and must not be used for real industrial equipment operation or maintenance.",
+    "processStage": "Final Electrical Test & Sort",
+    "description": "Automated Test Equipment (ATE) system integrated with a high-throughput pick-and-place device handler, tri-temperature environmental conditioning chamber, and multi-bin sorter designed to execute parametric and functional electrical validation at speed, sorting verified ICs into pass/fail bins or tape-and-reel carriers.",
+    "manufacturingProcess": "Packaged integrated circuits are fed from input tubes, trays, or bulk bowls. The high-speed robotic handler picks devices, brings them to temperature in an environmental chamber (-40\u00b0C to +125\u00b0C), and compresses them into precision pogo-pin test sockets on the Device-Under-Test (DUT) interface board. The ATE instrumentation executes DC parametric, AC timing, and functional RF/digital tests in milliseconds. Tested ICs are sorted into designated bin categories or transferred to high-speed tape-and-reel packaging.",
+    "subsystems": [
+      "Automated High-Speed Pick-and-Place Device Handler & Shuttle",
+      "Precision DUT Test Socket Interface & Pogo Pin Array",
+      "Tri-Temperature Environmental Conditioning Chamber",
+      "High-Speed Parametric Measurement Unit (PMU) & Pin Electronics",
+      "2D DataMatrix Optical Inspection & Laser Marking Station",
+      "Multi-Bin Sorting Shuttles & Tape-and-Reel Packaging Output"
+    ]
+  },
+  "components": [
+    {
+      "name": "DUT Interface Socket & Pogo Pin Block",
+      "function": "Provides temporary, highly reliable electrical contact to IC package pins/balls with minimal contact resistance and signal distortion.",
+      "importantParameters": "Pogo pin contact resistance (m\u03a9), compression stroke force (N), contact lifecycle count, socket surface temperature (\u00b0C).",
+      "degradationIndicators": "Contact resistance elevation (>85 m\u03a9), false open-circuit test failures, pogo pin spring fatigue, socket debris buildup."
+    },
+    {
+      "name": "High-Speed Handler Robotic Carriage",
+      "function": "Transfers untested chips to test sockets and sorts tested devices into pass/fail bin positions at accelerations up to 15G.",
+      "importantParameters": "Carriage linear vibration (mm/s), positioning repeatability (\u00b5m), vacuum pickup seal integrity.",
+      "degradationIndicators": "Handler vibration spikes (>0.90 mm/s), mechanical positioning jitter, device dropping, track belt slack."
+    },
+    {
+      "name": "Socket Actuator Press",
+      "function": "Applies programmable compression force to seat device pins firmly into pogo pin matrix during test execution.",
+      "importantParameters": "Actuator compression force (N), descent velocity (mm/s), force planarity balance.",
+      "degradationIndicators": "Actuator force creep (>75 N), lead deformation on packages, pneumatic seal leakage."
+    },
+    {
+      "name": "Tri-Temp Environmental Chamber",
+      "function": "Maintains precise device testing temperature from cold test (-40\u00b0C) to room temp (25\u00b0C) to hot burn-in (125\u00b0C).",
+      "importantParameters": "Chamber air temperature (\u00b0C), thermal airflow rate (CFM), thermocouple accuracy.",
+      "degradationIndicators": "Chamber temperature drift (>35\u00b0C in room test), fan bearing noise, thermal gradient across DUT sites."
+    },
+    {
+      "name": "Sorting Shuttle & Tape-and-Reel Unit",
+      "function": "Directs tested ICs into up to 8 bin classes and seals passing units into carrier tape with heated cover tape shoe.",
+      "importantParameters": "Sorting accuracy (\u00b5m), sealing shoe temperature (\u00b0C), tape peel force (N).",
+      "degradationIndicators": "Sorting positioning error (>15 \u00b5m), bin mis-sorting, carrier tape jam, sealing shoe temperature decay."
+    }
+  ],
+  "sensors": [
+    {
+      "sensorId": "vibration_handler",
+      "name": "Handler Vibration",
+      "unit": "mm/s",
+      "purpose": "Measures X/Y/Z linear motor carriage vibration on the high-speed device transfer handler.",
+      "minScale": 0.0,
+      "maxScale": 2.5,
+      "normalRange": [
+        0.2,
+        0.6
+      ],
+      "warningRange": [
+        0.6,
+        0.9
+      ],
+      "criticalRange": [
+        0.9,
+        2.5
+      ],
+      "direction": "HIGHER_IS_WORSE"
+    },
+    {
+      "sensorId": "temperature_chamber",
+      "name": "Test Chamber Temp",
+      "unit": "\u00b0C",
+      "purpose": "Measures ambient thermal condition inside the device-under-test socket environmental enclosure.",
+      "minScale": -40.0,
+      "maxScale": 150.0,
+      "normalRange": [
+        22.0,
+        28.0
+      ],
+      "warningRange": [
+        28.0,
+        35.0
+      ],
+      "criticalRange": [
+        35.0,
+        150.0
+      ],
+      "direction": "HIGHER_IS_WORSE"
+    },
+    {
+      "sensorId": "load_actuator",
+      "name": "Socket Actuator Load",
+      "unit": "N",
+      "purpose": "Measures contact compression force exerted when seating chips into the pogo pin test socket.",
+      "minScale": 0.0,
+      "maxScale": 120.0,
+      "normalRange": [
+        40.0,
+        60.0
+      ],
+      "warningRange": [
+        60.0,
+        75.0
+      ],
+      "criticalRange": [
+        75.0,
+        120.0
+      ],
+      "direction": "HIGHER_IS_WORSE"
+    },
+    {
+      "sensorId": "contact_resistance",
+      "name": "Pogo Pin Contact Resistance",
+      "unit": "m\u03a9",
+      "purpose": "Monitors the average electrical loop resistance across critical power and signal test pins.",
+      "minScale": 0.0,
+      "maxScale": 200.0,
+      "normalRange": [
+        25.0,
+        55.0
+      ],
+      "warningRange": [
+        55.0,
+        85.0
+      ],
+      "criticalRange": [
+        85.0,
+        200.0
+      ],
+      "direction": "HIGHER_IS_WORSE"
+    },
+    {
+      "sensorId": "sorting_accuracy",
+      "name": "Bin Sorting Positional Error",
+      "unit": "\u00b5m",
+      "purpose": "Measures positional placement offset when inserting tested devices into sorting output bins.",
+      "minScale": 0.0,
+      "maxScale": 40.0,
+      "normalRange": [
+        0.0,
+        8.0
+      ],
+      "warningRange": [
+        8.0,
+        15.0
+      ],
+      "criticalRange": [
+        15.0,
+        40.0
+      ],
+      "direction": "HIGHER_IS_WORSE"
+    },
+    {
+      "sensorId": "test_socket_temperature",
+      "name": "Socket Surface Temp",
+      "unit": "\u00b0C",
+      "purpose": "Monitors localized surface heating of the DUT socket elastomer/PEEK body during continuous testing.",
+      "minScale": 10.0,
+      "maxScale": 80.0,
+      "normalRange": [
+        24.0,
+        32.0
+      ],
+      "warningRange": [
+        32.0,
+        40.0
+      ],
+      "criticalRange": [
+        40.0,
+        80.0
+      ],
+      "direction": "HIGHER_IS_WORSE"
+    }
+  ],
+  "thresholds": [
+    {
+      "sensorId": "vibration_handler",
+      "sensorName": "Handler Vibration",
+      "unit": "mm/s",
+      "normal": {
+        "min": 0.2,
+        "max": 0.6,
+        "description": "Smooth handler carriage traverse and pick-and-place indexing."
+      },
+      "warning": {
+        "min": 0.6,
+        "max": 0.9,
+        "description": "Linear guide rail dry friction or belt tension relaxation."
+      },
+      "critical": {
+        "min": 0.9,
+        "max": 2.5,
+        "description": "Severe mechanical guide binding or loose carriage bearings causing device jams."
+      },
+      "direction": "HIGHER_IS_WORSE"
+    },
+    {
+      "sensorId": "temperature_chamber",
+      "sensorName": "Test Chamber Temp",
+      "unit": "\u00b0C",
+      "normal": {
+        "min": 22.0,
+        "max": 28.0,
+        "description": "Stable room-temperature parametric testing thermal envelope."
+      },
+      "warning": {
+        "min": 28.0,
+        "max": 35.0,
+        "description": "Chamber air circulation fan degradation or cleanroom thermal drift."
+      },
+      "critical": {
+        "min": 35.0,
+        "max": 150.0,
+        "description": "Thermal condition out of specification causing parametric test yield fallout."
+      },
+      "direction": "HIGHER_IS_WORSE"
+    },
+    {
+      "sensorId": "load_actuator",
+      "sensorName": "Socket Actuator Load",
+      "unit": "N",
+      "normal": {
+        "min": 40.0,
+        "max": 60.0,
+        "description": "Nominal compression seating pogo pins to optimal working travel."
+      },
+      "warning": {
+        "min": 60.0,
+        "max": 75.0,
+        "description": "Actuator friction increase or socket guide pin resistance."
+      },
+      "critical": {
+        "min": 75.0,
+        "max": 120.0,
+        "description": "Excessive force causing package lead bending or pogo pin destruction."
+      },
+      "direction": "HIGHER_IS_WORSE"
+    },
+    {
+      "sensorId": "contact_resistance",
+      "sensorName": "Pogo Pin Contact Resistance",
+      "unit": "m\u03a9",
+      "normal": {
+        "min": 25.0,
+        "max": 55.0,
+        "description": "Clean gold/palladium-alloy contact interfaces with minimal voltage drop."
+      },
+      "warning": {
+        "min": 55.0,
+        "max": 85.0,
+        "description": "Pogo pin tip oxidation or solder plating transfer buildup."
+      },
+      "critical": {
+        "min": 85.0,
+        "max": 200.0,
+        "description": "Severe contact degradation causing false electrical test failures (Yield crash)."
+      },
+      "direction": "HIGHER_IS_WORSE"
+    },
+    {
+      "sensorId": "sorting_accuracy",
+      "sensorName": "Bin Sorting Positional Error",
+      "unit": "\u00b5m",
+      "normal": {
+        "min": 0.0,
+        "max": 8.0,
+        "description": "High-precision pocket placement into tape pocket or tray."
+      },
+      "warning": {
+        "min": 8.0,
+        "max": 15.0,
+        "description": "Linear belt stretch or optical encoder scale dust fouling."
+      },
+      "critical": {
+        "min": 15.0,
+        "max": 40.0,
+        "description": "High risk of device jamming on pocket walls and lead damage."
+      },
+      "direction": "HIGHER_IS_WORSE"
+    },
+    {
+      "sensorId": "test_socket_temperature",
+      "sensorName": "Socket Surface Temp",
+      "unit": "\u00b0C",
+      "normal": {
+        "min": 24.0,
+        "max": 32.0,
+        "description": "Optimal thermal baseline during high-frequency DUT switching."
+      },
+      "warning": {
+        "min": 32.0,
+        "max": 40.0,
+        "description": "Localized ohmic heating from elevated pin contact resistance."
+      },
+      "critical": {
+        "min": 40.0,
+        "max": 80.0,
+        "description": "Dangerous socket heating risking PEEK body softening and pin misregistration."
+      },
+      "direction": "HIGHER_IS_WORSE"
+    }
+  ],
+  "operatingConditions": {
+    "ambientTemperature": "20.0 - 23.0 \u00b0C (Cleanroom ISO Class 7)",
+    "relativeHumidity": "40% - 60% RH non-condensing (ESD safe environment)",
+    "normalOperatingTemperature": "25.0 \u00b0C (Room temp test) / -40.0 to +125.0 \u00b0C (Tri-Temp modes)",
+    "normalOperatingPressure": "0.50 - 0.60 MPa (CDA pneumatic supply)",
+    "normalOperatingSpeed": "8,000 - 15,000 Units Per Hour (UPH)",
+    "normalCycleTime": "0.24 - 0.45 seconds per tested device",
+    "normalOperatingHours": "20 - 24 hours/day continuous",
+    "recommendedOperatingConditions": "Automated pogo pin cleaning brush cycle every 5,000 devices; socket life check every 250,000 cycles.",
+    "maximumContinuousOperation": "120 hours before required socket electrical calibration and alignment verification"
+  },
+  "maintenance": [
+    {
+      "component": "DUT Pogo Pin Test Socket Block",
+      "recommendedMaintenanceIntervalHours": 100,
+      "expectedServiceLifeHours": 1500,
+      "maintenanceAction": "Run automated abrasive brush cycle, clean pin tips with isopropyl alcohol swab, check contact resistance.",
+      "procedureSummary": "Use Kelvin 4-wire micro-ohmmeter on gold test coupon. Replace socket when average resistance > 60 m\u03a9."
+    },
+    {
+      "component": "Handler Robotic Linear Drive Belts & Guides",
+      "recommendedMaintenanceIntervalHours": 500,
+      "expectedServiceLifeHours": 6000,
+      "maintenanceAction": "Clean linear rails, lubricate guide bearings with cleanroom synthetic grease, check belt tension with sonic meter.",
+      "procedureSummary": "Verify timing belt tension is 85 \u00b1 5 Hz using optical/acoustic tension meter. Inspect belt teeth for wear."
+    },
+    {
+      "component": "Socket Actuator Pneumatic Press",
+      "recommendedMaintenanceIntervalHours": 350,
+      "expectedServiceLifeHours": 4000,
+      "maintenanceAction": "Inspect actuator guide bushings, replace pneumatic cylinder seals, calibrate compression load cell.",
+      "procedureSummary": "Place load cell calibration tool into socket nest; verify actuator delivers exactly 50 \u00b1 2 N."
+    },
+    {
+      "component": "Tri-Temp Thermal Circulation System",
+      "recommendedMaintenanceIntervalHours": 750,
+      "expectedServiceLifeHours": 8000,
+      "maintenanceAction": "Clean air circulation blower fans, check thermoelectric Peltier modules, calibrate RTD temperature sensors.",
+      "procedureSummary": "Place 4-wire platinum RTD logger into chamber; verify thermal uniformity across all 4 test sites \u00b1 0.5\u00b0C."
+    },
+    {
+      "component": "Tape-and-Reel Sealing Shoe & Cutter",
+      "recommendedMaintenanceIntervalHours": 250,
+      "expectedServiceLifeHours": 3000,
+      "maintenanceAction": "Clean Teflon sealing shoe surface, check heater cartridge, perform cover tape peel force test.",
+      "procedureSummary": "Run peel force tester on 500 mm of sealed carrier tape (verify peel force is 30 - 80 gf per EIA-481 standard)."
+    }
+  ],
+  "degradationIndicators": [
+    {
+      "parameter": "Pogo Pin Contact Resistance",
+      "normalCondition": "Average pin resistance between 25 and 55 m\u03a9 with low variance.",
+      "degradedCondition": "Contact resistance climbs to 55 - 85 m\u03a9 due to solder transfer and tip oxidation.",
+      "criticalCondition": "Resistance exceeds 85 m\u03a9; causes false parametric test bin failures and yield crashes.",
+      "indicatorMechanism": "Direct physical indication of solder intermetallic transfer, noble metal coating wear, or internal pogo spring fatigue."
+    },
+    {
+      "parameter": "Handler Carriage Vibration",
+      "normalCondition": "Vibration amplitude 0.20 - 0.60 mm/s during high-speed indexing.",
+      "degradedCondition": "Vibration climbs to 0.60 - 0.90 mm/s due to guide rail dry friction or belt slack.",
+      "criticalCondition": "Vibration exceeds 0.90 mm/s; mechanical resonance causes device pickup misregistration.",
+      "indicatorMechanism": "Indicates mechanical guide wear, linear motor bearing play, or timing belt tooth wear."
+    },
+    {
+      "parameter": "Socket Actuator Load",
+      "normalCondition": "Compression force maintains nominal 40 - 60 N.",
+      "degradedCondition": "Force climbs to 60 - 75 N as actuator friction increases.",
+      "criticalCondition": "Force exceeds 75 N; high risk of crushing delicate IC package leads.",
+      "indicatorMechanism": "Indicates pneumatic guide cylinder seal friction, mechanical guide binding, or load cell drift."
+    },
+    {
+      "parameter": "Test Chamber Temperature",
+      "normalCondition": "Maintained strictly at 22 - 28 \u00b0C during room temp validation.",
+      "degradedCondition": "Temperature drifts to 28 - 35 \u00b0C.",
+      "criticalCondition": "Temperature exceeds 35 \u00b0C; thermal drift alters semiconductor bandgap parameters.",
+      "indicatorMechanism": "Indicates blower fan failure, thermal insulation loss, or environmental chamber control loop failure."
+    },
+    {
+      "parameter": "Bin Sorting Positional Error",
+      "normalCondition": "Pocket placement offset below 8 \u00b5m.",
+      "degradedCondition": "Positional error increases to 8 - 15 \u00b5m.",
+      "criticalCondition": "Positional error exceeds 15 \u00b5m; device edges catch on pocket walls causing jams.",
+      "indicatorMechanism": "Indicates timing belt elongation, optical encoder scale contamination, or theta rotational backlash."
+    }
+  ],
+  "rulModel": {
+    "baseUsefulLifeHours": 6000,
+    "formulaDescription": "Deterministic multi-parameter linear degradation model for IC Tester & Sorter. Weights sum to 1.00.",
+    "weightsSum": 1.0,
+    "parameters": [
+      {
+        "parameter": "Contact Resistance",
+        "sensorId": "contact_resistance",
+        "sensorName": "Pogo Pin Contact Resistance",
+        "unit": "m\u03a9",
+        "weight": 0.3,
+        "healthyLimit": 55.0,
+        "criticalLimit": 110.0,
+        "direction": "HIGHER_IS_WORSE"
+      },
+      {
+        "parameter": "Handler Vibration",
+        "sensorId": "vibration_handler",
+        "sensorName": "Handler Vibration",
+        "unit": "mm/s",
+        "weight": 0.25,
+        "healthyLimit": 0.6,
+        "criticalLimit": 1.3,
+        "direction": "HIGHER_IS_WORSE"
+      },
+      {
+        "parameter": "Actuator Load",
+        "sensorId": "load_actuator",
+        "sensorName": "Socket Actuator Load",
+        "unit": "N",
+        "weight": 0.2,
+        "healthyLimit": 60.0,
+        "criticalLimit": 90.0,
+        "direction": "HIGHER_IS_WORSE"
+      },
+      {
+        "parameter": "Chamber Temperature",
+        "sensorId": "temperature_chamber",
+        "sensorName": "Test Chamber Temp",
+        "unit": "\u00b0C",
+        "weight": 0.15,
+        "healthyLimit": 28.0,
+        "criticalLimit": 45.0,
+        "direction": "HIGHER_IS_WORSE"
+      },
+      {
+        "parameter": "Sorting Positional Error",
+        "sensorId": "sorting_accuracy",
+        "sensorName": "Bin Sorting Positional Error",
+        "unit": "\u00b5m",
+        "weight": 0.1,
+        "healthyLimit": 8.0,
+        "criticalLimit": 22.0,
+        "direction": "HIGHER_IS_WORSE"
+      }
+    ]
+  },
+  "symptoms": [
+    {
+      "symptomId": "SYM-ATE-01",
+      "symptom": "Pogo Pin Contact Resistance Elevation / False Open Fails",
+      "severity": "Critical",
+      "relatedSensors": [
+        "contact_resistance",
+        "test_socket_temperature"
+      ],
+      "possibleCauses": [
+        "Solder and tin plating transfer onto gold-plated pogo pin crown tips",
+        "Pogo pin internal helical spring fatigue or contact micro-oxidation",
+        "Dust and resin particulate accumulation inside socket guide holes"
+      ],
+      "recommendedAction": "Run automated diamond cleaning brush sequence. If resistance > 60 m\u03a9 persists, replace pogo pin socket insert."
+    },
+    {
+      "symptomId": "SYM-ATE-02",
+      "symptom": "Handler Carriage Vibration Surge / Pick Jitter",
+      "severity": "High",
+      "relatedSensors": [
+        "vibration_handler",
+        "sorting_accuracy"
+      ],
+      "possibleCauses": [
+        "Linear guide rail dry friction and cleanroom grease breakdown",
+        "Timing belt tension relaxation or tooth pitch wear",
+        "Pick-and-place head mounting screw looseness"
+      ],
+      "recommendedAction": "Clean linear guides, lubricate with cleanroom grease, adjust timing belt tension to 85 Hz with sonic meter."
+    },
+    {
+      "symptomId": "SYM-ATE-03",
+      "symptom": "Socket Actuator High Compression Force / Lead Bending",
+      "severity": "High",
+      "relatedSensors": [
+        "load_actuator"
+      ],
+      "possibleCauses": [
+        "Pneumatic cylinder guide rod mechanical binding",
+        "Actuator downward stroke limit stop set too deep",
+        "Foreign particle trapped between device nest and socket face"
+      ],
+      "recommendedAction": "Inspect socket nest for debris, verify actuator load calibration (50 N), lubricate cylinder guide pins."
+    },
+    {
+      "symptomId": "SYM-ATE-04",
+      "symptom": "Test Chamber Temperature Drift / Thermal Yield Shift",
+      "severity": "Medium",
+      "relatedSensors": [
+        "temperature_chamber"
+      ],
+      "possibleCauses": [
+        "Environmental chamber air circulation fan bearing wear or failure",
+        "Thermoelectric Peltier module thermal paste degradation",
+        "Chamber thermal door seal gasket air leak"
+      ],
+      "recommendedAction": "Inspect circulation blower, check Peltier drive current, verify 25.0\u00b0C chamber temperature stability."
+    },
+    {
+      "symptomId": "SYM-ATE-05",
+      "symptom": "Tape-and-Reel Pocket Placement Jam / Mis-Sort",
+      "severity": "High",
+      "relatedSensors": [
+        "sorting_accuracy"
+      ],
+      "possibleCauses": [
+        "Sorting shuttle X/Y positioning belt stretch or encoder skip",
+        "Carrier tape sprocket indexing pin wear",
+        "Vacuum pickup collet tip wear causing device tilt during placement"
+      ],
+      "recommendedAction": "Re-teach tape pocket pickup coordinates, replace vacuum collet, clean optical encoder strip."
+    }
+  ],
+  "failureScenarios": [
+    {
+      "scenarioId": "SCEN-ATE-001",
+      "symptom": "Pogo Pin Solder Transfer & Contact Resistance Spike",
+      "sensorPattern": "contact_resistance surges from 38 m\u03a9 to 92 m\u03a9; false Continuity Fail rate climbs to 4.2%",
+      "possibleCauses": [
+        "Lead-free tin plating transferring from device balls to pogo crown tips",
+        "Internal spring relaxation after 200,000 mechanical actuations",
+        "Socket guide plate pocket contamination"
+      ],
+      "severity": "critical",
+      "recommendedAction": "Execute 20 strokes with abrasive cleaning coupon. Replace socket insert if resistance remains > 60 m\u03a9.",
+      "verificationSteps": [
+        "Run automated socket diagnostic self-test with gold coupon",
+        "Verify pin resistance < 40 m\u03a9 across all channels"
+      ]
+    },
+    {
+      "scenarioId": "SCEN-ATE-002",
+      "symptom": "Handler Carriage Timing Belt Tooth Wear & Vibration",
+      "sensorPattern": "vibration_handler rises from 0.42 to 0.94 mm/s; sorting_accuracy error jumps to 16.5 \u00b5m",
+      "possibleCauses": [
+        "Kevlar timing belt tooth shear wear after 2,000 operating hours",
+        "Belt tension dropped below 60 Hz",
+        "Linear guide bearing ball recirculation fatigue"
+      ],
+      "severity": "high",
+      "recommendedAction": "Replace timing belt, adjust tension to 85 Hz using acoustic meter, clean and re-grease linear rails.",
+      "verificationSteps": [
+        "Execute high-speed multi-point positioning test",
+        "Verify repeatability < 5.0 \u00b5m"
+      ]
+    },
+    {
+      "scenarioId": "SCEN-ATE-003",
+      "symptom": "Socket Actuator Cylinder Friction Binding",
+      "sensorPattern": "load_actuator climbs from 50 N to 78 N; cycle time delay alert",
+      "possibleCauses": [
+        "Pneumatic cylinder piston rod seal friction and contamination",
+        "Socket guide bushing misaligned",
+        "Force sensor amplifier baseline drift"
+      ],
+      "severity": "high",
+      "recommendedAction": "Replace pneumatic actuator seal kit. Re-align socket guide pins. Calibrate force sensor.",
+      "verificationSteps": [
+        "Perform 50 actuation cycles with load cell tool",
+        "Verify load is 50 \u00b1 2 N consistently"
+      ]
+    },
+    {
+      "scenarioId": "SCEN-ATE-004",
+      "symptom": "Test Chamber Air Blower Fan Bearing Failure",
+      "sensorPattern": "temperature_chamber rises from 24.5\u00b0C to 36.8\u00b0C; thermal gradient alert",
+      "possibleCauses": [
+        "Circulation fan brushless motor bearing seizure",
+        "Peltier cooling heat sink fins clogged with dust",
+        "Chamber intake air filter restriction"
+      ],
+      "severity": "medium",
+      "recommendedAction": "Replace circulation blower fan. Clean heat sink radiator fins. Replace intake air filter.",
+      "verificationSteps": [
+        "Log chamber temperature over 20 minutes",
+        "Verify temperature stays at 25.0 \u00b1 0.5\u00b0C"
+      ]
+    },
+    {
+      "scenarioId": "SCEN-ATE-005",
+      "symptom": "Tape-and-Reel Sealing Shoe Temperature Decay",
+      "sensorPattern": "Cover tape peel force drops below 20 gf (carrier open defect risk)",
+      "possibleCauses": [
+        "Sealing shoe heater cartridge resistance increase",
+        "Teflon tape build-up on sealing shoe blade",
+        "Thermocouple probe loose"
+      ],
+      "severity": "high",
+      "recommendedAction": "Clean sealing shoe with brass brush, replace heater element if resistance > 120 \u03a9, verify 160\u00b0C setpoint.",
+      "verificationSteps": [
+        "Run peel force test on 1 meter of sealed tape (target 45 \u00b1 10 gf)"
+      ]
+    },
+    {
+      "scenarioId": "SCEN-ATE-006",
+      "symptom": "Vacuum Pickup Collet Tip Contamination and Device Drop",
+      "sensorPattern": "Handler pickup error rate climbs to 1.8%; vibration_handler nominal",
+      "possibleCauses": [
+        "Silicone suction cup rim coated with package mold compound dust",
+        "Vacuum solenoid valve response delayed",
+        "Vacuum generator venturi clogged"
+      ],
+      "severity": "high",
+      "recommendedAction": "Clean suction cup tips with IPA swab. Inspect vacuum level (min -75 kPa).",
+      "verificationSteps": [
+        "Run 200 dummy devices in loop mode",
+        "Verify zero drop errors"
+      ]
+    },
+    {
+      "scenarioId": "SCEN-ATE-007",
+      "symptom": "2D DataMatrix Laser Reader Optical Blur",
+      "sensorPattern": "Vision scan timeout increases by 15 ms per device; occasional unreadable ID",
+      "possibleCauses": [
+        "Optical scanner window coated with cleanroom dust film",
+        "Laser scanner focal distance drifted due to bracket vibration",
+        "LED illumination ring half-channel failure"
+      ],
+      "severity": "medium",
+      "recommendedAction": "Clean scanner optical window with lens tissue. Recalibrate focal distance and illumination.",
+      "verificationSteps": [
+        "Test scan 100 sample 2D barcodes",
+        "Verify 100% first-pass read rate"
+      ]
+    },
+    {
+      "scenarioId": "SCEN-ATE-008",
+      "symptom": "Pogo Pin Breakage Causing Short Circuit on DUT Site",
+      "sensorPattern": "contact_resistance on Channel 4 reads 0.0 m\u03a9 (short) or infinite (open)",
+      "possibleCauses": [
+        "Mechanical fatigue fracture of internal pin spring",
+        "Foreign metallic burr bridging adjacent socket pins",
+        "Socket guide plate cracked"
+      ],
+      "severity": "critical",
+      "recommendedAction": "Remove socket block immediately. Replace broken pogo pin using pin insertion tool.",
+      "verificationSteps": [
+        "Inspect all pins with 50x microscope",
+        "Perform pin-to-pin isolation test (> 100 M\u03a9)"
+      ]
+    },
+    {
+      "scenarioId": "SCEN-ATE-009",
+      "symptom": "Handler Theta Rotation Backlash & Misalignment",
+      "sensorPattern": "sorting_accuracy theta error increases to \u00b1 1.2 degrees",
+      "possibleCauses": [
+        "Harmonic drive theta gearbox wear",
+        "Theta stepper motor coupling set screw loose",
+        "Rotary optical home sensor dirty"
+      ],
+      "severity": "medium",
+      "recommendedAction": "Tighten motor shaft coupling set screw with threadlocker. Clean home optical sensor.",
+      "verificationSteps": [
+        "Run theta rotation calibration routine",
+        "Verify angular repeatability < 0.1 deg"
+      ]
+    },
+    {
+      "scenarioId": "SCEN-ATE-010",
+      "symptom": "Electrostatic Discharge (ESD) Grounding Resistance Drift",
+      "sensorPattern": "ESD grounding monitor alert; resistance climbs from 0.8 \u03a9 to 15.4 \u03a9",
+      "possibleCauses": [
+        "Handler wrist strap grounding wire braid broken",
+        "Conductive table mat ground snap corroded",
+        "Socket grounding bus connection loose"
+      ],
+      "severity": "critical",
+      "recommendedAction": "Replace ESD grounding cable. Clean ground lug interface with wire brush. Verify resistance < 1.0 \u03a9.",
+      "verificationSteps": [
+        "Measure point-to-ground resistance with calibrated megohmmeter (< 1.0 \u03a9)"
+      ]
+    },
+    {
+      "scenarioId": "SCEN-ATE-011",
+      "symptom": "Carrier Tape Sprocket Hole Indexer Tooth Wear",
+      "sensorPattern": "Tape feeder jam alert; sorting_accuracy in tape direction drifts \u00b1 20 \u00b5m",
+      "possibleCauses": [
+        "Sprocket wheel teeth worn down from continuous plastic tape indexing",
+        "Feeder advance stepper belt loose",
+        "Cover tape peel tension too high pulling carrier backward"
+      ],
+      "severity": "high",
+      "recommendedAction": "Replace indexing sprocket wheel. Calibrate tape advance pitch to 4.00 \u00b1 0.02 mm.",
+      "verificationSteps": [
+        "Advance 100 tape pockets",
+        "Verify pocket center alignment with vision camera"
+      ]
+    },
+    {
+      "scenarioId": "SCEN-ATE-012",
+      "symptom": "DUT Test Head Docking Latch Play",
+      "sensorPattern": "contact_resistance values fluctuate across all pins when handler vibrates",
+      "possibleCauses": [
+        "Pneumatic docking latch mechanism air pressure low",
+        "Docking alignment guide pins worn",
+        "Test head stiffener frame clamping torque uneven"
+      ],
+      "severity": "high",
+      "recommendedAction": "Inspect docking latch air pressure (min 0.55 MPa). Replace worn docking guide pins.",
+      "verificationSteps": [
+        "Execute docking repeatable contact resistance test",
+        "Verify stability < \u00b1 2 m\u03a9"
+      ]
+    },
+    {
+      "scenarioId": "SCEN-ATE-013",
+      "symptom": "Socket Elastomer Body Localized Overheating",
+      "sensorPattern": "test_socket_temperature climbs from 28\u00b0C to 44.5\u00b0C during continuous DC stress test",
+      "possibleCauses": [
+        "High current power pin pogo resistance elevated causing I\u00b2R ohmic heating",
+        "Socket thermal cooling airflow obstructed",
+        "Continuous high duty cycle testing without dwell time"
+      ],
+      "severity": "high",
+      "recommendedAction": "Replace high-current pogo pins with heavy-duty crown pins. Clean socket bottom cooling channels.",
+      "verificationSteps": [
+        "Thermal camera inspection of socket under full test load",
+        "Verify max temp < 32\u00b0C"
+      ]
+    }
+  ]
+}

@@ -19,6 +19,7 @@ import { getPredictionScenario } from '../../../prediction/data/predictionScenar
 import { DegradationChart } from '../../../prediction/components/charts/DegradationChart';
 import { getHealthScoreColor } from '../../utils/machineStatus';
 import { DetailTab } from './MachineDetail';
+import { getMachineRulCalculation } from '../../services/machineApi';
 
 interface MachinePredictionProps {
   machine: Machine;
@@ -33,6 +34,7 @@ export const MachinePrediction: React.FC<MachinePredictionProps> = ({
 }) => {
   const scenario = getPredictionScenario(machine);
   const { color: healthColor } = getHealthScoreColor(machine.healthScore);
+  const detailedRul = getMachineRulCalculation(machine);
 
   const isCritical = scenario.conditionLevel === 'critical';
   const isWarning = scenario.conditionLevel === 'warning';
@@ -194,10 +196,10 @@ export const MachinePrediction: React.FC<MachinePredictionProps> = ({
       <div className="tech-card">
         <div className="tech-card-header">
           <span className="tech-card-title">
-            <BarChart2 size={14} /> DEGRADATION CURVE & REMAINING USEFUL LIFE PROJECTION
+            <BarChart2 size={14} /> DETERMINISTIC DEGRADATION CURVE & RUL PROJECTION
           </span>
           <span style={{ fontSize: '10px', fontFamily: 'var(--font-mono)', color: 'var(--text-muted)' }}>
-            HISTORICAL DRIFT + 8-STEP NEURAL FORECAST
+            FORMULA-BASED RUL (NO-ML) • BASE: {detailedRul?.baseUsefulLifeHours || 5000}h
           </span>
         </div>
         <div className="tech-card-body">
@@ -211,46 +213,83 @@ export const MachinePrediction: React.FC<MachinePredictionProps> = ({
         <div className="tech-card">
           <div className="tech-card-header">
             <span className="tech-card-title">
-              <Activity size={14} /> CONTRIBUTING ROOT-CAUSE FACTORS
+              <Activity size={14} /> DEGRADATION PARAMETER CONTRIBUTIONS (Σ w_i = 1.00)
             </span>
             <span style={{ fontSize: '10px', fontFamily: 'var(--font-mono)', color: 'var(--text-muted)' }}>
-              FEATURE WEIGHT
+              WEIGHTED WEAR
             </span>
           </div>
           <div className="tech-card-body" style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-            {scenario.contributingFactors.map((factor, index) => {
-              const factorColor = factor.status === 'critical' ? 'var(--accent-red)'
-                                : factor.status === 'warning' ? 'var(--accent-amber)'
-                                : 'var(--accent-green)';
-              return (
-                <div key={index}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '5px' }}>
-                    <span style={{
-                      fontFamily: 'var(--font-mono)',
-                      fontSize: '11px',
-                      fontWeight: 700,
-                      color: 'var(--text-primary)',
-                      letterSpacing: '0.02em'
-                    }}>
-                      {factor.name}
-                    </span>
-                    <span style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', fontWeight: 700, color: factorColor }}>
-                      {factor.pct}%
-                    </span>
+            {detailedRul && detailedRul.parameters.length > 0 ? (
+              detailedRul.parameters.map((param, index) => {
+                const paramColor = param.status === 'critical' ? 'var(--accent-red)'
+                                  : param.status === 'warning' ? 'var(--accent-amber)'
+                                  : 'var(--accent-green)';
+                const wearPct = Math.round(param.individualDegradation * 100);
+                return (
+                  <div key={index}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '5px' }}>
+                      <span style={{
+                        fontFamily: 'var(--font-mono)',
+                        fontSize: '11px',
+                        fontWeight: 700,
+                        color: 'var(--text-primary)',
+                        letterSpacing: '0.02em'
+                      }}>
+                        {param.parameter} <span style={{ color: 'var(--text-muted)', fontSize: '10px' }}>(w={param.weight.toFixed(2)})</span>
+                      </span>
+                      <span style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', fontWeight: 700, color: paramColor }}>
+                        {wearPct}% wear ({param.percentageOfTotalWear}% share)
+                      </span>
+                    </div>
+                    <div style={{ height: '6px', backgroundColor: 'var(--bg-muted)', overflow: 'hidden' }}>
+                      <div
+                        style={{
+                          height: '100%',
+                          width: `${Math.max(wearPct, 3)}%`,
+                          backgroundColor: paramColor,
+                          transition: 'width 0.4s ease'
+                        }}
+                      />
+                    </div>
                   </div>
-                  <div style={{ height: '6px', backgroundColor: 'var(--bg-muted)', overflow: 'hidden' }}>
-                    <div
-                      style={{
-                        height: '100%',
-                        width: `${factor.pct}%`,
-                        backgroundColor: factorColor,
-                        transition: 'width 0.4s ease'
-                      }}
-                    />
+                );
+              })
+            ) : (
+              scenario.contributingFactors.map((factor, index) => {
+                const factorColor = factor.status === 'critical' ? 'var(--accent-red)'
+                                  : factor.status === 'warning' ? 'var(--accent-amber)'
+                                  : 'var(--accent-green)';
+                return (
+                  <div key={index}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '5px' }}>
+                      <span style={{
+                        fontFamily: 'var(--font-mono)',
+                        fontSize: '11px',
+                        fontWeight: 700,
+                        color: 'var(--text-primary)',
+                        letterSpacing: '0.02em'
+                      }}>
+                        {factor.name}
+                      </span>
+                      <span style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', fontWeight: 700, color: factorColor }}>
+                        {factor.pct}%
+                      </span>
+                    </div>
+                    <div style={{ height: '6px', backgroundColor: 'var(--bg-muted)', overflow: 'hidden' }}>
+                      <div
+                        style={{
+                          height: '100%',
+                          width: `${factor.pct}%`,
+                          backgroundColor: factorColor,
+                          transition: 'width 0.4s ease'
+                        }}
+                      />
+                    </div>
                   </div>
-                </div>
-              );
-            })}
+                );
+              })
+            )}
           </div>
         </div>
 

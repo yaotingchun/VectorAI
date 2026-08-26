@@ -1,0 +1,735 @@
+{
+  "filename": "wire-bonder",
+  "machine": {
+    "name": "High-Speed Thermosonic Ball-Wedge Wire Bonder",
+    "type": "wire_bonder",
+    "prototypeMachineId": "WB-001",
+    "manualId": "VAI-MAN-WB-001",
+    "version": "1.0",
+    "generatedDate": "2026-08-26",
+    "documentStatus": "Synthetic Prototype Technical Manual",
+    "purpose": "VectorAI Demonstration and Development",
+    "disclaimer": "SYNTHETIC PROTOTYPE TECHNICAL MANUAL\n\nThis document is artificially generated for the VectorAI demonstration and software development.\n\nThe specifications, thresholds, service-life values, maintenance intervals, and operating parameters are synthetic and must not be used for real industrial equipment operation or maintenance.",
+    "processStage": "Wire Interconnect Assembly",
+    "description": "Ultra-fast thermosonic ball-wedge wire bonder designed to create microscopic electrical interconnects between semiconductor die pads and leadframe fingers/substrate traces using gold (Au) or copper (Cu) wire via high-frequency ultrasonic energy, controlled mechanical force, and stage heating.",
+    "manufacturingProcess": "The wire bonding sequence operates at up to 25 wires per second. An Electronic Flame-Off (EFO) spark creates a molten Free Air Ball (FAB) at the tip of the wire protruding from a ceramic capillary. The bond head drives the ball into the die pad, applying 138 kHz ultrasonic resonance to form a metallurgical intermetallic bond (First Bond). The capillary then forms a precision wire loop and presses the wire onto the leadframe finger, creating a crescent/wedge bond (Second Bond) before wire clamps tear the tail.",
+    "subsystems": [
+      "138 kHz Piezoelectric Ultrasonic Transducer & Horn Stack",
+      "Precision Ceramic Capillary Tooling & Z-Axis Voice Coil",
+      "Electronic Flame-Off (EFO) Spark Generator & Electrode",
+      "High-Precision Workholder Heated Clamp & Vacuum Stage",
+      "Wire Feed Spool & Micro-Air Tensioner Delivery System",
+      "High-Speed Look-Down Vision Alignment & Wire Loop Profiling Camera"
+    ]
+  },
+  "components": [
+    {
+      "name": "Ultrasonic Transducer & Horn Stack",
+      "function": "Converts high-frequency electrical drive signals into mechanical ultrasonic resonance to scrub and weld gold/copper wire to metal pads.",
+      "importantParameters": "Ultrasonic vibration magnitude (mm/s), resonance frequency (kHz), transducer temperature (\u00b0C), impedance (\u03a9).",
+      "degradationIndicators": "Vibration harmonic drift (>0.75 mm/s), piezo stack heating (>58\u00b0C), impedance increase, unbonded wires."
+    },
+    {
+      "name": "Ceramic Capillary Tool",
+      "function": "Guides the ultra-fine bonding wire (18-25 \u00b5m diameter), shapes the ball bond, and presses the stitch bond.",
+      "importantParameters": "Tip outer diameter (\u00b5m), hole diameter (\u00b5m), face angle, touchdown impact force (gf).",
+      "degradationIndicators": "Capillary tip wear/erosion, gold buildup in chamfer, touchdown force elevation (>28 gf), non-stick on pad."
+    },
+    {
+      "name": "Electronic Flame-Off (EFO) Wand",
+      "function": "Discharges a high-voltage, low-current micro-arc to melt the wire tip into a symmetrical Free Air Ball.",
+      "importantParameters": "Spark voltage (V), spark current (mA), spark duration (\u00b5s), electrode gap distance (mm).",
+      "degradationIndicators": "Spark voltage spikes (>2450 V), asymmetrical ball formation, electrode carbonization/oxidation."
+    },
+    {
+      "name": "Leadframe Workholder & Clamp",
+      "function": "Rigidly clamps leadframe against heated pedestal block to eliminate micro-motion during ultrasonic scrubbing.",
+      "importantParameters": "Clamping force (N), clamp insert flatness, heater stage temperature (\u00b0C).",
+      "degradationIndicators": "Clamping force degradation (>85 N or <45 N), leadframe bouncing, poor stitch adhesion, clamp wear."
+    },
+    {
+      "name": "Wire Feed Clamp & Air Tensioner",
+      "function": "Maintains constant light tension on bonding wire spool and executes precision tail breaking.",
+      "importantParameters": "Air tension pressure (kPa), clamp opening/closing response time (ms), wire drag friction.",
+      "degradationIndicators": "Wire sagging, loop height variance, wire drag friction increase, tail length inconsistency."
+    }
+  ],
+  "sensors": [
+    {
+      "sensorId": "vibration_ultrasonic",
+      "name": "Ultrasonic Vibration",
+      "unit": "mm/s",
+      "purpose": "Measures harmonic vibration magnitude directly at the ultrasonic transducer horn during the bonding burst.",
+      "minScale": 0.0,
+      "maxScale": 2.0,
+      "normalRange": [
+        0.3,
+        0.5
+      ],
+      "warningRange": [
+        0.5,
+        0.75
+      ],
+      "criticalRange": [
+        0.75,
+        2.0
+      ],
+      "direction": "HIGHER_IS_WORSE"
+    },
+    {
+      "sensorId": "load_clamp",
+      "name": "Clamp Clamping Force",
+      "unit": "N",
+      "purpose": "Measures mechanical clamping force exerted on leadframe to prevent substrate micro-vibration.",
+      "minScale": 0.0,
+      "maxScale": 120.0,
+      "normalRange": [
+        55.0,
+        75.0
+      ],
+      "warningRange": [
+        75.0,
+        85.0
+      ],
+      "criticalRange": [
+        85.0,
+        120.0
+      ],
+      "direction": "HIGHER_IS_WORSE"
+    },
+    {
+      "sensorId": "temperature_transducer",
+      "name": "Transducer Temp",
+      "unit": "\u00b0C",
+      "purpose": "Monitors the internal operating temperature of the piezoelectric crystal stack in the transducer horn.",
+      "minScale": 20.0,
+      "maxScale": 80.0,
+      "normalRange": [
+        42.0,
+        50.0
+      ],
+      "warningRange": [
+        50.0,
+        58.0
+      ],
+      "criticalRange": [
+        58.0,
+        80.0
+      ],
+      "direction": "HIGHER_IS_WORSE"
+    },
+    {
+      "sensorId": "ultrasonic_power",
+      "name": "Ultrasonic Power Output",
+      "unit": "W",
+      "purpose": "Monitors electrical power delivered to the transducer during the bonding scrub cycle.",
+      "minScale": 0.0,
+      "maxScale": 6.0,
+      "normalRange": [
+        1.8,
+        2.8
+      ],
+      "warningRange": [
+        2.8,
+        3.6
+      ],
+      "criticalRange": [
+        3.6,
+        6.0
+      ],
+      "direction": "HIGHER_IS_WORSE"
+    },
+    {
+      "sensorId": "efo_spark_voltage",
+      "name": "EFO Spark Voltage",
+      "unit": "V",
+      "purpose": "Monitors the ignition voltage of the Electronic Flame-Off arc used to create Free Air Balls.",
+      "minScale": 1000.0,
+      "maxScale": 3000.0,
+      "normalRange": [
+        1800.0,
+        2200.0
+      ],
+      "warningRange": [
+        2200.0,
+        2450.0
+      ],
+      "criticalRange": [
+        2450.0,
+        3000.0
+      ],
+      "direction": "HIGHER_IS_WORSE"
+    },
+    {
+      "sensorId": "capillary_touchdown_force",
+      "name": "Touchdown Impact Force",
+      "unit": "gf",
+      "purpose": "Measures initial impact force (gram-force) when capillary tip touches die pad surface.",
+      "minScale": 0.0,
+      "maxScale": 50.0,
+      "normalRange": [
+        18.0,
+        24.0
+      ],
+      "warningRange": [
+        24.0,
+        28.0
+      ],
+      "criticalRange": [
+        28.0,
+        50.0
+      ],
+      "direction": "HIGHER_IS_WORSE"
+    }
+  ],
+  "thresholds": [
+    {
+      "sensorId": "vibration_ultrasonic",
+      "sensorName": "Ultrasonic Vibration",
+      "unit": "mm/s",
+      "normal": {
+        "min": 0.3,
+        "max": 0.5,
+        "description": "Resonant harmonic energy properly transmitted through horn and capillary."
+      },
+      "warning": {
+        "min": 0.5,
+        "max": 0.75,
+        "description": "Acoustic impedance mismatch or loosened capillary locking screw."
+      },
+      "critical": {
+        "min": 0.75,
+        "max": 2.0,
+        "description": "Severe transducer piezo cracking or uncontrolled mechanical oscillation."
+      },
+      "direction": "HIGHER_IS_WORSE"
+    },
+    {
+      "sensorId": "load_clamp",
+      "sensorName": "Clamp Clamping Force",
+      "unit": "N",
+      "normal": {
+        "min": 55.0,
+        "max": 75.0,
+        "description": "Firm clamping holding leadframe flat against heater block without substrate damage."
+      },
+      "warning": {
+        "min": 75.0,
+        "max": 85.0,
+        "description": "Excessive clamping force causing leadframe indentation or clamp actuator fatigue."
+      },
+      "critical": {
+        "min": 85.0,
+        "max": 120.0,
+        "description": "Excessive force causing leadframe deformation or lead pin crushing."
+      },
+      "direction": "HIGHER_IS_WORSE"
+    },
+    {
+      "sensorId": "temperature_transducer",
+      "sensorName": "Transducer Temp",
+      "unit": "\u00b0C",
+      "normal": {
+        "min": 42.0,
+        "max": 50.0,
+        "description": "Nominal thermal equilibrium under continuous 20 W/sec bonding load."
+      },
+      "warning": {
+        "min": 50.0,
+        "max": 58.0,
+        "description": "Piezoelectric internal dielectric loss and self-heating."
+      },
+      "critical": {
+        "min": 58.0,
+        "max": 80.0,
+        "description": "Thermal depolarization hazard for PZT crystals; imminent transducer failure."
+      },
+      "direction": "HIGHER_IS_WORSE"
+    },
+    {
+      "sensorId": "ultrasonic_power",
+      "sensorName": "Ultrasonic Power Output",
+      "unit": "W",
+      "normal": {
+        "min": 1.8,
+        "max": 2.8,
+        "description": "Standard energy required to establish Au-Al or Cu-Al intermetallic bond."
+      },
+      "warning": {
+        "min": 2.8,
+        "max": 3.6,
+        "description": "Generator boosting power to overcome bonding interface contamination or capillary wear."
+      },
+      "critical": {
+        "min": 3.6,
+        "max": 6.0,
+        "description": "Excessive power delivery risking pad metal cratering and silicon fracture."
+      },
+      "direction": "HIGHER_IS_WORSE"
+    },
+    {
+      "sensorId": "efo_spark_voltage",
+      "sensorName": "EFO Spark Voltage",
+      "unit": "V",
+      "normal": {
+        "min": 1800.0,
+        "max": 2200.0,
+        "description": "Clean, repeatable arc breakdown forming spherical FAB."
+      },
+      "warning": {
+        "min": 2200.0,
+        "max": 2450.0,
+        "description": "Electrode gap widening or tip oxidation increasing ionization potential."
+      },
+      "critical": {
+        "min": 2450.0,
+        "max": 3000.0,
+        "description": "EFO arc failure or unstable spark causing golf-club shaped deformed balls."
+      },
+      "direction": "HIGHER_IS_WORSE"
+    },
+    {
+      "sensorId": "capillary_touchdown_force",
+      "sensorName": "Touchdown Impact Force",
+      "unit": "gf",
+      "normal": {
+        "min": 18.0,
+        "max": 24.0,
+        "description": "Gentle touchdown preserving delicate underlying low-k dielectric under die pads."
+      },
+      "warning": {
+        "min": 24.0,
+        "max": 28.0,
+        "description": "Voice-coil velocity dampening drift causing hard touchdown impacts."
+      },
+      "critical": {
+        "min": 28.0,
+        "max": 50.0,
+        "description": "Severe impact force causing micro-crater fractures beneath bond pads."
+      },
+      "direction": "HIGHER_IS_WORSE"
+    }
+  ],
+  "operatingConditions": {
+    "ambientTemperature": "20.0 - 23.0 \u00b0C (Cleanroom ISO Class 5 / Class 100)",
+    "relativeHumidity": "35% - 50% RH non-condensing (strictly controlled for Cu wire oxidation prevention)",
+    "normalOperatingTemperature": "180.0 - 220.0 \u00b0C (Workholder heater for Au wire; 150-180\u00b0C for Cu wire)",
+    "normalOperatingPressure": "0.45 - 0.55 MPa (CDA & 95% N2 / 5% H2 forming gas for Cu wire)",
+    "normalOperatingSpeed": "18 - 25 wires per second",
+    "normalCycleTime": "0.04 - 0.06 seconds per bonded wire",
+    "normalOperatingHours": "20 - 24 hours/day continuous",
+    "recommendedOperatingConditions": "Forming gas flow 0.5 L/min during EFO fire; capillary clean cycle every 100,000 bonds.",
+    "maximumContinuousOperation": "100 operating hours before capillary inspection/replacement"
+  },
+  "maintenance": [
+    {
+      "component": "Ceramic Capillary Tool",
+      "recommendedMaintenanceIntervalHours": 100,
+      "expectedServiceLifeHours": 250,
+      "maintenanceAction": "Inspect tip wear with optical scope, clean tip with ceramic polishing sheet, replace when worn.",
+      "procedureSummary": "Torque capillary locking screw to precisely 0.35 Nm using preset torque wrench. Verify vertical orientation."
+    },
+    {
+      "component": "Ultrasonic Transducer Horn",
+      "recommendedMaintenanceIntervalHours": 1000,
+      "expectedServiceLifeHours": 5000,
+      "maintenanceAction": "Perform electrical impedance analyzer scan; clean horn mounting interface and check resonance curve.",
+      "procedureSummary": "Verify resonance peak is at 138.0 \u00b1 0.5 kHz with series resistance < 25 \u03a9."
+    },
+    {
+      "component": "EFO Wand & Electrode",
+      "recommendedMaintenanceIntervalHours": 200,
+      "expectedServiceLifeHours": 2000,
+      "maintenanceAction": "Clean electrode tip with fine abrasive pad, inspect gap setting to wire (target 0.8 mm), check high-voltage cable.",
+      "procedureSummary": "Measure spark gap with optical reticle. Fire 20 sample sparks; verify ball symmetry under 100x scope."
+    },
+    {
+      "component": "Leadframe Clamp Insert",
+      "recommendedMaintenanceIntervalHours": 300,
+      "expectedServiceLifeHours": 3000,
+      "maintenanceAction": "Inspect clamp edge for gold dust contamination and mechanical burrs; verify clamping force with load cell.",
+      "procedureSummary": "Place load cell wafer under clamp; calibrate clamp motor current to deliver exactly 65 N."
+    },
+    {
+      "component": "Wire Feed Spool & Tensioner",
+      "recommendedMaintenanceIntervalHours": 150,
+      "expectedServiceLifeHours": 4000,
+      "maintenanceAction": "Clean sapphire wire guides, replace air tensioner filter, verify zero wire snagging along feed path.",
+      "procedureSummary": "Inspect wire under microscope for scratches. Verify tension gauge reads 3.0 \u00b1 0.5 gf."
+    }
+  ],
+  "degradationIndicators": [
+    {
+      "parameter": "Ultrasonic Vibration",
+      "normalCondition": "Vibration amplitude 0.30 - 0.50 mm/s with sharp 138 kHz resonance.",
+      "degradedCondition": "Vibration drifts into 0.50 - 0.75 mm/s due to capillary screw loosening or horn impedance rise.",
+      "criticalCondition": "Vibration exceeds 0.75 mm/s; transducer resonance breaks down into chaotic noise.",
+      "indicatorMechanism": "Indicates physical micro-cracking in piezoelectric crystal stack or mechanical loosening of the capillary clamping screw."
+    },
+    {
+      "parameter": "Transducer Temperature",
+      "normalCondition": "Operates steadily between 42 and 50 \u00b0C.",
+      "degradedCondition": "Temperature climbs to 50 - 58 \u00b0C as internal electrical dissipation increases.",
+      "criticalCondition": "Temperature exceeds 58 \u00b0C; approaching Curie temperature depolarization limit.",
+      "indicatorMechanism": "Indicates internal dielectric breakdown and heat dissipation from micro-fractured piezo ceramic disks."
+    },
+    {
+      "parameter": "Ultrasonic Power Output",
+      "normalCondition": "Power stable between 1.8 and 2.8 W.",
+      "degradedCondition": "Power creeps up to 2.8 - 3.6 W to overcome bonding interface contamination or capillary tip wear.",
+      "criticalCondition": "Power exceeds 3.6 W; high risk of pad metal lifting and silicon micro-cracking.",
+      "indicatorMechanism": "Compensates for loss of acoustic scrubbing efficiency caused by eroded capillary tip chamfer."
+    },
+    {
+      "parameter": "Clamp Clamping Force",
+      "normalCondition": "Force maintained at 55 - 75 N.",
+      "degradedCondition": "Force creeps into 75 - 85 N due to actuator motor friction.",
+      "criticalCondition": "Force exceeds 85 N or drops below 40 N; leads move during bonding.",
+      "indicatorMechanism": "Indicates wear in the clamping toggle linkage, pneumatic piston friction, or clamp spring fatigue."
+    },
+    {
+      "parameter": "Touchdown Impact Force",
+      "normalCondition": "Gentle touchdown force between 18 and 24 gf.",
+      "degradedCondition": "Impact force increases to 24 - 28 gf.",
+      "criticalCondition": "Impact force exceeds 28 gf; dangerous shock loads delivered to active die circuitry.",
+      "indicatorMechanism": "Indicates loss of voice-coil velocity feedback damping or friction in Z-axis linear air-bearing slides."
+    }
+  ],
+  "rulModel": {
+    "baseUsefulLifeHours": 5000,
+    "formulaDescription": "Deterministic multi-parameter linear degradation model for Wire Bonder. Weights sum to 1.00.",
+    "weightsSum": 1.0,
+    "parameters": [
+      {
+        "parameter": "Ultrasonic Vibration",
+        "sensorId": "vibration_ultrasonic",
+        "sensorName": "Ultrasonic Vibration",
+        "unit": "mm/s",
+        "weight": 0.3,
+        "healthyLimit": 0.5,
+        "criticalLimit": 1.1,
+        "direction": "HIGHER_IS_WORSE"
+      },
+      {
+        "parameter": "Transducer Temperature",
+        "sensorId": "temperature_transducer",
+        "sensorName": "Transducer Temp",
+        "unit": "\u00b0C",
+        "weight": 0.2,
+        "healthyLimit": 50.0,
+        "criticalLimit": 68.0,
+        "direction": "HIGHER_IS_WORSE"
+      },
+      {
+        "parameter": "Ultrasonic Power",
+        "sensorId": "ultrasonic_power",
+        "sensorName": "Ultrasonic Power Output",
+        "unit": "W",
+        "weight": 0.2,
+        "healthyLimit": 2.8,
+        "criticalLimit": 4.0,
+        "direction": "HIGHER_IS_WORSE"
+      },
+      {
+        "parameter": "Clamp Clamping Force",
+        "sensorId": "load_clamp",
+        "sensorName": "Clamp Clamping Force",
+        "unit": "N",
+        "weight": 0.15,
+        "healthyLimit": 75.0,
+        "criticalLimit": 95.0,
+        "direction": "HIGHER_IS_WORSE"
+      },
+      {
+        "parameter": "Touchdown Force",
+        "sensorId": "capillary_touchdown_force",
+        "sensorName": "Touchdown Impact Force",
+        "unit": "gf",
+        "weight": 0.15,
+        "healthyLimit": 24.0,
+        "criticalLimit": 32.0,
+        "direction": "HIGHER_IS_WORSE"
+      }
+    ]
+  },
+  "symptoms": [
+    {
+      "symptomId": "SYM-WB-01",
+      "symptom": "Ultrasonic Transducer Resonance Drift / Vibration Spike",
+      "severity": "Critical",
+      "relatedSensors": [
+        "vibration_ultrasonic",
+        "temperature_transducer"
+      ],
+      "possibleCauses": [
+        "Capillary fastening screw torque relaxation (< 0.35 Nm)",
+        "Piezoelectric crystal disk micro-cracking or electrode delamination",
+        "Transducer horn mounting bracket misalignment"
+      ],
+      "recommendedAction": "Retorque capillary screw to 0.35 Nm. If vibration persists, execute impedance sweep and replace transducer stack."
+    },
+    {
+      "symptomId": "SYM-WB-02",
+      "symptom": "Non-Stick on Pad (NSOP) / First Bond Lift-Off",
+      "severity": "Critical",
+      "relatedSensors": [
+        "ultrasonic_power",
+        "vibration_ultrasonic",
+        "capillary_touchdown_force"
+      ],
+      "possibleCauses": [
+        "Ceramic capillary tip chamfer wear or gold clogging",
+        "Substrate surface organic contamination or pad aluminum oxidation",
+        "Insufficient ultrasonic power delivery"
+      ],
+      "recommendedAction": "Replace ceramic capillary tool, execute capillary tip alignment, verify substrate heater temperature (200\u00b0C)."
+    },
+    {
+      "symptomId": "SYM-WB-03",
+      "symptom": "Electronic Flame-Off (EFO) Spark Failure / Tail Open",
+      "severity": "High",
+      "relatedSensors": [
+        "efo_spark_voltage"
+      ],
+      "possibleCauses": [
+        "EFO electrode tip carbonization or oxidation buildup",
+        "Electrode spark gap out of specification (> 1.2 mm)",
+        "Forming gas flow deficiency causing copper wire oxidation"
+      ],
+      "recommendedAction": "Clean electrode tip with abrasive pad, readjust gap to 0.8 mm, verify 0.5 L/min forming gas flow."
+    },
+    {
+      "symptomId": "SYM-WB-04",
+      "symptom": "Second Bond (Stitch) Peeling / Non-Stick on Lead (NSOL)",
+      "severity": "High",
+      "relatedSensors": [
+        "load_clamp",
+        "ultrasonic_power"
+      ],
+      "possibleCauses": [
+        "Leadframe clamp insert wear or insufficient clamping force allowing substrate bounce",
+        "Heater stage pedestal surface particulate buildup",
+        "Capillary outer radius wear"
+      ],
+      "recommendedAction": "Inspect leadframe clamping force (target 65 N), clean heater pedestal surface, replace capillary."
+    },
+    {
+      "symptomId": "SYM-WB-05",
+      "symptom": "Die Pad Metal Cratering / Silicon Damage",
+      "severity": "Critical",
+      "relatedSensors": [
+        "capillary_touchdown_force",
+        "ultrasonic_power"
+      ],
+      "possibleCauses": [
+        "Z-axis touchdown impact force exceeding 28 gf",
+        "Ultrasonic power burst applied prior to complete touchdown seating",
+        "Excessive ultrasonic power amplitude (> 3.6 W)"
+      ],
+      "recommendedAction": "Calibrate Z-axis touchdown damping and velocity profile, reduce ultrasonic power by 15%, inspect pad under acoustic scope."
+    }
+  ],
+  "failureScenarios": [
+    {
+      "scenarioId": "SCEN-WB-001",
+      "symptom": "Transducer Piezo Stack Micro-Crack Breakdown",
+      "sensorPattern": "vibration_ultrasonic rises from 0.44 to 0.88 mm/s; temperature_transducer hits 56.5\u00b0C",
+      "possibleCauses": [
+        "Repetitive mechanical shock fatigue on piezo crystal discs",
+        "High-voltage drive amplifier transient spike",
+        "Capillary overtightened beyond 0.50 Nm"
+      ],
+      "severity": "critical",
+      "recommendedAction": "Replace ultrasonic transducer horn assembly. Calibrate generator resonant frequency to 138 kHz.",
+      "verificationSteps": [
+        "Run impedance analyzer scan (target 138.0 kHz, < 25 \u03a9)",
+        "Execute 100 test bonds with wire pull test (> 8 gf)"
+      ]
+    },
+    {
+      "scenarioId": "SCEN-WB-002",
+      "symptom": "Capillary Tip Chamfer Erosion and Gold Buildup",
+      "sensorPattern": "ultrasonic_power creeps from 2.2W to 3.4W; NSOP rate climbs to 1.5%",
+      "possibleCauses": [
+        "Abrasive friction from gold/copper wire after 150,000 bond cycles",
+        "Gold buildup in capillary wire hole causing feed drag",
+        "Capillary touched off-center on hard leadframe edge"
+      ],
+      "severity": "high",
+      "recommendedAction": "Replace capillary with new ceramic tool. Torque to 0.35 Nm. Re-teach optical bond locations.",
+      "verificationSteps": [
+        "Inspect capillary tip under microscope",
+        "Perform wire pull and ball shear test (> 25 gf shear)"
+      ]
+    },
+    {
+      "scenarioId": "SCEN-WB-003",
+      "symptom": "EFO Electrode Oxidation Causing Misshaped Free Air Ball",
+      "sensorPattern": "efo_spark_voltage rises to 2520 V; ball diameter variance increases",
+      "possibleCauses": [
+        "Forming gas shield tube misaligned",
+        "Electrode tip oxidized from ambient air exposure",
+        "Spark duration timing drift"
+      ],
+      "severity": "high",
+      "recommendedAction": "Polish electrode tip, readjust spark gap to 0.8 mm, verify 95% N2 / 5% H2 gas shield.",
+      "verificationSteps": [
+        "Fire 50 test balls onto leadframe",
+        "Verify FAB diameter is 35 \u00b1 1.5 \u00b5m under vision inspection"
+      ]
+    },
+    {
+      "scenarioId": "SCEN-WB-004",
+      "symptom": "Leadframe Clamp Wear Causing Substrate Resonance Bounce",
+      "sensorPattern": "load_clamp reads 84.0 N; ultrasonic_power elevated; NSOL stitch peels",
+      "possibleCauses": [
+        "Clamp insert contact pads worn and grooved by leadframe strips",
+        "Clamp air cylinder seal friction",
+        "Heater block vacuum channels blocked by solder residue"
+      ],
+      "severity": "high",
+      "recommendedAction": "Replace leadframe clamp insert. Clean heater pedestal vacuum channels with brass scraper and IPA.",
+      "verificationSteps": [
+        "Test clamping force with calibrated load cell (target 65 N)",
+        "Check stitch bond pull strength (> 5 gf)"
+      ]
+    },
+    {
+      "scenarioId": "SCEN-WB-005",
+      "symptom": "Z-Axis Voice Coil Damping Loss & Pad Cratering Hazard",
+      "sensorPattern": "capillary_touchdown_force surges to 31.0 gf; bond force alarm",
+      "possibleCauses": [
+        "Z-axis voice-coil velocity feedback circuit gain drift",
+        "Linear air slide bearing particulate contamination",
+        "Touchdown sensor optical flag bent"
+      ],
+      "severity": "critical",
+      "recommendedAction": "Clean Z-axis air bearing slides, recalibrate voice coil velocity damping profile, verify 20 gf touchdown.",
+      "verificationSteps": [
+        "Perform touchdown test on piezoelectric sensor block",
+        "Acoustic microscopy check for cratering"
+      ]
+    },
+    {
+      "scenarioId": "SCEN-WB-006",
+      "symptom": "Wire Spool Tensioner Air Damper Instability",
+      "sensorPattern": "Wire loop height variance exceeds \u00b1 15 \u00b5m; cycle time erratic",
+      "possibleCauses": [
+        "Air tensioner glass tube dirty with gold dust flakes",
+        "Tension air regulator pressure fluctuation",
+        "Wire spool drag brake pad worn"
+      ],
+      "severity": "medium",
+      "recommendedAction": "Clean glass tensioner tube with alcohol swab. Inspect spool brake spring.",
+      "verificationSteps": [
+        "Measure loop profile on 30 sample wires with vision system (target height 120 \u00b1 3 \u00b5m)"
+      ]
+    },
+    {
+      "scenarioId": "SCEN-WB-007",
+      "symptom": "Substrate Heater Block Zone 2 Thermal Degradation",
+      "sensorPattern": "Bond temperature fluctuates between 165\u00b0C and 198\u00b0C; heater duty cycle alert",
+      "possibleCauses": [
+        "Heater cartridge internal resistance aging",
+        "Thermocouple loose in heater pocket",
+        "Thermal paste dried and calcified"
+      ],
+      "severity": "high",
+      "recommendedAction": "Replace heater cartridge element, apply high-temperature thermal paste, reseat thermocouple.",
+      "verificationSteps": [
+        "Measure temperature profile across heater block with surface pyrometer (uniformity \u00b1 2\u00b0C)"
+      ]
+    },
+    {
+      "scenarioId": "SCEN-WB-008",
+      "symptom": "Wire Clamping Solenoid Response Latency",
+      "sensorPattern": "Tail length fluctuates (50 \u00b5m to 250 \u00b5m); occasional tail-less open alarm",
+      "possibleCauses": [
+        "Wire clamp solenoid pivot jewel bearing dirt",
+        "Clamp driving pulse voltage drop",
+        "Clamp ruby inserts contaminated with wire drawing lubricant"
+      ],
+      "severity": "medium",
+      "recommendedAction": "Clean wire clamp ruby jaws with optical solvent wipe. Calibrate clamp open/close timing.",
+      "verificationSteps": [
+        "Verify tail length consistency (target 100 \u00b1 10 \u00b5m) over 500 wires"
+      ]
+    },
+    {
+      "scenarioId": "SCEN-WB-009",
+      "symptom": "Vision System Pattern Recognition Offset Drift",
+      "sensorPattern": "Die pad alignment search time increases by 40 ms; occasional false PR rejects",
+      "possibleCauses": [
+        "Look-down camera objective lens coated with leadframe flux vapor",
+        "LED coaxial illumination brightness decay",
+        "Thermal drift of optical mounting bracket"
+      ],
+      "severity": "medium",
+      "recommendedAction": "Clean camera front glass with lens tissue. Execute illumination auto-calibration and optics zeroing.",
+      "verificationSteps": [
+        "Run PR test on 50 reference dies",
+        "Verify location accuracy < 0.5 \u00b5m"
+      ]
+    },
+    {
+      "scenarioId": "SCEN-WB-010",
+      "symptom": "Capillary Clamping Screw Torque Relaxation",
+      "sensorPattern": "vibration_ultrasonic exhibits erratic noise spikes (0.35 to 0.72 mm/s)",
+      "possibleCauses": [
+        "Thermal expansion cycling of aluminum horn threads",
+        "Capillary screw thread stripped or worn",
+        "Improper torque wrench used during last tool change"
+      ],
+      "severity": "high",
+      "recommendedAction": "Replace clamping screw with new titanium screw. Torque to exactly 0.35 Nm.",
+      "verificationSteps": [
+        "Verify vibration stability during continuous 1000-wire test run"
+      ]
+    },
+    {
+      "scenarioId": "SCEN-WB-011",
+      "symptom": "Forming Gas Flow Interruption During Cu Bonding",
+      "sensorPattern": "efo_spark_voltage rises to 2600 V; copper wire ball heavily oxidized (dark red/purple)",
+      "possibleCauses": [
+        "Forming gas mass flow controller valve stuck closed",
+        "Gas line cylinder pressure depleted",
+        "Gas delivery nozzle tip clogged with spatter"
+      ],
+      "severity": "critical",
+      "recommendedAction": "Inspect gas supply line, clear nozzle orifice, verify 0.5 L/min flow rate with inline rotameter.",
+      "verificationSteps": [
+        "Inspect copper FAB under microscope (must be bright shiny copper sphere)"
+      ]
+    },
+    {
+      "scenarioId": "SCEN-WB-012",
+      "symptom": "Second Bond Stitch Cutter Blade Chipping",
+      "sensorPattern": "Wire tail fails to break cleanly; wire dragging across package leads",
+      "possibleCauses": [
+        "Tear clamp stroke distance insufficient",
+        "Capillary outer radius chipped on lead edge",
+        "Leadframe metal burrs catching wire"
+      ],
+      "severity": "high",
+      "recommendedAction": "Replace capillary tool. Check tear clamp motion profile.",
+      "verificationSteps": [
+        "Verify clean tail separation without wire necking or sagging"
+      ]
+    },
+    {
+      "scenarioId": "SCEN-WB-013",
+      "symptom": "Heater Pedestal Vacuum Suction Loss",
+      "sensorPattern": "load_clamp at 72 N; leadframe vibration detected during scrub",
+      "possibleCauses": [
+        "Vacuum generator venturi clogged with cleanroom dust",
+        "Heater pedestal vacuum manifold seal O-ring degraded",
+        "Leadframe strip bottom surface burrs preventing vacuum seal"
+      ],
+      "severity": "medium",
+      "recommendedAction": "Clean vacuum venturi nozzle, replace high-temp silicone O-ring, check leadframe incoming quality.",
+      "verificationSteps": [
+        "Verify vacuum level < -70 kPa under clamped leadframe"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,739 @@
+{
+  "filename": "molding-machine",
+  "machine": {
+    "name": "Multi-Plunger Transfer Molding Press",
+    "type": "molding",
+    "prototypeMachineId": "MOLD-001",
+    "manualId": "VAI-MAN-MOLD-001",
+    "version": "1.0",
+    "generatedDate": "2026-08-26",
+    "documentStatus": "Synthetic Prototype Technical Manual",
+    "purpose": "VectorAI Demonstration and Development",
+    "disclaimer": "SYNTHETIC PROTOTYPE TECHNICAL MANUAL\n\nThis document is artificially generated for the VectorAI demonstration and software development.\n\nThe specifications, thresholds, service-life values, maintenance intervals, and operating parameters are synthetic and must not be used for real industrial equipment operation or maintenance.",
+    "processStage": "Encapsulation & Package Molding",
+    "description": "High-precision automated multi-plunger transfer molding system designed to encapsulate wire-bonded semiconductor sub-assemblies in high-grade thermoset Epoxy Molding Compound (EMC) using high-tonnage hydraulic/servo clamping and precision vacuum-assisted cavity injection.",
+    "manufacturingProcess": "Leadframe strips are loaded into heated top and bottom mold chases. Solid EMC pellets are loaded into multiple plunger pots. The main press closes under 180 tons of clamping force, pulling a deep vacuum (< 10 mbar) inside the mold chases. Motorized or hydraulic transfer rams melt and inject the liquefied epoxy compound through runner channels into the package cavities, encapsulating the fragile die and gold wire loops without wire sweep or void formation.",
+    "subsystems": [
+      "180-Ton High-Rigidity Hydraulic Clamping Press & Tie-Bars",
+      "Precision Multi-Plunger Transfer Injection Ram System",
+      "Top & Bottom Precision Mold Chase Tooling with Vacuum Seal",
+      "Multi-Zone Cartridge Heating & PID Mold Temperature Controllers",
+      "Vacuum De-Gassing Cavity Chamber & High-Capacity Vacuum Pump",
+      "Automated Degate, Ejector Pin Bar & Leadframe Unloading Handler"
+    ]
+  },
+  "components": [
+    {
+      "name": "Mold Chase Tooling (Top & Bottom)",
+      "function": "Precision-machined hardened tool steel blocks with mirror-polished, hard-chrome plated cavities forming the IC package package exterior.",
+      "importantParameters": "Mold chase temperature (\u00b0C), parting line planarity (\u00b5m), vacuum seal integrity, air vent depth (\u00b5m).",
+      "degradationIndicators": "Mold temperature gradient (>10\u00b0C delta), resin flash leakage, cavity chrome plating abrasion, air vent clogging."
+    },
+    {
+      "name": "Multi-Plunger Transfer Injection System",
+      "function": "Drives hardened transfer plungers to compress and melt epoxy pellets, injecting viscous resin into mold runners at controlled velocity.",
+      "importantParameters": "Plunger force load (kN), plunger velocity (mm/s), transfer time (s), plunger tip clearance.",
+      "degradationIndicators": "Plunger force surge (>30 kN), plunger tip wear, resin bleed past plunger seal, velocity stutter."
+    },
+    {
+      "name": "Hydraulic Press Clamping Unit",
+      "function": "Exerts up to 200 tons of clamping force across the mold chase parting line to contain high internal injection pressures.",
+      "importantParameters": "Hydraulic system pressure (bar), clamping tonnage (tons), hydraulic oil temperature (\u00b0C).",
+      "degradationIndicators": "Hydraulic pressure creep (>175 bar), oil overheating (>62\u00b0C), tie-bar elongation imbalance, cylinder seal leakage."
+    },
+    {
+      "name": "Vacuum Assist De-Gassing System",
+      "function": "Evacuates air and volatile organic gases from closed mold cavities prior to resin injection to prevent void formation.",
+      "importantParameters": "Cavity vacuum pressure (mbar), evacuation time (s), vacuum valve response latency.",
+      "degradationIndicators": "Cavity vacuum loss (>25 mbar), vacuum filter clogging with epoxy dust, O-ring seal hardening."
+    },
+    {
+      "name": "Ejector Pin & Degating Mechanism",
+      "function": "Pushes encapsulated leadframe out of mold cavities and shears hardened runner gates after cure cycle completes.",
+      "importantParameters": "Ejector stroke length (mm), ejector motor force (N), degate shear blade sharpness.",
+      "degradationIndicators": "Ejector pin seizure, package surface indentation, leadframe deformation, incomplete degating."
+    }
+  ],
+  "sensors": [
+    {
+      "sensorId": "temperature_mold",
+      "name": "Mold Chase Temp",
+      "unit": "\u00b0C",
+      "purpose": "Monitors the surface temperature of the upper and lower mold chase heating plates.",
+      "minScale": 100.0,
+      "maxScale": 230.0,
+      "normalRange": [
+        165.0,
+        180.0
+      ],
+      "warningRange": [
+        180.0,
+        190.0
+      ],
+      "criticalRange": [
+        190.0,
+        230.0
+      ],
+      "direction": "HIGHER_IS_WORSE"
+    },
+    {
+      "sensorId": "pressure_hydraulic",
+      "name": "Hydraulic Pressure",
+      "unit": "bar",
+      "purpose": "Measures hydraulic system pressure driving the transfer ram during compound injection.",
+      "minScale": 0.0,
+      "maxScale": 250.0,
+      "normalRange": [
+        120.0,
+        150.0
+      ],
+      "warningRange": [
+        150.0,
+        175.0
+      ],
+      "criticalRange": [
+        175.0,
+        250.0
+      ],
+      "direction": "HIGHER_IS_WORSE"
+    },
+    {
+      "sensorId": "load_plunger",
+      "name": "Plunger Force Load",
+      "unit": "kN",
+      "purpose": "Monitors dynamic compression force exerted by the motorized/hydraulic multi-plunger system.",
+      "minScale": 0.0,
+      "maxScale": 50.0,
+      "normalRange": [
+        18.0,
+        25.0
+      ],
+      "warningRange": [
+        25.0,
+        30.0
+      ],
+      "criticalRange": [
+        30.0,
+        50.0
+      ],
+      "direction": "HIGHER_IS_WORSE"
+    },
+    {
+      "sensorId": "vacuum_chamber_pressure",
+      "name": "Mold Cavity Vacuum Pressure",
+      "unit": "mbar",
+      "purpose": "Measures absolute vacuum level achieved inside the mold cavity chamber before resin injection.",
+      "minScale": 0.0,
+      "maxScale": 100.0,
+      "normalRange": [
+        1.0,
+        10.0
+      ],
+      "warningRange": [
+        10.0,
+        25.0
+      ],
+      "criticalRange": [
+        25.0,
+        100.0
+      ],
+      "direction": "HIGHER_IS_WORSE"
+    },
+    {
+      "sensorId": "clamping_tonnage",
+      "name": "Main Press Clamping Force",
+      "unit": "tons",
+      "purpose": "Measures total clamping tonnage holding upper and lower mold chases closed during transfer.",
+      "minScale": 0.0,
+      "maxScale": 260.0,
+      "normalRange": [
+        160.0,
+        190.0
+      ],
+      "warningRange": [
+        190.0,
+        215.0
+      ],
+      "criticalRange": [
+        215.0,
+        260.0
+      ],
+      "direction": "HIGHER_IS_WORSE"
+    },
+    {
+      "sensorId": "hydraulic_oil_temperature",
+      "name": "Hydraulic Oil Temp",
+      "unit": "\u00b0C",
+      "purpose": "Monitors the bulk temperature of hydraulic oil in the main power unit reservoir.",
+      "minScale": 20.0,
+      "maxScale": 90.0,
+      "normalRange": [
+        40.0,
+        52.0
+      ],
+      "warningRange": [
+        52.0,
+        62.0
+      ],
+      "criticalRange": [
+        62.0,
+        90.0
+      ],
+      "direction": "HIGHER_IS_WORSE"
+    }
+  ],
+  "thresholds": [
+    {
+      "sensorId": "temperature_mold",
+      "sensorName": "Mold Chase Temp",
+      "unit": "\u00b0C",
+      "normal": {
+        "min": 165.0,
+        "max": 180.0,
+        "description": "Optimal thermoset epoxy polymerization and curing temperature window."
+      },
+      "warning": {
+        "min": 180.0,
+        "max": 190.0,
+        "description": "Thermal overshoot risking premature resin gelation and incomplete fill."
+      },
+      "critical": {
+        "min": 190.0,
+        "max": 230.0,
+        "description": "Severe thermal runaway causing resin scorch, gas burns, and mold thermal damage."
+      },
+      "direction": "HIGHER_IS_WORSE"
+    },
+    {
+      "sensorId": "pressure_hydraulic",
+      "sensorName": "Hydraulic Pressure",
+      "unit": "bar",
+      "normal": {
+        "min": 120.0,
+        "max": 150.0,
+        "description": "Nominal hydraulic line pressure delivering smooth transfer stroke."
+      },
+      "warning": {
+        "min": 150.0,
+        "max": 175.0,
+        "description": "Proportional valve restriction or resin flow resistance elevation."
+      },
+      "critical": {
+        "min": 175.0,
+        "max": 250.0,
+        "description": "Hydraulic over-pressurization risking hose rupture and excessive mold stress."
+      },
+      "direction": "HIGHER_IS_WORSE"
+    },
+    {
+      "sensorId": "load_plunger",
+      "sensorName": "Plunger Force Load",
+      "unit": "kN",
+      "normal": {
+        "min": 18.0,
+        "max": 25.0,
+        "description": "Balanced multi-plunger compaction and resin flow through runners."
+      },
+      "warning": {
+        "min": 25.0,
+        "max": 30.0,
+        "description": "Pellet pre-cure resistance or plunger tip friction in pot sleeve."
+      },
+      "critical": {
+        "min": 30.0,
+        "max": 50.0,
+        "description": "Plunger mechanical binding, gate freeze-off, or severe wire sweep risk."
+      },
+      "direction": "HIGHER_IS_WORSE"
+    },
+    {
+      "sensorId": "vacuum_chamber_pressure",
+      "sensorName": "Mold Cavity Vacuum Pressure",
+      "unit": "mbar",
+      "normal": {
+        "min": 1.0,
+        "max": 10.0,
+        "description": "Deep vacuum ensuring complete elimination of micro-voids in package corners."
+      },
+      "warning": {
+        "min": 10.0,
+        "max": 25.0,
+        "description": "Vacuum seal degradation or particulate debris on mold parting line."
+      },
+      "critical": {
+        "min": 25.0,
+        "max": 100.0,
+        "description": "Inadequate vacuum causing severe internal package voids and wire sweep defects."
+      },
+      "direction": "HIGHER_IS_WORSE"
+    },
+    {
+      "sensorId": "clamping_tonnage",
+      "sensorName": "Main Press Clamping Force",
+      "unit": "tons",
+      "normal": {
+        "min": 160.0,
+        "max": 190.0,
+        "description": "Nominal clamping force sealing parting line without tool deformation."
+      },
+      "warning": {
+        "min": 190.0,
+        "max": 215.0,
+        "description": "Clamping compensation required due to parting line flash buildup."
+      },
+      "critical": {
+        "min": 215.0,
+        "max": 260.0,
+        "description": "Excessive tonnage causing mold chase plastic deformation or tie-bar fatigue."
+      },
+      "direction": "HIGHER_IS_WORSE"
+    },
+    {
+      "sensorId": "hydraulic_oil_temperature",
+      "sensorName": "Hydraulic Oil Temp",
+      "unit": "\u00b0C",
+      "normal": {
+        "min": 40.0,
+        "max": 52.0,
+        "description": "Optimal oil viscosity and lubrication for proportional valves and pumps."
+      },
+      "warning": {
+        "min": 52.0,
+        "max": 62.0,
+        "description": "Oil cooler degradation or continuous high-cycle hydraulic loading."
+      },
+      "critical": {
+        "min": 62.0,
+        "max": 90.0,
+        "description": "Severe oil thermal oxidation, viscosity breakdown, and seal deterioration."
+      },
+      "direction": "HIGHER_IS_WORSE"
+    }
+  ],
+  "operatingConditions": {
+    "ambientTemperature": "20.0 - 24.0 \u00b0C (Cleanroom ISO Class 7 / Class 10,000)",
+    "relativeHumidity": "40% - 60% RH non-condensing",
+    "normalOperatingTemperature": "170.0 - 178.0 \u00b0C (Upper and Lower Mold Chases)",
+    "normalOperatingPressure": "130.0 - 150.0 bar (Hydraulic system pressure)",
+    "normalOperatingSpeed": "45 - 90 seconds per complete mold cycle (injection + cure)",
+    "normalCycleTime": "60 - 80 seconds cure time (epoxy formulation dependent)",
+    "normalOperatingHours": "20 - 24 hours/day continuous",
+    "recommendedOperatingConditions": "Melamine cleaning cycle every 200 shots; wax conditioning cycle every 500 shots.",
+    "maximumContinuousOperation": "168 hours before scheduled mold chase tear-down and ultrasonic cleaning"
+  },
+  "maintenance": [
+    {
+      "component": "Mold Chase Cavity Inserts",
+      "recommendedMaintenanceIntervalHours": 200,
+      "expectedServiceLifeHours": 8000,
+      "maintenanceAction": "Run melamine cleaning compound shots, clean air vents with brass scraper, apply carnauba release wax.",
+      "procedureSummary": "Execute 3 shots of melamine cleaning block. Wipe mold chase with cleanroom cloth, measure air vent depth (target 15 \u00b5m)."
+    },
+    {
+      "component": "Transfer Plunger Tips & Pot Sleeves",
+      "recommendedMaintenanceIntervalHours": 500,
+      "expectedServiceLifeHours": 3500,
+      "maintenanceAction": "Inspect plunger tip OD and pot ID for score marks and resin flash; replace worn plunger tips.",
+      "procedureSummary": "Verify radial clearance between plunger tip and pot sleeve is 0.035 - 0.050 mm using feeler gauge."
+    },
+    {
+      "component": "Hydraulic Power Unit & Proportional Valves",
+      "recommendedMaintenanceIntervalHours": 1000,
+      "expectedServiceLifeHours": 10000,
+      "maintenanceAction": "Replace 5 \u00b5m hydraulic return filter, test oil viscosity/particle count (ISO 4406), clean oil cooler radiator.",
+      "procedureSummary": "Draw oil sample from reservoir. Verify moisture content < 150 ppm and particle cleanliness level 16/14/11."
+    },
+    {
+      "component": "Vacuum Chamber Seal & Exhaust Valves",
+      "recommendedMaintenanceIntervalHours": 350,
+      "expectedServiceLifeHours": 2500,
+      "maintenanceAction": "Replace silicone vacuum perimeter gasket, clean vacuum trap exhaust filter of condensed resin volatiles.",
+      "procedureSummary": "Inspect gasket for hardening or cracks. Verify vacuum decay rate is < 2.0 mbar/sec."
+    },
+    {
+      "component": "Tie-Bars & Press Mechanical Structure",
+      "recommendedMaintenanceIntervalHours": 2000,
+      "expectedServiceLifeHours": 20000,
+      "maintenanceAction": "Measure tie-bar ultrasonic elongation to verify balanced tonnage distribution across all 4 columns.",
+      "procedureSummary": "Use ultrasonic bolt tension meter on all 4 tie-bars; verify strain variance across columns is < 3%."
+    }
+  ],
+  "degradationIndicators": [
+    {
+      "parameter": "Hydraulic System Pressure",
+      "normalCondition": "Hydraulic pressure stable between 120 and 150 bar during transfer.",
+      "degradedCondition": "Pressure climbs into 150 - 175 bar as internal valve friction rises or resin viscosity thickens.",
+      "criticalCondition": "Pressure exceeds 175 bar; proportional valve saturation and risk of hydraulic shock.",
+      "indicatorMechanism": "Indicates proportional directional valve spool wear, internal pump slippage, or fluid contamination."
+    },
+    {
+      "parameter": "Plunger Force Load",
+      "normalCondition": "Plunger compression force maintains steady 18 - 25 kN profile.",
+      "degradedCondition": "Force increases to 25 - 30 kN due to plunger tip carbon buildup or resin pre-gelation.",
+      "criticalCondition": "Force exceeds 30 kN; high risk of wire sweep, die pad fracture, and plunger jamming.",
+      "indicatorMechanism": "Indicates physical friction between plunger tips and pot sleeves or premature EMC curing in runners."
+    },
+    {
+      "parameter": "Mold Chase Temperature",
+      "normalCondition": "Uniform thermal holding at 165 - 180 \u00b0C (zone gradient < 2\u00b0C).",
+      "degradedCondition": "Temperature climbs to 180 - 190 \u00b0C or zone temperature delta exceeds 6\u00b0C.",
+      "criticalCondition": "Temperature exceeds 190 \u00b0C; high risk of epoxy blister defect and scorch burning.",
+      "indicatorMechanism": "Indicates cartridge heater resistance oxidation, loose thermocouple contact, or SSR phase breakdown."
+    },
+    {
+      "parameter": "Mold Cavity Vacuum Pressure",
+      "normalCondition": "Pulls deep negative vacuum down to 1.0 - 10.0 mbar prior to injection.",
+      "degradedCondition": "Vacuum only reaches 10.0 - 25.0 mbar as perimeter O-ring seals age.",
+      "criticalCondition": "Vacuum level worse than 25.0 mbar; entrapped air creates catastrophic void defects.",
+      "indicatorMechanism": "Indicates vacuum seal hardening, parting line resin flash buildup, or vacuum pump vane degradation."
+    },
+    {
+      "parameter": "Hydraulic Oil Temperature",
+      "normalCondition": "Bulk oil temperature stabilized between 40 and 52 \u00b0C.",
+      "degradedCondition": "Oil temperature climbs into 52 - 62 \u00b0C range.",
+      "criticalCondition": "Oil temperature exceeds 62 \u00b0C; thermal oxidation rapidly accelerates.",
+      "indicatorMechanism": "Indicates heat exchanger fouling, continuous high-pressure relief valve bypass, or low fluid level."
+    }
+  ],
+  "rulModel": {
+    "baseUsefulLifeHours": 8000,
+    "formulaDescription": "Deterministic multi-parameter linear degradation model for Molding Machine. Weights sum to 1.00.",
+    "weightsSum": 1.0,
+    "parameters": [
+      {
+        "parameter": "Hydraulic Pressure",
+        "sensorId": "pressure_hydraulic",
+        "sensorName": "Hydraulic Pressure",
+        "unit": "bar",
+        "weight": 0.25,
+        "healthyLimit": 150.0,
+        "criticalLimit": 200.0,
+        "direction": "HIGHER_IS_WORSE"
+      },
+      {
+        "parameter": "Plunger Force Load",
+        "sensorId": "load_plunger",
+        "sensorName": "Plunger Force Load",
+        "unit": "kN",
+        "weight": 0.25,
+        "healthyLimit": 25.0,
+        "criticalLimit": 38.0,
+        "direction": "HIGHER_IS_WORSE"
+      },
+      {
+        "parameter": "Mold Chase Temp",
+        "sensorId": "temperature_mold",
+        "sensorName": "Mold Chase Temp",
+        "unit": "\u00b0C",
+        "weight": 0.2,
+        "healthyLimit": 180.0,
+        "criticalLimit": 205.0,
+        "direction": "HIGHER_IS_WORSE"
+      },
+      {
+        "parameter": "Cavity Vacuum Pressure",
+        "sensorId": "vacuum_chamber_pressure",
+        "sensorName": "Mold Cavity Vacuum Pressure",
+        "unit": "mbar",
+        "weight": 0.15,
+        "healthyLimit": 10.0,
+        "criticalLimit": 35.0,
+        "direction": "HIGHER_IS_WORSE"
+      },
+      {
+        "parameter": "Hydraulic Oil Temp",
+        "sensorId": "hydraulic_oil_temperature",
+        "sensorName": "Hydraulic Oil Temp",
+        "unit": "\u00b0C",
+        "weight": 0.15,
+        "healthyLimit": 52.0,
+        "criticalLimit": 70.0,
+        "direction": "HIGHER_IS_WORSE"
+      }
+    ]
+  },
+  "symptoms": [
+    {
+      "symptomId": "SYM-MOLD-01",
+      "symptom": "Plunger Injection Force Surge / Wire Sweep Risk",
+      "severity": "Critical",
+      "relatedSensors": [
+        "load_plunger",
+        "pressure_hydraulic"
+      ],
+      "possibleCauses": [
+        "Epoxy molding compound pellets pre-curing in preheat hopper",
+        "Transfer runner gate freeze-off due to low mold temperature in runner zone",
+        "Plunger tip carbon residue buildup and mechanical binding"
+      ],
+      "recommendedAction": "Halt injection stroke, purge mold cavities, clean plunger tips and pot sleeves, verify pellet preheat time (< 45 sec)."
+    },
+    {
+      "symptomId": "SYM-MOLD-02",
+      "symptom": "Mold Cavity Vacuum Loss / Incomplete Void Elimination",
+      "severity": "High",
+      "relatedSensors": [
+        "vacuum_chamber_pressure"
+      ],
+      "possibleCauses": [
+        "Silicone vacuum perimeter seal gasket burnt, cracked, or hardened",
+        "Parting line resin flash preventing complete seal compression",
+        "Vacuum exhaust solenoid valve filter clogged with condensed epoxy vapor"
+      ],
+      "recommendedAction": "Replace vacuum perimeter seal gasket, clean parting line sealing surfaces, clean vacuum line filter trap."
+    },
+    {
+      "symptomId": "SYM-MOLD-03",
+      "symptom": "Hydraulic System Pressure Elevation & Oil Overheating",
+      "severity": "High",
+      "relatedSensors": [
+        "pressure_hydraulic",
+        "hydraulic_oil_temperature"
+      ],
+      "possibleCauses": [
+        "Hydraulic proportional directional valve spool varnish contamination",
+        "Heat exchanger water flow restricted by scale deposits",
+        "Main pump relief valve setting drifting high"
+      ],
+      "recommendedAction": "Flush proportional valve assembly, descale heat exchanger with chemical flush, verify oil temperature stays < 50\u00b0C."
+    },
+    {
+      "symptomId": "SYM-MOLD-04",
+      "symptom": "Mold Chase Temperature Asymmetry / Package Warpage",
+      "severity": "Medium",
+      "relatedSensors": [
+        "temperature_mold"
+      ],
+      "possibleCauses": [
+        "Cartridge heater element in zone 3 open-circuit or high resistance",
+        "Thermocouple probe loose in heater pocket",
+        "SSR controller channel intermittent conduction"
+      ],
+      "recommendedAction": "Measure heater cartridge resistances (nominal 45 \u03a9 each), replace damaged cartridge, verify zone uniformity \u00b1 2\u00b0C."
+    },
+    {
+      "symptomId": "SYM-MOLD-05",
+      "symptom": "Parting Line Resin Flash / Excess Bleed Defect",
+      "severity": "High",
+      "relatedSensors": [
+        "clamping_tonnage",
+        "pressure_hydraulic"
+      ],
+      "possibleCauses": [
+        "Main clamping cylinder hydraulic pressure droop under injection load",
+        "Tie-bar elongation imbalance causing parting line tilting",
+        "Mold chase insert wear or mechanical debris caught on parting surface"
+      ],
+      "recommendedAction": "Verify 180-ton clamping force calibration, inspect parting line with feeler gauge (< 5 \u00b5m), clean mold faces."
+    }
+  ],
+  "failureScenarios": [
+    {
+      "scenarioId": "SCEN-MOLD-001",
+      "symptom": "Transfer Plunger Tip Friction Binding & Force Surge",
+      "sensorPattern": "load_plunger surges from 22.0 to 32.5 kN; pressure_hydraulic elevated to 168 bar",
+      "possibleCauses": [
+        "Burnt epoxy resin carbonizing in pot sleeve clearance",
+        "Plunger tip thermal expansion exceeding pot bore tolerance",
+        "Plunger rod misalignment relative to mold base"
+      ],
+      "severity": "critical",
+      "recommendedAction": "Manually retract plungers. Clean pot sleeves with brass brush and release wax. Replace worn plunger tips.",
+      "verificationSteps": [
+        "Run empty plunger stroke test",
+        "Verify plunger force < 5 kN at zero load",
+        "Run test shot with dummy leadframe"
+      ]
+    },
+    {
+      "scenarioId": "SCEN-MOLD-002",
+      "symptom": "Mold Cavity Vacuum Seal Breakdown",
+      "sensorPattern": "vacuum_chamber_pressure degrades from 4.2 mbar to 28.5 mbar; micro-void alert",
+      "possibleCauses": [
+        "Perimeter fluoroelastomer vacuum seal O-ring baked and embrittled",
+        "Vacuum line check valve sticking open",
+        "Resin flash trapped beneath vacuum seal land"
+      ],
+      "severity": "high",
+      "recommendedAction": "Replace mold perimeter vacuum seal. Clean vacuum sealing groove. Verify vacuum achieves < 8 mbar within 3.0 sec.",
+      "verificationSteps": [
+        "Run vacuum decay rate test (< 1.5 mbar/sec)",
+        "Inspect X-ray package samples for voiding"
+      ]
+    },
+    {
+      "scenarioId": "SCEN-MOLD-003",
+      "symptom": "Hydraulic Proportional Valve Sticking & Pressure Spike",
+      "sensorPattern": "pressure_hydraulic rises to 182 bar; transfer velocity stutters during injection",
+      "possibleCauses": [
+        "Hydraulic oil varnish deposits on proportional valve spool lands",
+        "Hydraulic oil particle contamination exceeding ISO 18/16/13",
+        "Valve LVDT position feedback sensor drift"
+      ],
+      "severity": "critical",
+      "recommendedAction": "Replace proportional flow control valve. Replace 5 \u00b5m high-pressure system filter. Flush hydraulic lines.",
+      "verificationSteps": [
+        "Execute hydraulic step-response calibration",
+        "Verify smooth transfer velocity profile"
+      ]
+    },
+    {
+      "scenarioId": "SCEN-MOLD-004",
+      "symptom": "Mold Chase Cartridge Heater Open Circuit",
+      "sensorPattern": "temperature_mold zone 3 drops to 154\u00b0C while other zones at 175\u00b0C",
+      "possibleCauses": [
+        "Internal nickel-chromium wire burnout in cartridge heater",
+        "Terminal connection terminal block screw loosened by thermal cycling",
+        "Solid-state relay gate drive failure"
+      ],
+      "severity": "high",
+      "recommendedAction": "Replace burnt cartridge heater in zone 3. Apply thermal conductive grease. Verify zone reaches 175\u00b0C.",
+      "verificationSteps": [
+        "Thermal camera scan of mold chase",
+        "Verify temperature uniformity across all cavities \u00b1 2\u00b0C"
+      ]
+    },
+    {
+      "scenarioId": "SCEN-MOLD-005",
+      "symptom": "Hydraulic Reservoir Heat Exchanger Scale Fouling",
+      "sensorPattern": "hydraulic_oil_temperature climbs to 64.2\u00b0C under continuous 24/7 production",
+      "possibleCauses": [
+        "Facility cooling water mineral scale clogging tube-and-shell heat exchanger",
+        "Thermostatic water regulation valve failed in closed position",
+        "Oil circulation pump flow rate reduction"
+      ],
+      "severity": "high",
+      "recommendedAction": "Descale heat exchanger with circulating acid cleaner. Clean cooling water strainer. Verify oil cools to 45\u00b0C.",
+      "verificationSteps": [
+        "Monitor oil temperature over 5 mold cycles",
+        "Verify stability at 46 \u00b1 2\u00b0C"
+      ]
+    },
+    {
+      "scenarioId": "SCEN-MOLD-006",
+      "symptom": "Tie-Bar Strain Imbalance Causing Parting Line Flash",
+      "sensorPattern": "clamping_tonnage reads 195 tons; resin flash detected on right cavity bay",
+      "possibleCauses": [
+        "Uneven thermal expansion of tie-bar columns",
+        "Clamping nut lock washer backing off on column 4",
+        "Mold chase mounting base parallel alignment error"
+      ],
+      "severity": "high",
+      "recommendedAction": "Measure tie-bar strain with ultrasonic gauge. Re-torque column nuts to equalize 45 tons per column.",
+      "verificationSteps": [
+        "Check parting line contact with pressure-sensitive film (Fuji Prescale)",
+        "Verify even color density across all 4 corners"
+      ]
+    },
+    {
+      "scenarioId": "SCEN-MOLD-007",
+      "symptom": "Degating Shear Blade Dullness and Package Chipping",
+      "sensorPattern": "Ejector motor current climbs by 25%; package leadframe trim burr alert",
+      "possibleCauses": [
+        "Tungsten carbide degating cutter blade edge chipped from repeated shearing",
+        "Degate hydraulic cylinder pressure drop",
+        "Leadframe carrier rail guide play"
+      ],
+      "severity": "medium",
+      "recommendedAction": "Replace degating shear blade set. Adjust shear clearance to 0.02 mm.",
+      "verificationSteps": [
+        "Inspect 20 degated leadframes under scope",
+        "Verify clean runner separation without gate residue"
+      ]
+    },
+    {
+      "scenarioId": "SCEN-MOLD-008",
+      "symptom": "Ejector Pin Galling and Mechanical Seizure",
+      "sensorPattern": "Ejector cylinder travel timeout alarm; hydraulic pressure brief surge",
+      "possibleCauses": [
+        "Resin flash migrating into ejector pin guide bushings",
+        "Ejector pin lubrication breakdown at 175\u00b0C operating temperature",
+        "Ejector plate guide pillar binding"
+      ],
+      "severity": "critical",
+      "recommendedAction": "Disassemble ejector plate, clean pin bushings with brass reamer, apply high-temp Krytox grease.",
+      "verificationSteps": [
+        "Perform 10 full ejector stroke cycles in dry run",
+        "Verify smooth actuation without sticking"
+      ]
+    },
+    {
+      "scenarioId": "SCEN-MOLD-009",
+      "symptom": "Pellet Auto-Feeder Vacuum Loader Malfunction",
+      "sensorPattern": "Cycle pause alert; pellet feed tray empty sensor triggers false alarm",
+      "possibleCauses": [
+        "Pellet hopper suction cup vacuum line cracked",
+        "Pellet dust blocking optical level sensor lens",
+        "Pellet carousel stepper motor drive belt slipped"
+      ],
+      "severity": "low",
+      "recommendedAction": "Clean optical pellet sensor windows with IPA wipe. Inspect feeder vacuum tubing.",
+      "verificationSteps": [
+        "Run automatic pellet loading sequence for 10 pots",
+        "Verify correct pellet delivery"
+      ]
+    },
+    {
+      "scenarioId": "SCEN-MOLD-010",
+      "symptom": "Mold Cavity Air Vent Clogging & Gas Burning",
+      "sensorPattern": "Resin scorch burn marks on end cavities; vacuum pressure reading stable",
+      "possibleCauses": [
+        "Condensed epoxy wax and silica filler accumulating in 15 \u00b5m air vent grooves",
+        "Melamine cleaning interval exceeded 300 shots",
+        "Excessive injection speed compressing entrapped volatiles"
+      ],
+      "severity": "high",
+      "recommendedAction": "Perform 4 melamine cleaning shots. Clean air vent channels manually with soft brass scraper.",
+      "verificationSteps": [
+        "Inspect molded package corners under microscope",
+        "Confirm zero dark scorch marks"
+      ]
+    },
+    {
+      "scenarioId": "SCEN-MOLD-011",
+      "symptom": "Clamping Cylinder Piston Hydraulic Seal Bypass",
+      "sensorPattern": "clamping_tonnage decays by 15 tons during high-pressure transfer hold phase",
+      "possibleCauses": [
+        "High-pressure hydraulic piston polyurethane U-cup seal extrusion",
+        "Cylinder inner bore micro-scoring",
+        "Clamping pilot-operated check valve seat leakage"
+      ],
+      "severity": "critical",
+      "recommendedAction": "Replace clamping cylinder piston seal set. Inspect pilot check valve.",
+      "verificationSteps": [
+        "Perform 15-minute clamping pressure hold test at 180 tons",
+        "Verify pressure drop < 2 bar"
+      ]
+    },
+    {
+      "scenarioId": "SCEN-MOLD-012",
+      "symptom": "Thermocouple Cold-Junction Compensation Error",
+      "sensorPattern": "All mold zone temperatures read 15\u00b0C offset from actual surface pyrometer",
+      "possibleCauses": [
+        "Temperature controller terminal block isothermal cold-junction RTD open",
+        "Thermocouple extension wire polarity reversed",
+        "Electrical enclosure internal cooling fan failed"
+      ],
+      "severity": "high",
+      "recommendedAction": "Replace temperature input module cold-junction reference sensor. Verify with calibrated thermocouple calibrator.",
+      "verificationSteps": [
+        "Compare controller display with NIST-traceable surface probe (must match within \u00b1 1.0\u00b0C)"
+      ]
+    },
+    {
+      "scenarioId": "SCEN-MOLD-013",
+      "symptom": "Mold Chase Bottom Plate Vacuum Gasket Creep",
+      "sensorPattern": "vacuum_chamber_pressure fluctuates erratically between 6 and 22 mbar",
+      "possibleCauses": [
+        "Gasket retaining groove corner expansion",
+        "Residual epoxy pellet fragments pinching gasket perimeter",
+        "Vacuum line manifold quick-disconnect coupling loose"
+      ],
+      "severity": "medium",
+      "recommendedAction": "Inspect gasket retention groove, clean debris, replace silicone profile seal.",
+      "verificationSteps": [
+        "Verify vacuum seal seating with vacuum test cycle (< 8 mbar)"
+      ]
+    }
+  ]
+}

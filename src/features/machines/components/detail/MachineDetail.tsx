@@ -60,11 +60,11 @@ export const MachineDetail: React.FC<MachineDetailProps> = ({
   const typeDef = MACHINE_TYPES[machine.machineType];
   const typeName = typeDef ? typeDef.name : machine.machineType;
 
-  const handleExportDiagnostics = () => {
+  const handleExportTelemetry = () => {
     const dataStr = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(machine, null, 2));
     const downloadAnchor = document.createElement('a');
     downloadAnchor.setAttribute('href', dataStr);
-    downloadAnchor.setAttribute('download', `${machine.id}_diagnostics_telemetry.json`);
+    downloadAnchor.setAttribute('download', `${machine.id}_telemetry.json`);
     document.body.appendChild(downloadAnchor);
     downloadAnchor.click();
     downloadAnchor.remove();
@@ -86,7 +86,12 @@ export const MachineDetail: React.FC<MachineDetailProps> = ({
       badge: ['Accelerated Wear', 'Imminent Failure'].includes(machine.rul.degradationStage) ? 'RISK' : undefined
     },
     { id: 'maintenance', label: 'MAINTENANCE', icon: <Wrench size={13} /> },
-    { id: 'documents', label: 'DOCUMENTS', icon: <FileText size={13} />, badge: machine.documents.length }
+    { 
+      id: 'documents', 
+      label: 'DOCUMENTS', 
+      icon: <FileText size={13} />, 
+      badge: machine.documents?.filter(d => d.id.startsWith('DOC-VAI-MAN') || d.title.includes('Technical Manual')).length || 1 
+    }
   ];
 
   return (
@@ -172,13 +177,13 @@ export const MachineDetail: React.FC<MachineDetailProps> = ({
           )}
 
           <button
-            onClick={handleExportDiagnostics}
+            onClick={handleExportTelemetry}
             className="tech-btn"
             style={{ fontSize: '11px', padding: '6px 12px' }}
-            title="Export full machine telemetry JSON"
+            title="Export full machine telemetry JSON dataset"
           >
             <Download size={13} />
-            <span>EXPORT DIAGNOSTICS</span>
+            <span>EXPORT TELEMETRY</span>
           </button>
         </div>
       </div>
@@ -243,7 +248,7 @@ export const MachineDetail: React.FC<MachineDetailProps> = ({
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
             <MachineOverview machine={machine} />
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '16px' }}>
-              <RULCard rul={machine.rul} />
+              <RULCard rul={machine.rul} machine={machine} />
               <HealthTrendChart trendData={machine.healthTrend} currentScore={machine.healthScore} />
             </div>
           </div>
@@ -256,6 +261,7 @@ export const MachineDetail: React.FC<MachineDetailProps> = ({
         {activeTab === 'anomalies' && (
           <AnomalySummary
             anomalies={machine.anomalies}
+            machine={machine}
             onAcknowledge={(anoId) => console.log('Acknowledge anomaly:', anoId)}
           />
         )}
@@ -282,6 +288,7 @@ export const MachineDetail: React.FC<MachineDetailProps> = ({
           <MachineDocuments
             documents={machine.documents}
             machineId={machine.id}
+            machineType={machine.machineType}
           />
         )}
       </div>
