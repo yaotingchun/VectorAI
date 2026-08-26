@@ -7,6 +7,10 @@ import {
   MaintenanceTask,
   SystemEvent,
   MaintenanceHistoryLog,
+  NotificationLog,
+  DiagnosisReport,
+  ProgressStep,
+  CommunicationChannel,
 } from '../types/factory';
 import rawMachinesData from '../data/machines.json';
 
@@ -326,6 +330,169 @@ export const FactoryProvider: React.FC<{ children: React.ReactNode }> = ({ child
     return () => clearInterval(interval);
   }, [machines, weights]);
 
+  // ── Helper: generate diagnosis report for a machine ────────────────────────
+  const buildDiagnosisReport = (m: Machine, parts: string[]): DiagnosisReport => {
+    const critSensors = m.sensors.filter(s => s.deviation >= 60);
+    const warnSensors = m.sensors.filter(s => s.deviation >= 30 && s.deviation < 60);
+    const maxDevSensor = [...m.sensors].sort((a, b) => b.deviation - a.deviation)[0];
+
+    const rootCauseMap: Record<string, string> = {
+      dicing: 'Progressive diamond blade wear causing increased spindle resistance and vibration harmonics.',
+      die_attach: 'Collet vacuum seal degradation leading to inconsistent bonding pressure and pick accuracy loss.',
+      wire_bond: 'Ultrasonic transducer tip erosion reducing wire-pull force and increasing loop height variance.',
+      molding: 'Hydraulic ram seal leakage causing cavity pressure drop and plunger load fluctuation.',
+      ate_sort: 'Contact test pin mechanical fatigue causing intermittent open-circuit failures during sort.',
+    };
+
+    return {
+      generatedAt: new Date().toISOString(),
+      faultSummary: `${m.name} (${m.id}) has entered a ${m.status} state with RUL of ${m.currentRul}h. Primary fault detected on ${maxDevSensor?.label ?? 'primary sensor'} at ${maxDevSensor?.deviation ?? 0}% deviation.`,
+      estimatedRootCause: rootCauseMap[m.category] ?? 'Component wear detected across multiple sensor channels.',
+      sensorReadings: m.sensors.map(s => ({
+        sensor: s.label,
+        value: `${s.value.toFixed(2)} ${s.unit}`,
+        status: s.deviation >= 90 ? 'CRITICAL' : s.deviation >= 50 ? 'WARNING' : 'OK',
+      })),
+      recommendedActions: [
+        `Replace: ${parts.join(', ')}.`,
+        critSensors.length > 0
+          ? `Immediately recalibrate ${critSensors.map(s => s.label).join(', ')} to baseline.`
+          : 'Run standard sensor recalibration post-service.',
+        warnSensors.length > 0
+          ? `Monitor ${warnSensors.map(s => s.label).join(', ')} closely for 24h after service.`
+          : 'Verify all sensor readings within ±5% of baseline before restart.',
+        'Perform full dry-run cycle test before returning machine to production.',
+        'Update service log and reset RUL baseline in Vector.AI dashboard.',
+      ],
+    };
+  };
+
+  // ── Helper: determine technician communication channel ──────────────────────
+  const getTechChannel = (tech: string, taskId: string, machineId: string): CommunicationChannel => {
+    if (tech.includes('Chen')) {
+      return {
+        type: 'WHATSAPP',
+        address: '+60 12-884 9210',
+        label: 'WhatsApp (+60 12-884 9210)',
+      };
+    } else if (tech.includes('Kovacs')) {
+      return {
+        type: 'WEBSITE',
+        address: `https://ops.vector.ai/dispatch/wo/${taskId.toLowerCase()}`,
+        label: `Website (https://ops.vector.ai/dispatch/wo/${taskId.toLowerCase()})`,
+      };
+    } else if (tech.includes('Miller')) {
+      return {
+        type: 'EMAIL',
+        address: `j.miller.${machineId.toLowerCase()}@vectorai.factory`,
+        label: `Email (j.miller.${machineId.toLowerCase()}@vectorai.factory)`,
+      };
+    } else {
+      return {
+        type: 'EMAIL',
+        address: `m.patel.${machineId.toLowerCase()}@vectorai.factory`,
+        label: `Email (m.patel.${machineId.toLowerCase()}@vectorai.factory)`,
+      };
+    }
+  };
+
+  // ── Helper: generate auto-dispatch notification log (only in saved channel) ───
+  const buildNotificationLog = (
+    tech: string,
+    taskId: string,
+    machineName: string,
+    machineId: string,
+    priority: string,
+    channel: CommunicationChannel
+  ): NotificationLog[] => {
+    const now = new Date();
+
+    if (channel.type === 'EMAIL') {
+      return [
+        {
+          channel: 'EMAIL',
+          channelAddress: channel.address,
+          sentAt: now.toISOString(),
+          recipient: `${tech} <${channel.address}>`,
+          subject: `[${priority}] Urgent Auto-Dispatch: ${taskId} — ${machineName} (${machineId})`,
+          body: `Dear ${tech},
+
+The Vector.AI Automated Maintenance System detected critical wear telemetry on ${machineName} (${machineId}).
+Work Order Ticket: ${taskId}
+Priority Level: ${priority}
+
+Please review the attached Diagnosis Report (PDF) and initiate service protocol immediately.
+
+Required Spares: Staged in Bay 4.
+Attachment: DIAGNOSIS_REPORT_${machineId}_${taskId}.pdf
+
+Regards,
+Vector.AI Autonomous Dispatch Service`,
+          delivered: true,
+        },
+      ];
+    } else if (channel.type === 'WHATSAPP') {
+      return [
+        {
+          channel: 'WHATSAPP',
+          channelAddress: channel.address,
+          sentAt: now.toISOString(),
+          recipient: `${tech} (${channel.address})`,
+          subject: `🚨 [${priority}] Dispatch Alert — ${machineId}`,
+          body: `🚨 *VECTOR.AI AUTO-DISPATCH ALERT*
+━━━━━━━━━━━━━━━━━━━━━
+*Ticket:* ${taskId}
+*Machine:* ${machineName} (${machineId})
+*Priority:* ${priority}
+*Assigned Technician:* ${tech}
+
+⚠️ *Telemetry Alert:* Remaining Useful Life (RUL) threshold reached. Immediate intervention required.
+
+📄 *Diagnosis PDF:* https://docs.vectorai.factory/reports/${taskId}.pdf
+📦 *Parts Staging:* Ready at Maintenance Station A.
+
+Please acknowledge receipt and mark when en route.`,
+          delivered: true,
+        },
+      ];
+    } else {
+      return [
+        {
+          channel: 'WEBSITE',
+          channelAddress: channel.address,
+          sentAt: now.toISOString(),
+          recipient: `Technician Web Portal (${channel.address})`,
+          subject: `POST /api/v1/dispatch/work-orders/${taskId}`,
+          body: `{
+  "event": "AUTOMATED_MAINTENANCE_DISPATCH",
+  "workOrderId": "${taskId}",
+  "machineId": "${machineId}",
+  "machineName": "${machineName}",
+  "priority": "${priority}",
+  "assignedTechnician": "${tech}",
+  "dispatchEndpoint": "${channel.address}",
+  "status": "DISPATCHED",
+  "timestamp": "${now.toISOString()}",
+  "diagnosisAttachment": "DIAGNOSIS_REPORT_${machineId}_${taskId}.pdf",
+  "recommendedAction": "Immediate onsite inspection and parts replacement."
+}`,
+          delivered: true,
+        },
+      ];
+    }
+  };
+
+  // ── Helper: generate progress steps ─────────────────────────────────────────
+  const buildProgressSteps = (): ProgressStep[] => [
+    { label: 'Work Order Created & Technician Notified', status: 'DONE', completedAt: new Date().toISOString() },
+    { label: 'Technician Acknowledged & En Route', status: 'ACTIVE' },
+    { label: 'Machine Taken Offline / Locked Out', status: 'PENDING' },
+    { label: 'Diagnosis & Fault Inspection', status: 'PENDING' },
+    { label: 'Parts Replacement & Calibration', status: 'PENDING' },
+    { label: 'Dry-Run Test & Sensor Verification', status: 'PENDING' },
+    { label: 'Machine Returned to Production', status: 'PENDING' },
+  ];
+
   // Automated Maintenance Task Scheduler
   useEffect(() => {
     if (machines.length === 0) return;
@@ -347,7 +514,7 @@ export const FactoryProvider: React.FC<{ children: React.ReactNode }> = ({ child
         // We auto-schedule if RUL falls below 250 hours (Warning zone)
         if (m.currentRul <= 250 && !existingTask) {
           const hoursToFailure = m.currentRul;
-          const scheduledHours = Math.max(6, Math.round(hoursToFailure - 24)); // Schedule 24h before predicted failure
+          const scheduledHours = Math.max(6, Math.round(hoursToFailure - 24));
 
           const priority = m.currentRul <= 48 ? 'CRITICAL' : m.currentRul <= 120 ? 'HIGH' : 'MEDIUM';
 
@@ -361,8 +528,11 @@ export const FactoryProvider: React.FC<{ children: React.ReactNode }> = ({ child
           else if (m.category === 'molding') parts = ['Hydraulic Seal Kit', 'Plunger Tip Ring'];
           else if (m.category === 'ate_sort') parts = ['Contact Test Pins', 'Pneumatic Carriage Seals'];
 
+          const taskId = `WO-${Date.now()}-${m.id}`;
+          const channel = getTechChannel(randomTech, taskId, m.id);
+
           const newTask: MaintenanceTask = {
-            id: `WO-${Date.now()}-${m.id}`,
+            id: taskId,
             machineId: m.id,
             machineName: m.name,
             machineCategory: m.category,
@@ -371,13 +541,18 @@ export const FactoryProvider: React.FC<{ children: React.ReactNode }> = ({ child
             priority,
             status: 'SCHEDULED',
             technician: randomTech,
+            communicationChannel: channel,
             estimatedDuration: m.category === 'molding' ? 3.5 : m.category === 'dicing' ? 1.5 : 2.0,
             partsRequired: parts,
+            notificationLog: buildNotificationLog(randomTech, taskId, m.name, m.id, priority, channel),
+            diagnosisReport: buildDiagnosisReport(m, parts),
+            progressSteps: buildProgressSteps(),
+            progressPercent: 14,
           };
 
           updatedTasks.push(newTask);
           queueChanged = true;
-          logSystemEvent('SYSTEM', `AUTO-SCHEDULER: Created preventive Maintenance Work Order ${newTask.id} for ${m.id} (RUL: ${m.currentRul}h).`, m.id);
+          logSystemEvent('SYSTEM', `AUTO-SCHEDULER: Created Work Order ${taskId} for ${m.id} (RUL: ${m.currentRul}h). Auto-dispatched via ${channel.label}.`, m.id);
         } else if (existingTask && existingTask.status === 'SCHEDULED') {
           // Dynamic priority update if RUL drops further
           const correctPriority = m.currentRul <= 48 ? 'CRITICAL' : m.currentRul <= 120 ? 'HIGH' : 'MEDIUM';
@@ -385,6 +560,32 @@ export const FactoryProvider: React.FC<{ children: React.ReactNode }> = ({ child
             existingTask.priority = correctPriority;
             existingTask.predictedFailureTime = `In ${m.currentRul} hours`;
             queueChanged = true;
+          }
+        } else if (existingTask && existingTask.status === 'IN_PROGRESS') {
+          // Tick progress forward every scheduler cycle (~3s)
+          const completedSteps = existingTask.progressSteps.filter(s => s.status === 'DONE').length;
+          const totalSteps = existingTask.progressSteps.length;
+          if (completedSteps < totalSteps) {
+            const nextPendingIdx = existingTask.progressSteps.findIndex(s => s.status !== 'DONE');
+            if (nextPendingIdx !== -1) {
+              // Mark active step as DONE, next as ACTIVE (advances every ~15s in sim)
+              const activeIdx = existingTask.progressSteps.findIndex(s => s.status === 'ACTIVE');
+              if (activeIdx !== -1 && Math.random() < 0.06) {
+                existingTask.progressSteps[activeIdx] = {
+                  ...existingTask.progressSteps[activeIdx],
+                  status: 'DONE',
+                  completedAt: new Date().toISOString(),
+                };
+                const nextIdx = activeIdx + 1;
+                if (nextIdx < totalSteps) {
+                  existingTask.progressSteps[nextIdx] = { ...existingTask.progressSteps[nextIdx], status: 'ACTIVE' };
+                }
+                existingTask.progressPercent = Math.round(
+                  (existingTask.progressSteps.filter(s => s.status === 'DONE').length / totalSteps) * 100
+                );
+                queueChanged = true;
+              }
+            }
           }
         }
       });
@@ -511,15 +712,23 @@ No specific manuals matched your exact query, but matching telemetry guides reco
 
   const startMaintenanceTask = (taskId: string) => {
     setMaintenanceQueue((prev) =>
-      prev.map((t) => (t.id === taskId ? { ...t, status: 'IN_PROGRESS' } : t))
+      prev.map((t) => {
+        if (t.id !== taskId) return t;
+        // Advance first pending step → ACTIVE, second step for the in-progress state
+        const steps = t.progressSteps.map((s, i) => {
+          if (i === 0) return { ...s, status: 'DONE' as const, completedAt: s.completedAt ?? new Date().toISOString() };
+          if (i === 1) return { ...s, status: 'ACTIVE' as const };
+          return s;
+        });
+        return { ...t, status: 'IN_PROGRESS', progressSteps: steps, progressPercent: 14 };
+      })
     );
-    // Find task's machine id
     const task = maintenanceQueue.find((t) => t.id === taskId);
     if (task) {
       setMachines((prev) =>
         prev.map((m) => (m.id === task.machineId ? { ...m, status: 'MAINT' } : m))
       );
-      logSystemEvent('MAINTENANCE', `SERVICE IN PROGRESS: Technician started maintenance work order ${taskId} on ${task.machineId}. Machine taken offline.`, task.machineId);
+      logSystemEvent('MAINTENANCE', `SERVICE IN PROGRESS: Technician started maintenance work order ${taskId} on ${task.machineId}. Machine taken offline for servicing.`, task.machineId);
     }
   };
 
