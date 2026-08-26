@@ -1613,6 +1613,10 @@ export const MaintenancePage: React.FC = () => {
   const efficiency = completedCount + activeCount > 0
     ? Math.round((completedCount / (completedCount + activeTasks.filter(t => t.priority === 'CRITICAL').length)) * 100) || 100
     : 100;
+  const tasksWithAllocatedSpares = maintenanceQueue.filter(t => t.partsRequired && t.partsRequired.length > 0).length;
+  const sparesAllocationRate = maintenanceQueue.length > 0
+    ? Math.round((tasksWithAllocatedSpares / maintenanceQueue.length) * 100)
+    : 100;
 
   const getTaskMaintenanceWindowStatus = (task: MaintenanceTask) => {
     const machine = machines.find((m) => m.id === task.machineId);
@@ -1780,7 +1784,7 @@ export const MaintenancePage: React.FC = () => {
         <div className="tech-card" style={{ padding: '16px' }}>
           <span style={{ fontSize: '9px', fontWeight: 800, color: 'var(--text-muted)', display: 'block', textTransform: 'uppercase' }}>Pre-Allocated Spares</span>
           <div style={{ fontFamily: 'var(--font-display)', fontSize: '26px', fontWeight: 800, marginTop: '4px' }}>
-            {Math.round(85 + completedCount * 1.2)}% <span style={{ fontSize: '12px', fontWeight: 500, color: 'var(--text-secondary)' }}>kit availability</span>
+            {sparesAllocationRate}% <span style={{ fontSize: '12px', fontWeight: 500, color: 'var(--text-secondary)' }}>kit availability</span>
           </div>
         </div>
       </div>
