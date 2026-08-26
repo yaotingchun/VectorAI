@@ -214,7 +214,7 @@ html, body, #root {
   padding: 0 20px;
   flex-shrink: 0;
   position: relative;
-  z-index: 10000;
+  z-index: 500;
 }
 
 .header-breadcrumbs {
@@ -232,7 +232,7 @@ html, body, #root {
   align-items: center;
   gap: 16px;
   position: relative;
-  z-index: 10001;
+  z-index: 501;
 }
 
 /* Main Viewport */
