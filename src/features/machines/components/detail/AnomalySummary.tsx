@@ -9,8 +9,7 @@ import {
   BookOpen, 
   AlertTriangle, 
   AlertOctagon, 
-  Wrench, 
-  Check 
+  Wrench 
 } from 'lucide-react';
 import { 
   diagnoseFromManual, 
@@ -22,13 +21,11 @@ import {
 interface AnomalySummaryProps {
   anomalies: AnomalyEvent[];
   machine?: Machine;
-  onAcknowledge?: (anomalyId: string) => void;
 }
 
 export const AnomalySummary: React.FC<AnomalySummaryProps> = ({
   anomalies,
-  machine,
-  onAcknowledge
+  machine
 }) => {
   const machineType = (machine?.machineType || 'wire_bonder') as MachineTypeId;
 
@@ -181,16 +178,6 @@ export const AnomalySummary: React.FC<AnomalySummaryProps> = ({
                   <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
                     <Clock size={12} /> Detected: {anomaly.timestamp}
                   </span>
-                  {onAcknowledge && anomaly.status === 'active' && (
-                    <button
-                      onClick={() => onAcknowledge(anomaly.id)}
-                      className="tech-btn"
-                      style={{ fontSize: '10px', padding: '3px 9px' }}
-                    >
-                      <Check size={11} />
-                      <span>ACKNOWLEDGE</span>
-                    </button>
-                  )}
                 </div>
               </div>
 
