@@ -85,7 +85,8 @@ const TYPE_CONFIGS: Record<string, TypeConfig> = {
       action: 'Immediate cutting blade inspection required. Halt production if vibration exceeds critical threshold.',
       qualityLabel: 'Wafer Damage Risk',
       qualityExplanation: () => 'Elevated spindle vibration and motor load significantly raise risk of wafer micro-fracture and yield loss.'
-    }
+    },
+    docLink: { id: 'DOC-VAI-MAN-DIC-001', title: 'High-Precision Wafer Dicing Saw Technical Manual (PDF)' }
   },
   die_attacher: {
     healthy: {
@@ -108,7 +109,8 @@ const TYPE_CONFIGS: Record<string, TypeConfig> = {
       action: 'Stop production for immediate nozzle and vacuum system inspection.',
       qualityLabel: 'Die Placement Risk',
       qualityExplanation: () => 'Combined arm vibration and vacuum instability indicate high probability of die misplacement and yield loss.'
-    }
+    },
+    docLink: { id: 'DOC-VAI-MAN-DA-001', title: 'Thermo-Compression Precision Die Attacher Technical Manual (PDF)' }
   },
   wire_bonder: {
     healthy: {
@@ -131,7 +133,8 @@ const TYPE_CONFIGS: Record<string, TypeConfig> = {
       action: 'Immediate transducer and capillary tool inspection required. Risk of wire bond failure.',
       qualityLabel: 'Bond Quality Risk',
       qualityExplanation: () => 'Increasing ultrasonic vibration and unstable clamp load indicate growing bonding-process instability and elevated wire bond failure risk.'
-    }
+    },
+    docLink: { id: 'DOC-VAI-MAN-WB-001', title: 'High-Speed Thermosonic Ball-Wedge Wire Bonder Technical Manual (PDF)' }
   },
   molding: {
     healthy: {
@@ -155,7 +158,7 @@ const TYPE_CONFIGS: Record<string, TypeConfig> = {
       qualityLabel: 'Encapsulation Risk',
       qualityExplanation: () => 'Hydraulic pressure variation and plunger load increase significantly elevate risk of encapsulation voids and package defects.'
     },
-    docLink: { id: 'DOC-MOLD-02', title: 'Hydraulic Pressure Troubleshooting Guide' }
+    docLink: { id: 'DOC-VAI-MAN-MOLD-001', title: 'Multi-Plunger Transfer Molding Press Technical Manual (PDF)' }
   },
   ic_tester: {
     healthy: {
@@ -179,7 +182,7 @@ const TYPE_CONFIGS: Record<string, TypeConfig> = {
       qualityLabel: 'Test Reliability Risk',
       qualityExplanation: () => 'Contact mechanism degradation may cause unreliable test contacts, leading to false rejects and reduced test throughput.'
     },
-    docLink: { id: 'DOC-ATE01-01', title: 'High-Speed Handler Pogo Pin Maintenance Guide' }
+    docLink: { id: 'DOC-VAI-MAN-ATE-001', title: 'High-Speed Automated IC Tester & Pick-and-Place Sorter Technical Manual (PDF)' }
   }
 };
 

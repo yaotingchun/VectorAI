@@ -91,6 +91,8 @@ export interface Machine {
   anomalies: AnomalyEvent[];
   maintenance: MaintenanceRecord;
   documents: MachineDocument[];
+  knowledgeBaseRef?: string;
+  manualId?: string;
   healthTrend?: {
     '24h': HealthDataPoint[];
     '7d': HealthDataPoint[];

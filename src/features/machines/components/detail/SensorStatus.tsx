@@ -1,6 +1,7 @@
 import React from 'react';
 import { Machine } from '../../types/machine';
-import { MACHINE_TYPES, SensorSchema } from '../../data/machineTypes';
+import { MachineTypeId } from '../../data/machineTypes';
+import { getThresholdsForMachine, MachineSensorThreshold } from '../../intelligence';
 import { AlertTriangle, CheckCircle2, AlertOctagon } from 'lucide-react';
 
 interface SensorStatusProps {
@@ -8,17 +9,22 @@ interface SensorStatusProps {
 }
 
 export const SensorStatus: React.FC<SensorStatusProps> = ({ machine }) => {
-  const typeDef = MACHINE_TYPES[machine.machineType];
+  const machineType = machine.machineType as MachineTypeId;
+  const thresholds = getThresholdsForMachine(machineType);
+  const thresholdMap = new Map<string, MachineSensorThreshold>();
+  thresholds.forEach(t => thresholdMap.set(t.sensorId, t));
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', width: '100%' }}>
       <div
         style={{
           display: 'flex',
+          flexWrap: 'wrap',
           alignItems: 'center',
           justifyContent: 'space-between',
           borderBottom: '1.5px solid var(--border-strong)',
-          paddingBottom: '8px'
+          paddingBottom: '8px',
+          gap: '8px'
         }}
       >
         <div>
@@ -32,10 +38,10 @@ export const SensorStatus: React.FC<SensorStatusProps> = ({ machine }) => {
               color: 'var(--text-primary)'
             }}
           >
-            Real-Time Edge Sensor Telemetry
+            Real-Time Edge Sensor Telemetry & Threshold Envelopes
           </div>
           <div style={{ fontSize: '12px', color: 'var(--text-secondary)', fontFamily: 'var(--font-sans)', marginTop: '2px' }}>
-            Dynamic sensor schema for {typeDef ? typeDef.name : machine.machineType} • Sampling Rate: 100ms Edge Stream
+            Machine Manual Specifications for {machine.name} ({machine.id}) • Sampling Rate: 100ms Edge Stream
           </div>
         </div>
 
@@ -58,15 +64,13 @@ export const SensorStatus: React.FC<SensorStatusProps> = ({ machine }) => {
       <div
         style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
           gap: '16px',
           width: '100%'
         }}
       >
         {machine.sensors.map((sensor) => {
-          const schemaDef: SensorSchema | undefined = typeDef?.sensors.find(
-            (s) => s.id === sensor.sensorId
-          );
+          const threshDef = thresholdMap.get(sensor.sensorId);
 
           let statusColor = 'var(--accent-green)';
           let statusBg = 'rgba(22, 163, 74, 0.1)';
@@ -85,8 +89,8 @@ export const SensorStatus: React.FC<SensorStatusProps> = ({ machine }) => {
             StatusIcon = AlertOctagon;
           }
 
-          const min = schemaDef ? schemaDef.min : 0;
-          const max = schemaDef ? schemaDef.max : sensor.value * 1.5 || 100;
+          const min = threshDef ? threshDef.normal.min * 0.7 : 0;
+          const max = threshDef ? threshDef.critical.max || threshDef.critical.min * 1.2 : sensor.value * 1.5 || 100;
           const percentage = Math.min(Math.max(((sensor.value - min) / (max - min)) * 100, 0), 100);
 
           return (
@@ -111,17 +115,22 @@ export const SensorStatus: React.FC<SensorStatusProps> = ({ machine }) => {
                   justifyContent: 'space-between'
                 }}
               >
-                <span
-                  style={{
-                    fontFamily: 'var(--font-display)',
-                    fontSize: '14px',
-                    fontWeight: 700,
-                    color: 'var(--text-primary)',
-                    letterSpacing: '0.03em'
-                  }}
-                >
-                  {sensor.name}
-                </span>
+                <div>
+                  <span
+                    style={{
+                      fontFamily: 'var(--font-display)',
+                      fontSize: '14px',
+                      fontWeight: 700,
+                      color: 'var(--text-primary)',
+                      letterSpacing: '0.03em'
+                    }}
+                  >
+                    {sensor.name}
+                  </span>
+                  <div style={{ fontSize: '10px', fontFamily: 'var(--font-mono)', color: 'var(--text-muted)' }}>
+                    ID: <code>{sensor.sensorId}</code>
+                  </div>
+                </div>
 
                 <span
                   style={{
@@ -180,26 +189,8 @@ export const SensorStatus: React.FC<SensorStatusProps> = ({ machine }) => {
                   </span>
                 </div>
 
-                <div style={{ marginBottom: '10px' }}>
-                  <div
-                    style={{
-                      display: 'flex',
-                      justifyContent: 'space-between',
-                      fontSize: '11px',
-                      fontFamily: 'var(--font-mono)',
-                      color: 'var(--text-secondary)',
-                      marginBottom: '4px'
-                    }}
-                  >
-                    <span>MIN: {min} {sensor.unit}</span>
-                    {schemaDef && (
-                      <span>
-                        NOMINAL: [{schemaDef.normalRange[0]} - {schemaDef.normalRange[1]}]
-                      </span>
-                    )}
-                    <span>MAX: {max} {sensor.unit}</span>
-                  </div>
-
+                {/* Progress bar */}
+                <div style={{ marginBottom: '12px' }}>
                   <div
                     style={{
                       width: '100%',
@@ -220,20 +211,48 @@ export const SensorStatus: React.FC<SensorStatusProps> = ({ machine }) => {
                   </div>
                 </div>
 
-                {schemaDef && (
+                {/* Threshold Specifications Box */}
+                {threshDef && (
                   <div
                     style={{
-                      fontSize: '12px',
-                      color: 'var(--text-secondary)',
-                      fontFamily: 'var(--font-sans)',
-                      lineHeight: 1.45,
-                      marginTop: '10px'
+                      backgroundColor: 'var(--bg-surface)',
+                      border: '1px solid var(--border-light)',
+                      padding: '8px 10px',
+                      fontSize: '11px',
+                      fontFamily: 'var(--font-mono)',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: '4px'
                     }}
                   >
-                    {schemaDef.description}
+                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                      <span style={{ color: 'var(--text-muted)' }}>Nominal Band:</span>
+                      <strong style={{ color: 'var(--accent-green)' }}>
+                        {threshDef.normal.min} – {threshDef.normal.max} {sensor.unit}
+                      </strong>
+                    </div>
+
+                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                      <span style={{ color: 'var(--text-muted)' }}>Warning Limit:</span>
+                      <strong style={{ color: 'var(--accent-amber)' }}>
+                        {threshDef.direction === 'HIGHER_IS_WORSE' ? `≥ ${threshDef.warning.min}` : `≤ ${threshDef.warning.max}`} {sensor.unit}
+                      </strong>
+                    </div>
+
+                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                      <span style={{ color: 'var(--text-muted)' }}>Critical Limit:</span>
+                      <strong style={{ color: 'var(--accent-red)' }}>
+                        {threshDef.direction === 'HIGHER_IS_WORSE' ? `≥ ${threshDef.critical.min}` : `≤ ${threshDef.critical.max}`} {sensor.unit}
+                      </strong>
+                    </div>
+
+                    <div style={{ fontSize: '10px', color: 'var(--text-muted)', borderTop: '1px dashed var(--border-light)', paddingTop: '4px', marginTop: '2px' }}>
+                      Direction: {threshDef.direction.replace('_', ' ')}
+                    </div>
                   </div>
                 )}
 
+                {/* Recent Telemetry trend if available */}
                 {sensor.history && sensor.history.length > 0 && (
                   <div
                     style={{
@@ -247,7 +266,7 @@ export const SensorStatus: React.FC<SensorStatusProps> = ({ machine }) => {
                       fontFamily: 'var(--font-mono)'
                     }}
                   >
-                    <span style={{ color: 'var(--text-muted)' }}>RECENT TELEMETRY TREND:</span>
+                    <span style={{ color: 'var(--text-muted)' }}>TREND:</span>
                     <div style={{ display: 'flex', gap: '5px' }}>
                       {sensor.history.map((pt, i) => (
                         <span

@@ -1,0 +1,742 @@
+{
+  "filename": "wafer-dicing-machine",
+  "machine": {
+    "name": "High-Precision Wafer Dicing Saw",
+    "type": "wafer_dicing",
+    "prototypeMachineId": "DIC-001",
+    "manualId": "VAI-MAN-DIC-001",
+    "version": "1.0",
+    "generatedDate": "2026-08-26",
+    "documentStatus": "Synthetic Prototype Technical Manual",
+    "purpose": "VectorAI Demonstration and Development",
+    "disclaimer": "SYNTHETIC PROTOTYPE TECHNICAL MANUAL\n\nThis document is artificially generated for the VectorAI demonstration and software development.\n\nThe specifications, thresholds, service-life values, maintenance intervals, and operating parameters are synthetic and must not be used for real industrial equipment operation or maintenance.",
+    "processStage": "Wafer Prep & Dicing",
+    "description": "Precision dual-spindle wafer dicing system designed for cutting incoming 200mm/300mm semiconductor silicon, GaAs, and GaN wafers into individual micro-dies using high-speed diamond blade spindles operating up to 60,000 RPM with deionized coolant delivery.",
+    "manufacturingProcess": "The dicing process utilizes resinoid/nickel-bond diamond blades mounted on high-frequency air-bearing spindles. Silicon wafers mounted on dicing tape are secured on a porous ceramic vacuum chuck table. High-pressure DI water jets cool the cutting zone, remove silicon swarf, and lubricate the blade kerf while optical cameras align scribe lanes with sub-micron precision.",
+    "subsystems": [
+      "Air-Bearing High-Speed Spindle Assembly",
+      "Porous Ceramic Vacuum Chuck & Work Stage",
+      "DI Water Coolant Delivery & Jet Nozzle System",
+      "High-Resolution Vision Alignment & Kerf Inspection Optical System",
+      "Diamond Blade Flange & Auto-Contact Touch Sensor",
+      "Dressing Board Mechanism for Blade Sharpening"
+    ]
+  },
+  "components": [
+    {
+      "name": "Air-Bearing Spindle Assembly",
+      "function": "Drives diamond cutting blade at rotational speeds from 30,000 to 60,000 RPM with minimal radial runout.",
+      "importantParameters": "Spindle rotation speed (RPM), radial vibration (mm/s), motor winding current (A), bearing air pressure (MPa).",
+      "degradationIndicators": "Increased high-frequency harmonic vibration (>0.8 mm/s), spindle bearing temperature rise, motor current spikes."
+    },
+    {
+      "name": "Diamond Dicing Blade",
+      "function": "Precision mechanical shearing and material removal along scribe lanes on silicon and compound semiconductor wafers.",
+      "importantParameters": "Blade outer diameter (mm), diamond grit exposure, kerf width (\u00b5m), blade wear index (\u00b5m).",
+      "degradationIndicators": "Increased cutting resistance, wafer backside chipping (>25 \u00b5m), kerf width widening, blade edge loading."
+    },
+    {
+      "name": "Coolant Delivery System",
+      "function": "Directs constant laminar DI water flow to blade kerf to dissipate cutting friction heat and flush silicon particulate.",
+      "importantParameters": "Coolant temperature (\u00b0C), nozzle pressure (bar), volumetric flow rate (L/min), resistivity (M\u03a9\u00b7cm).",
+      "degradationIndicators": "Nozzle pressure drop (<1.5 bar), coolant temperature rise (>28\u00b0C), nozzle orifice particulate fouling."
+    },
+    {
+      "name": "Porous Ceramic Vacuum Chuck",
+      "function": "Immobilizes wafer dicing tape carrier securely during high-velocity cutting passes.",
+      "importantParameters": "Holding vacuum level (kPa), chuck table flatness (\u00b5m), surface temperature (\u00b0C).",
+      "degradationIndicators": "Vacuum leakage (>-60 kPa), micro-vibration transfer, particulate clogging in ceramic pores."
+    },
+    {
+      "name": "Vision Alignment Optical System",
+      "function": "Performs dual-axis sub-pixel recognition of wafer alignment targets and post-cut kerf placement accuracy.",
+      "importantParameters": "Illumination intensity (lux), focal distance (mm), pattern match confidence score (%).",
+      "degradationIndicators": "Alignment search timeouts, optical lens dust contamination, LED strobe brightness decay."
+    }
+  ],
+  "sensors": [
+    {
+      "sensorId": "vibration_spindle",
+      "name": "Spindle Radial Vibration",
+      "unit": "mm/s",
+      "purpose": "Monitors mechanical vibration amplitude and air-bearing stability on the primary cutting spindle.",
+      "minScale": 0.0,
+      "maxScale": 2.0,
+      "normalRange": [
+        0.1,
+        0.5
+      ],
+      "warningRange": [
+        0.5,
+        0.8
+      ],
+      "criticalRange": [
+        0.8,
+        2.0
+      ],
+      "direction": "HIGHER_IS_WORSE"
+    },
+    {
+      "sensorId": "temperature_coolant",
+      "name": "DI Water Coolant Temp",
+      "unit": "\u00b0C",
+      "purpose": "Measures the temperature of DI water sprayed directly on the diamond blade and silicon interface.",
+      "minScale": 10.0,
+      "maxScale": 50.0,
+      "normalRange": [
+        18.0,
+        24.0
+      ],
+      "warningRange": [
+        24.0,
+        28.0
+      ],
+      "criticalRange": [
+        28.0,
+        50.0
+      ],
+      "direction": "HIGHER_IS_WORSE"
+    },
+    {
+      "sensorId": "load_motor",
+      "name": "Spindle Motor Load",
+      "unit": "%",
+      "purpose": "Monitors the percentage of electrical motor current capacity drawn by the high-torque cutting spindle.",
+      "minScale": 0.0,
+      "maxScale": 100.0,
+      "normalRange": [
+        30.0,
+        65.0
+      ],
+      "warningRange": [
+        65.0,
+        80.0
+      ],
+      "criticalRange": [
+        80.0,
+        100.0
+      ],
+      "direction": "HIGHER_IS_WORSE"
+    },
+    {
+      "sensorId": "pressure_coolant",
+      "name": "Coolant Nozzle Pressure",
+      "unit": "bar",
+      "purpose": "Monitors fluid pressure delivered to the dual-jet cutting nozzle manifold.",
+      "minScale": 0.0,
+      "maxScale": 5.0,
+      "normalRange": [
+        2.2,
+        3.5
+      ],
+      "warningRange": [
+        1.5,
+        2.2
+      ],
+      "criticalRange": [
+        0.0,
+        1.5
+      ],
+      "direction": "LOWER_IS_WORSE"
+    },
+    {
+      "sensorId": "blade_wear_index",
+      "name": "Diamond Blade Wear Index",
+      "unit": "\u00b5m",
+      "purpose": "Calculates cumulative diamond matrix radius erosion relative to new blade baseline.",
+      "minScale": 0.0,
+      "maxScale": 50.0,
+      "normalRange": [
+        0.0,
+        15.0
+      ],
+      "warningRange": [
+        15.0,
+        30.0
+      ],
+      "criticalRange": [
+        30.0,
+        50.0
+      ],
+      "direction": "HIGHER_IS_WORSE"
+    },
+    {
+      "sensorId": "chuck_vacuum",
+      "name": "Work Chuck Vacuum",
+      "unit": "kPa",
+      "purpose": "Measures negative vacuum pressure securing the wafer substrate on the ceramic stage.",
+      "minScale": -100.0,
+      "maxScale": 0.0,
+      "normalRange": [
+        -90.0,
+        -75.0
+      ],
+      "warningRange": [
+        -75.0,
+        -60.0
+      ],
+      "criticalRange": [
+        -60.0,
+        0.0
+      ],
+      "direction": "HIGHER_IS_WORSE"
+    }
+  ],
+  "thresholds": [
+    {
+      "sensorId": "vibration_spindle",
+      "sensorName": "Spindle Radial Vibration",
+      "unit": "mm/s",
+      "normal": {
+        "min": 0.1,
+        "max": 0.5,
+        "description": "Nominal spindle dynamic balance and hydrodynamic air film."
+      },
+      "warning": {
+        "min": 0.5,
+        "max": 0.8,
+        "description": "Early bearing air film instability or minor blade unbalance."
+      },
+      "critical": {
+        "min": 0.8,
+        "max": 2.0,
+        "description": "Severe bearing wear or imminent air-bearing spindle crash."
+      },
+      "direction": "HIGHER_IS_WORSE"
+    },
+    {
+      "sensorId": "temperature_coolant",
+      "sensorName": "DI Water Coolant Temp",
+      "unit": "\u00b0C",
+      "normal": {
+        "min": 18.0,
+        "max": 24.0,
+        "description": "Optimal thermal stabilization for blade lubrication and wafer cooling."
+      },
+      "warning": {
+        "min": 24.0,
+        "max": 28.0,
+        "description": "Heat exchanger thermal drift or partial chiller degradation."
+      },
+      "critical": {
+        "min": 28.0,
+        "max": 50.0,
+        "description": "Severe thermal dissipation failure causing kerf thermal stress and micro-cracking."
+      },
+      "direction": "HIGHER_IS_WORSE"
+    },
+    {
+      "sensorId": "load_motor",
+      "sensorName": "Spindle Motor Load",
+      "unit": "%",
+      "normal": {
+        "min": 30.0,
+        "max": 65.0,
+        "description": "Standard cutting torque through silicon substrate."
+      },
+      "warning": {
+        "min": 65.0,
+        "max": 80.0,
+        "description": "Diamond blade dulling or excessive feed rate resistance."
+      },
+      "critical": {
+        "min": 80.0,
+        "max": 100.0,
+        "description": "Severe blade loading, spindle stalling risk, or blade breakage hazard."
+      },
+      "direction": "HIGHER_IS_WORSE"
+    },
+    {
+      "sensorId": "pressure_coolant",
+      "sensorName": "Coolant Nozzle Pressure",
+      "unit": "bar",
+      "normal": {
+        "min": 2.2,
+        "max": 3.5,
+        "description": "Adequate jet velocity to evacuate kerf swarf particles."
+      },
+      "warning": {
+        "min": 1.5,
+        "max": 2.2,
+        "description": "Filter restriction or partial nozzle orifice clogging."
+      },
+      "critical": {
+        "min": 0.0,
+        "max": 1.5,
+        "description": "Inadequate coolant supply causing immediate blade burning and wafer thermal shock."
+      },
+      "direction": "LOWER_IS_WORSE"
+    },
+    {
+      "sensorId": "blade_wear_index",
+      "sensorName": "Diamond Blade Wear Index",
+      "unit": "\u00b5m",
+      "normal": {
+        "min": 0.0,
+        "max": 15.0,
+        "description": "Normal blade exposure and sharp diamond cutting facets."
+      },
+      "warning": {
+        "min": 15.0,
+        "max": 30.0,
+        "description": "Substantial matrix wear requiring dressing cycle or replacement schedule."
+      },
+      "critical": {
+        "min": 30.0,
+        "max": 50.0,
+        "description": "Blade end-of-life; risk of blade breakout, kerf drift, and die damage."
+      },
+      "direction": "HIGHER_IS_WORSE"
+    },
+    {
+      "sensorId": "chuck_vacuum",
+      "sensorName": "Work Chuck Vacuum",
+      "unit": "kPa",
+      "normal": {
+        "min": -90.0,
+        "max": -75.0,
+        "description": "Firm vacuum clamp holding wafer tape flat during cutting stroke."
+      },
+      "warning": {
+        "min": -75.0,
+        "max": -60.0,
+        "description": "Minor seal leak or tape micro-lifting risk at wafer edges."
+      },
+      "critical": {
+        "min": -60.0,
+        "max": 0.0,
+        "description": "Insufficient vacuum clamping resulting in wafer shift or die flying hazard."
+      },
+      "direction": "HIGHER_IS_WORSE"
+    }
+  ],
+  "operatingConditions": {
+    "ambientTemperature": "20.0 - 24.0 \u00b0C (Cleanroom ISO Class 5 / Class 100)",
+    "relativeHumidity": "40% - 55% RH non-condensing",
+    "normalOperatingTemperature": "20.0 - 25.0 \u00b0C",
+    "normalOperatingPressure": "0.55 - 0.65 MPa (Clean Dry Air for Air Bearing)",
+    "normalOperatingSpeed": "40,000 - 60,000 RPM",
+    "normalCycleTime": "45 - 75 seconds per 300mm wafer (standard die pitch)",
+    "normalOperatingHours": "20 - 24 hours/day continuous production",
+    "recommendedOperatingConditions": "Spindle warm-up cycle for 15 minutes before first cut; DI water resistivity > 15 M\u03a9\u00b7cm.",
+    "maximumContinuousOperation": "168 hours (7 days) before scheduled dressing and optical calibration"
+  },
+  "maintenance": [
+    {
+      "component": "Diamond Dicing Blade",
+      "recommendedMaintenanceIntervalHours": 250,
+      "expectedServiceLifeHours": 400,
+      "maintenanceAction": "Inspect blade exposure, perform dressing board sharpening or install replacement blade with torque wrench calibration.",
+      "procedureSummary": "Use optical microscope to inspect blade edge. Dress blade using GC-1200 dressing plate for 5 passes at 20 mm/s."
+    },
+    {
+      "component": "Air-Bearing Spindle Flange",
+      "recommendedMaintenanceIntervalHours": 1000,
+      "expectedServiceLifeHours": 6000,
+      "maintenanceAction": "Check spindle axial and radial runout with capacitive displacement probe; clean flange mating surface.",
+      "procedureSummary": "Verify runout is < 0.5 \u00b5m. Inspect air bearing filtration unit and dew point."
+    },
+    {
+      "component": "Coolant Delivery & Nozzle Manifold",
+      "recommendedMaintenanceIntervalHours": 500,
+      "expectedServiceLifeHours": 4000,
+      "maintenanceAction": "Ultrasonic clean nozzle orifices, flush supply lines, and replace 0.2 \u00b5m DI water cartridge filter.",
+      "procedureSummary": "Remove nozzle bar, sonicate in 5% citric acid for 15 min, rinse with DI water, verify spray fan pattern."
+    },
+    {
+      "component": "Porous Ceramic Chuck Table",
+      "recommendedMaintenanceIntervalHours": 750,
+      "expectedServiceLifeHours": 8000,
+      "maintenanceAction": "Perform chemical back-flush and ultrasonic surface wipe down to eliminate embedded silicon slurry.",
+      "procedureSummary": "Apply isopropyl alcohol with lint-free cleanroom wipe, run back-purge vacuum cycle at +0.2 MPa."
+    },
+    {
+      "component": "Vision Optical Lens & Camera",
+      "recommendedMaintenanceIntervalHours": 350,
+      "expectedServiceLifeHours": 10000,
+      "maintenanceAction": "Clean front objective lens with optical solvent and execute sub-pixel reticle recalibration.",
+      "procedureSummary": "Use standard calibration grid target; verify telecentric distortion is < 0.05%."
+    }
+  ],
+  "degradationIndicators": [
+    {
+      "parameter": "Spindle Radial Vibration",
+      "normalCondition": "Vibration amplitude between 0.10 and 0.50 mm/s with stable spectral baseline.",
+      "degradedCondition": "Vibration levels drift into 0.50 - 0.80 mm/s due to diamond blade micro-chipping or bearing air film instability.",
+      "criticalCondition": "Vibration exceeds 0.80 mm/s; mechanical imbalance causes severe wafer kerf damage.",
+      "indicatorMechanism": "Indicates physical loss of diamond matrix uniformity, blade flange clamping looseness, or bearing air clearance degradation."
+    },
+    {
+      "parameter": "Spindle Motor Load",
+      "normalCondition": "Motor load steady between 30% and 65% during standard cutting feed.",
+      "degradedCondition": "Motor load climbs to 65% - 80% as cutting resistance increases.",
+      "criticalCondition": "Motor load exceeds 80%; spindle inverter experiences overcurrent and risks stall.",
+      "indicatorMechanism": "Indicates diamond grit dulling/loading, where friction replaces clean shearing, transferring excess mechanical resistance to spindle motor."
+    },
+    {
+      "parameter": "DI Water Coolant Temperature",
+      "normalCondition": "Coolant temperature maintained strictly within 18.0 - 24.0 \u00b0C.",
+      "degradedCondition": "Temperature climbs to 24.0 - 28.0 \u00b0C as heat exchanger efficiency declines.",
+      "criticalCondition": "Coolant temperature exceeds 28.0 \u00b0C; silicon substrate suffers thermal expansion and stress micro-fractures.",
+      "indicatorMechanism": "Indicates fouling of heat exchanger or chiller refrigeration loop decay, degrading heat transfer away from blade cutting zone."
+    },
+    {
+      "parameter": "Coolant Nozzle Pressure",
+      "normalCondition": "Continuous nozzle line pressure between 2.2 and 3.5 bar.",
+      "degradedCondition": "Pressure drops to 1.5 - 2.2 bar due to upstream filter loading.",
+      "criticalCondition": "Pressure drops below 1.5 bar; laminar cooling jet collapses into turbulent mist.",
+      "indicatorMechanism": "Indicates particulate clogging in line filters or nozzle aperture buildup, starving the cutting interface of lubrication."
+    },
+    {
+      "parameter": "Diamond Blade Wear Index",
+      "normalCondition": "Radial blade wear below 15 \u00b5m.",
+      "degradedCondition": "Blade wear between 15 and 30 \u00b5m; kerf profile begins widening.",
+      "criticalCondition": "Blade wear exceeds 30 \u00b5m; blade diameter reduced to core substrate limit.",
+      "indicatorMechanism": "Represents the direct physical attrition of synthetic diamond abrasive matrix through cumulative silicon cutting distance."
+    }
+  ],
+  "rulModel": {
+    "baseUsefulLifeHours": 6000,
+    "formulaDescription": "Deterministic multi-parameter linear degradation model. Each parameter degradation is computed relative to healthy and critical limits, clamped [0, 1], weighted, and subtracted from Base Useful Life.",
+    "weightsSum": 1.0,
+    "parameters": [
+      {
+        "parameter": "Spindle Vibration",
+        "sensorId": "vibration_spindle",
+        "sensorName": "Spindle Radial Vibration",
+        "unit": "mm/s",
+        "weight": 0.3,
+        "healthyLimit": 0.5,
+        "criticalLimit": 1.2,
+        "direction": "HIGHER_IS_WORSE"
+      },
+      {
+        "parameter": "Spindle Motor Load",
+        "sensorId": "load_motor",
+        "sensorName": "Spindle Motor Load",
+        "unit": "%",
+        "weight": 0.25,
+        "healthyLimit": 65.0,
+        "criticalLimit": 90.0,
+        "direction": "HIGHER_IS_WORSE"
+      },
+      {
+        "parameter": "Coolant Temperature",
+        "sensorId": "temperature_coolant",
+        "sensorName": "DI Water Coolant Temp",
+        "unit": "\u00b0C",
+        "weight": 0.15,
+        "healthyLimit": 24.0,
+        "criticalLimit": 35.0,
+        "direction": "HIGHER_IS_WORSE"
+      },
+      {
+        "parameter": "Coolant Pressure",
+        "sensorId": "pressure_coolant",
+        "sensorName": "Coolant Nozzle Pressure",
+        "unit": "bar",
+        "weight": 0.15,
+        "healthyLimit": 2.5,
+        "criticalLimit": 1.2,
+        "direction": "LOWER_IS_WORSE"
+      },
+      {
+        "parameter": "Blade Wear Index",
+        "sensorId": "blade_wear_index",
+        "sensorName": "Diamond Blade Wear Index",
+        "unit": "\u00b5m",
+        "weight": 0.15,
+        "healthyLimit": 15.0,
+        "criticalLimit": 35.0,
+        "direction": "HIGHER_IS_WORSE"
+      }
+    ]
+  },
+  "symptoms": [
+    {
+      "symptomId": "SYM-DIC-01",
+      "symptom": "Spindle Radial Vibration Exceedance",
+      "severity": "High",
+      "relatedSensors": [
+        "vibration_spindle",
+        "load_motor"
+      ],
+      "possibleCauses": [
+        "Diamond blade dynamic imbalance or flange clamping runout",
+        "Air-bearing air supply pressure fluctuation or moisture contamination",
+        "Spindle internal ceramic bearing race wear"
+      ],
+      "recommendedAction": "Halt dicing cycle, inspect blade flange torque (0.8 Nm), verify CDA dew point (-40\u00b0C), perform dynamic balance calibration."
+    },
+    {
+      "symptomId": "SYM-DIC-02",
+      "symptom": "Elevated Coolant Supply Temperature",
+      "severity": "Medium",
+      "relatedSensors": [
+        "temperature_coolant"
+      ],
+      "possibleCauses": [
+        "DI water chiller heat exchanger bio-fouling or sediment accumulation",
+        "Coolant circulation pump flow rate reduction",
+        "Chiller refrigerant leak or compressor duty overload"
+      ],
+      "recommendedAction": "Inspect chiller loop temperature, clean heat exchanger plates, verify 4.5 L/min minimum flow rate."
+    },
+    {
+      "symptomId": "SYM-DIC-03",
+      "symptom": "Spindle Motor High Load Surge During Cut",
+      "severity": "High",
+      "relatedSensors": [
+        "load_motor",
+        "blade_wear_index"
+      ],
+      "possibleCauses": [
+        "Diamond blade glazing and lost abrasive grit exposure",
+        "Work table feed velocity exceeding blade cutting capacity",
+        "Insufficient DI water lubrication at cutting kerf"
+      ],
+      "recommendedAction": "Execute 5-pass dressing cycle on GC board, reduce feed rate by 15%, inspect coolant nozzle alignment."
+    },
+    {
+      "symptomId": "SYM-DIC-04",
+      "symptom": "Coolant Jet Pressure Drop Below Limit",
+      "severity": "Critical",
+      "relatedSensors": [
+        "pressure_coolant",
+        "temperature_coolant"
+      ],
+      "possibleCauses": [
+        "Inline 0.2 \u00b5m DI water particulate filter clogged with silicon fines",
+        "Coolant delivery solenoid valve coil failure",
+        "Nozzle orifice blockage from crystallized mineral deposits"
+      ],
+      "recommendedAction": "Immediately replace filter cartridge, perform ultrasonic purge of nozzle manifold, confirm 2.8 bar baseline pressure."
+    },
+    {
+      "symptomId": "SYM-DIC-05",
+      "symptom": "Work Chuck Vacuum Pressure Degradation",
+      "severity": "Critical",
+      "relatedSensors": [
+        "chuck_vacuum"
+      ],
+      "possibleCauses": [
+        "Ceramic chuck surface micro-porosity contamination with slurry",
+        "Vacuum generator ejector venturi nozzle wear",
+        "Dicing tape puncture or bottom seal perimeter leak"
+      ],
+      "recommendedAction": "Perform chemical back-flush of chuck with IPA, inspect ejector vacuum generator, verify wafer frame tape seal tension."
+    }
+  ],
+  "failureScenarios": [
+    {
+      "scenarioId": "SCEN-DIC-001",
+      "symptom": "High-Frequency Harmonic Spindle Vibration",
+      "sensorPattern": "vibration_spindle rises from 0.42 to 0.88 mm/s; load_motor stable at 48%",
+      "possibleCauses": [
+        "Diamond blade edge micro-chipping",
+        "Spindle flange tightening screw relaxation",
+        "Spindle shaft air film thickness reduction"
+      ],
+      "severity": "high",
+      "recommendedAction": "Retorque blade clamping flange to 0.8 Nm with calibrated torque wrench. If vibration persists, replace blade.",
+      "verificationSteps": [
+        "Run 10,000 RPM idle spin test",
+        "Measure radial runout with capacitive sensor",
+        "Execute dry run without wafer load"
+      ]
+    },
+    {
+      "scenarioId": "SCEN-DIC-002",
+      "symptom": "Diamond Blade Loading & Cutting Resistance Spike",
+      "sensorPattern": "load_motor surges from 52% to 84%; blade_wear_index jumps to 28 \u00b5m",
+      "possibleCauses": [
+        "Silicon swarf embedded in diamond matrix resinoid pores",
+        "Excessive feed velocity on thick wafer substrate",
+        "Improper coolant spray angle"
+      ],
+      "severity": "high",
+      "recommendedAction": "Initiate automated blade dressing sequence on silicon carbide block for 8 strokes. Adjust nozzle angle to 45\u00b0.",
+      "verificationSteps": [
+        "Verify motor load returns to < 55% during test cut",
+        "Inspect kerf edge for burrs under 50x magnification"
+      ]
+    },
+    {
+      "scenarioId": "SCEN-DIC-003",
+      "symptom": "Coolant Delivery Manifold Pressure Drop",
+      "sensorPattern": "pressure_coolant drops from 2.8 bar to 1.3 bar; temperature_coolant rises by 4.2\u00b0C",
+      "possibleCauses": [
+        "Main 0.2 \u00b5m DI filter differential pressure threshold exceeded",
+        "Coolant pump impeller cavitation",
+        "Nozzle feed line kink"
+      ],
+      "severity": "critical",
+      "recommendedAction": "Replace primary and secondary coolant filter cartridges. Purge trapped air from manifold.",
+      "verificationSteps": [
+        "Check pressure gauge reads > 2.5 bar at full flow",
+        "Inspect spray symmetry across dual nozzles"
+      ]
+    },
+    {
+      "scenarioId": "SCEN-DIC-004",
+      "symptom": "Wafer Micro-Shift During High-Speed X-Feed",
+      "sensorPattern": "chuck_vacuum degrades from -82 kPa to -54 kPa",
+      "possibleCauses": [
+        "Silicon slurry accumulation inside porous ceramic chuck channels",
+        "Vacuum solenoid valve seal leak",
+        "Improper wafer dicing tape lamination pressure"
+      ],
+      "severity": "critical",
+      "recommendedAction": "Perform hot DI water and IPA reverse purge of ceramic chuck table. Test vacuum holding force.",
+      "verificationSteps": [
+        "Verify vacuum level drops to < -80 kPa with test frame",
+        "Perform pull force gauge test (> 15 N)"
+      ]
+    },
+    {
+      "scenarioId": "SCEN-DIC-005",
+      "symptom": "Spindle Thermal Expansion and Z-Axis Kerf Depth Drift",
+      "sensorPattern": "vibration_spindle at 0.65 mm/s; load_motor at 72%; coolant temp at 27.5\u00b0C",
+      "possibleCauses": [
+        "Spindle internal chiller coolant jacket restriction",
+        "Continuous operation exceeding 12 hours without thermal stabilization",
+        "Room cleanroom ambient temperature fluctuation"
+      ],
+      "severity": "medium",
+      "recommendedAction": "Recalibrate non-contact height sensor baseline. Clean spindle cooling jacket circuit.",
+      "verificationSteps": [
+        "Perform touch-sensor zero calibration",
+        "Check kerf depth on test wafer (nominal \u00b1 2 \u00b5m)"
+      ]
+    },
+    {
+      "scenarioId": "SCEN-DIC-006",
+      "symptom": "Excessive Wafer Backside Chipping on Die Corners",
+      "sensorPattern": "blade_wear_index at 32 \u00b5m; vibration_spindle at 0.74 mm/s",
+      "possibleCauses": [
+        "Diamond blade wear past nominal diamond matrix boundary",
+        "Blade kerf tapering due to side-face erosion",
+        "Dicing tape adhesion loss from coolant over-penetration"
+      ],
+      "severity": "high",
+      "recommendedAction": "Replace diamond blade immediately. Inspect wafer backing tape UV cure parameters.",
+      "verificationSteps": [
+        "Measure backside chipping width on sample die (< 15 \u00b5m allowable)",
+        "Confirm new blade zero reference"
+      ]
+    },
+    {
+      "scenarioId": "SCEN-DIC-007",
+      "symptom": "Spindle Inverter Harmonic Overcurrent Trip",
+      "sensorPattern": "load_motor spikes to 96% instantaneously; vibration_spindle at 1.1 mm/s",
+      "possibleCauses": [
+        "Blade jamming caused by silicon fragment wedged in blade cover",
+        "Spindle inverter IGBT phase imbalance",
+        "Spindle bearing air pressure dropped below interlock limit"
+      ],
+      "severity": "critical",
+      "recommendedAction": "Emergency stop. Clear blade chamber of fragments. Inspect air supply regulator (min 0.55 MPa).",
+      "verificationSteps": [
+        "Manually spin spindle by hand with air on (must rotate freely)",
+        "Reset inverter faults",
+        "Perform slow ramp-up test"
+      ]
+    },
+    {
+      "scenarioId": "SCEN-DIC-008",
+      "symptom": "Coolant Chiller Loop Heat Saturation",
+      "sensorPattern": "temperature_coolant drifts continuously up to 31.2\u00b0C; pressure_coolant stable",
+      "possibleCauses": [
+        "External facility chilled water loop temperature elevated",
+        "Chiller condenser coil dust clogging",
+        "Refrigerant R134a undercharge"
+      ],
+      "severity": "high",
+      "recommendedAction": "Notify facilities team to check primary loop. Clean chiller condenser filters. Verify temperature returns to 21\u00b0C.",
+      "verificationSteps": [
+        "Monitor temperature log over 30 min",
+        "Verify stability at 22.0 \u00b1 0.5\u00b0C"
+      ]
+    },
+    {
+      "scenarioId": "SCEN-DIC-009",
+      "symptom": "Vision Alignment Optical Target Misrecognition",
+      "sensorPattern": "Cycle time increases by 25 seconds per wafer; sensor telemetry nominal",
+      "possibleCauses": [
+        "Microscope front protective glass coated with dried silicon aerosol mist",
+        "Ring light LED intensity degradation",
+        "Wafer surface reflectivity change from new metal layer"
+      ],
+      "severity": "medium",
+      "recommendedAction": "Clean microscope protective glass with optical tissue and lens cleaner. Run illumination auto-calibration.",
+      "verificationSteps": [
+        "Run vision recognition test on standard wafer pattern",
+        "Confirm match score > 95%"
+      ]
+    },
+    {
+      "scenarioId": "SCEN-DIC-010",
+      "symptom": "Work Table Y-Axis Ball Screw Linear Pitch Error",
+      "sensorPattern": "Kerf positioning offset increases linearly across wafer diameter (+8 \u00b5m)",
+      "possibleCauses": [
+        "Y-axis precision linear guide lubrication starvation",
+        "Linear optical scale glass grating contamination",
+        "Ball screw pre-load spring fatigue"
+      ],
+      "severity": "high",
+      "recommendedAction": "Apply cleanroom grease (Kluber Isoflex NBU 15) to linear guides. Clean optical scale reading head.",
+      "verificationSteps": [
+        "Execute laser interferometer positioning verification",
+        "Verify repeatability < 1.0 \u00b5m"
+      ]
+    },
+    {
+      "scenarioId": "SCEN-DIC-011",
+      "symptom": "Blade Dressing Board Auto-Mechanism Jam",
+      "sensorPattern": "load_motor at 68% during dressing cycle; dressing cycle timeout alert",
+      "possibleCauses": [
+        "Dressing board mechanical feed stage lead screw bound by slurry",
+        "Dressing board material thickness exhausted",
+        "Pneumatic actuator cylinder seal sticking"
+      ],
+      "severity": "medium",
+      "recommendedAction": "Replace dressing board plate. Clean and lubricate dressing stage pneumatic cylinder.",
+      "verificationSteps": [
+        "Run manual dress test",
+        "Confirm touch sensor triggers at correct Z coordinate"
+      ]
+    },
+    {
+      "scenarioId": "SCEN-DIC-012",
+      "symptom": "Air-Bearing Clean Dry Air Dew Point Alert",
+      "sensorPattern": "vibration_spindle exhibits micro-spikes (0.35 to 0.65 mm/s intermittently)",
+      "possibleCauses": [
+        "Compressed air desiccant dryer saturation",
+        "Air filter oil coalescing element breakthrough",
+        "Main air line condensate buildup"
+      ],
+      "severity": "critical",
+      "recommendedAction": "Immediately check air supply dew point sensor. Replace air filter sub-assembly before moisture ruins air bearings.",
+      "verificationSteps": [
+        "Verify CDA dew point is < -40\u00b0C",
+        "Verify zero oil aerosol with particle counter"
+      ]
+    },
+    {
+      "scenarioId": "SCEN-DIC-013",
+      "symptom": "Blade Touchdown Sensor Sensitivity Drift",
+      "sensorPattern": "Blade wear index calculation fluctuates erratically (\u00b1 10 \u00b5m between cuts)",
+      "possibleCauses": [
+        "Electrical grounding contact resistance increase at workpiece chuck",
+        "Non-contact electrical discharge sensor probe oxidized",
+        "Substrate tape dielectric thickness variation"
+      ],
+      "severity": "medium",
+      "recommendedAction": "Clean touchdown contact plate with scotch-brite pad and IPA. Calibrate electrical sensor threshold.",
+      "verificationSteps": [
+        "Execute 5 repeated touchdown tests",
+        "Verify standard deviation < 1.0 \u00b5m"
+      ]
+    }
+  ]
+}

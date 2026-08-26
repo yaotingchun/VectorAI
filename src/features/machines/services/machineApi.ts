@@ -10,7 +10,17 @@ import {
 } from 'firebase/firestore';
 import { db } from '../../../lib/firebase';
 import { Machine, MachineStatus } from '../types/machine';
+import { MachineTypeId } from '../data/machineTypes';
 import { SEED_MACHINES } from '../data/seedMachines';
+import { 
+  analyzeMachine, 
+  calculateDeterministicRul, 
+  getMachineKnowledge, 
+  getRulModelForMachine,
+  MachineAgentAnalysis,
+  RulCalculationResult,
+  StructuredMachineKnowledge
+} from '../intelligence';
 
 const COLLECTION_NAME = 'machines';
 
@@ -158,6 +168,32 @@ export async function updateMachineStatus(id: string, status: MachineStatus): Pr
 }
 
 /**
+ * Executes full Machine Agent intelligence analysis on a machine.
+ */
+export function analyzeMachineState(machine: Machine): MachineAgentAnalysis {
+  return analyzeMachine(machine);
+}
+
+/**
+ * Calculates deterministic formula-based RUL for a machine.
+ */
+export function getMachineRulCalculation(machine: Machine): RulCalculationResult {
+  const model = getRulModelForMachine(machine.machineType as MachineTypeId);
+  const sensorInputs = machine.sensors.map((s) => ({
+    sensorId: s.sensorId,
+    value: s.value
+  }));
+  return calculateDeterministicRul(machine.id, machine.machineType as MachineTypeId, sensorInputs, model);
+}
+
+/**
+ * Fetches structured technical manual knowledge for a machine type.
+ */
+export function getMachineKnowledgeBase(machineType: MachineTypeId): StructuredMachineKnowledge {
+  return getMachineKnowledge(machineType);
+}
+
+/**
  * Seed Firestore with initial demo machines.
  */
 export async function seedFirestoreMachines(): Promise<{ count: number; success: boolean }> {
@@ -172,3 +208,4 @@ export async function seedFirestoreMachines(): Promise<{ count: number; success:
     return { count: 0, success: false };
   }
 }
+

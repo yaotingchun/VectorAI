@@ -1,0 +1,738 @@
+{
+  "filename": "die-attacher",
+  "machine": {
+    "name": "Thermo-Compression Precision Die Attacher",
+    "type": "die_attacher",
+    "prototypeMachineId": "DA-001",
+    "manualId": "VAI-MAN-DA-001",
+    "version": "1.0",
+    "generatedDate": "2026-08-26",
+    "documentStatus": "Synthetic Prototype Technical Manual",
+    "purpose": "VectorAI Demonstration and Development",
+    "disclaimer": "SYNTHETIC PROTOTYPE TECHNICAL MANUAL\n\nThis document is artificially generated for the VectorAI demonstration and software development.\n\nThe specifications, thresholds, service-life values, maintenance intervals, and operating parameters are synthetic and must not be used for real industrial equipment operation or maintenance.",
+    "processStage": "Die Attach & Bonding",
+    "description": "High-speed, ultra-precision die bonding system designed to pick singulated semiconductor dies from diced wafer film frames and place them onto leadframes, organic substrates, or ceramic carriers with sub-micron positional accuracy using epoxy dispensing or eutectic bonding.",
+    "manufacturingProcess": "The die attach cycle begins with wafer expansion and bottom-up ejector pin actuation. A high-speed pick-and-place robotic bond head fitted with a vacuum collet lifts the die. An epoxy dispensing unit applies programmable dot or cross patterns onto the leadframe pad. The heated substrate indexer stage maintains precise temperature while the bond head applies controlled compression force to achieve uniform bond line thickness.",
+    "subsystems": [
+      "High-Speed Voice-Coil Pick-and-Place Bond Arm",
+      "Substrate Indexer & Heated Workholder Stage",
+      "Precision Augered Epoxy Dispense Pump",
+      "Wafer Ejector Pin & Expansion Table",
+      "Dual Optical Look-Up/Look-Down Vision Alignment Cameras",
+      "Collet Vacuum & Programmable Positive Purge Manifold"
+    ]
+  },
+  "components": [
+    {
+      "name": "Pick-and-Place Bond Head Arm",
+      "function": "Transfers dies from diced wafer carrier to leadframe with precise Z-axis touchdown force and X-Y-theta orientation.",
+      "importantParameters": "Arm linear traverse vibration (mm/s), voice-coil current (A), positioning repeatability (\u00b5m).",
+      "degradationIndicators": "Traverse vibration spikes (>0.7 mm/s), bond position drift, linear encoder jitter."
+    },
+    {
+      "name": "Vacuum Collet / Pickup Tool",
+      "function": "Secures delicate silicon die surface via suction during high acceleration (up to 10G) transit.",
+      "importantParameters": "Collet vacuum pressure (kPa), tip wear/contamination, positive blow-off purge time (ms).",
+      "degradationIndicators": "Vacuum leakage (>-55 kPa), die dropping, collet rubber tip deformation, silicone residue."
+    },
+    {
+      "name": "Epoxy Dispense System",
+      "function": "Applies micro-liter volumes of thermally or electrically conductive adhesive to target bond pads.",
+      "importantParameters": "Dispense fluid pressure (bar), syringe temperature (\u00b0C), needle Z-gap (\u00b5m), dot volume repeatability.",
+      "degradationIndicators": "Dispense pressure creep (>5.5 bar), epoxy tailing, dispensing void formation, needle partial clogging."
+    },
+    {
+      "name": "Heated Substrate Indexer Stage",
+      "function": "Heats leadframe/substrate to facilitate adhesive curing or eutectic bonding while indexing strip carriers.",
+      "importantParameters": "Heater block temperature (\u00b0C), temperature uniformity across heater zone (\u00b1 2\u00b0C), clamp pressure.",
+      "degradationIndicators": "Heater block temperature drift (>195\u00b0C), heater cartridge resistance imbalance, leadframe warping."
+    },
+    {
+      "name": "Wafer Ejector Pin Assembly",
+      "function": "Pushes up through dicing tape under target die to delaminate die backside from adhesive tape.",
+      "importantParameters": "Ejector pin travel height (\u00b5m), ascent velocity (mm/s), pin tip radius of curvature.",
+      "degradationIndicators": "Die cracking, tape piercing, ejector guide bushing play, pin tip deformation."
+    }
+  ],
+  "sensors": [
+    {
+      "sensorId": "vibration_arm",
+      "name": "Arm Vibration",
+      "unit": "mm/s",
+      "purpose": "Measures linear motor traverse vibration on the pick-and-place robotic arm during transfer strokes.",
+      "minScale": 0.0,
+      "maxScale": 2.0,
+      "normalRange": [
+        0.1,
+        0.4
+      ],
+      "warningRange": [
+        0.4,
+        0.7
+      ],
+      "criticalRange": [
+        0.7,
+        2.0
+      ],
+      "direction": "HIGHER_IS_WORSE"
+    },
+    {
+      "sensorId": "pressure_vacuum",
+      "name": "Collet Vacuum Pressure",
+      "unit": "kPa",
+      "purpose": "Measures negative vacuum pressure holding the silicon die securely on the pickup collet.",
+      "minScale": -100.0,
+      "maxScale": 0.0,
+      "normalRange": [
+        -85.0,
+        -70.0
+      ],
+      "warningRange": [
+        -70.0,
+        -55.0
+      ],
+      "criticalRange": [
+        -55.0,
+        0.0
+      ],
+      "direction": "HIGHER_IS_WORSE"
+    },
+    {
+      "sensorId": "temperature_heater",
+      "name": "Heater Block Temp",
+      "unit": "\u00b0C",
+      "purpose": "Measures operating temperature of the substrate preheat and curing stage.",
+      "minScale": 50.0,
+      "maxScale": 260.0,
+      "normalRange": [
+        140.0,
+        180.0
+      ],
+      "warningRange": [
+        180.0,
+        195.0
+      ],
+      "criticalRange": [
+        195.0,
+        260.0
+      ],
+      "direction": "HIGHER_IS_WORSE"
+    },
+    {
+      "sensorId": "bond_force",
+      "name": "Placement Bond Force",
+      "unit": "N",
+      "purpose": "Measures dynamic Z-axis compression force applied by bond head when pressing die into epoxy.",
+      "minScale": 0.0,
+      "maxScale": 15.0,
+      "normalRange": [
+        4.5,
+        6.5
+      ],
+      "warningRange": [
+        6.5,
+        8.0
+      ],
+      "criticalRange": [
+        8.0,
+        15.0
+      ],
+      "direction": "HIGHER_IS_WORSE"
+    },
+    {
+      "sensorId": "dispense_pressure",
+      "name": "Epoxy Dispense Pressure",
+      "unit": "bar",
+      "purpose": "Monitors pneumatic fluid pressure driving the epoxy adhesive dispensing syringe and valve.",
+      "minScale": 0.0,
+      "maxScale": 8.0,
+      "normalRange": [
+        3.5,
+        4.5
+      ],
+      "warningRange": [
+        4.5,
+        5.5
+      ],
+      "criticalRange": [
+        5.5,
+        8.0
+      ],
+      "direction": "HIGHER_IS_WORSE"
+    },
+    {
+      "sensorId": "placement_offset",
+      "name": "Placement Positional Offset",
+      "unit": "\u00b5m",
+      "purpose": "Measures post-placement X/Y spatial deviation relative to target pad centroid.",
+      "minScale": 0.0,
+      "maxScale": 25.0,
+      "normalRange": [
+        0.0,
+        5.0
+      ],
+      "warningRange": [
+        5.0,
+        10.0
+      ],
+      "criticalRange": [
+        10.0,
+        25.0
+      ],
+      "direction": "HIGHER_IS_WORSE"
+    }
+  ],
+  "thresholds": [
+    {
+      "sensorId": "vibration_arm",
+      "sensorName": "Arm Vibration",
+      "unit": "mm/s",
+      "normal": {
+        "min": 0.1,
+        "max": 0.4,
+        "description": "Smooth linear motion with well-damped voice-coil servo loop."
+      },
+      "warning": {
+        "min": 0.4,
+        "max": 0.7,
+        "description": "Linear guide rail dry friction or slight servo gain oscillation."
+      },
+      "critical": {
+        "min": 0.7,
+        "max": 2.0,
+        "description": "Severe mechanical guide binding or loose bond head mounting assembly."
+      },
+      "direction": "HIGHER_IS_WORSE"
+    },
+    {
+      "sensorId": "pressure_vacuum",
+      "sensorName": "Collet Vacuum Pressure",
+      "unit": "kPa",
+      "normal": {
+        "min": -85.0,
+        "max": -70.0,
+        "description": "Firm suction seal holding silicon die without slippage."
+      },
+      "warning": {
+        "min": -70.0,
+        "max": -55.0,
+        "description": "Collet tip rubber wear, minor particulate leak, or tape residue on collet."
+      },
+      "critical": {
+        "min": -55.0,
+        "max": 0.0,
+        "description": "Vacuum seal compromised; high probability of dropped die during transfer."
+      },
+      "direction": "HIGHER_IS_WORSE"
+    },
+    {
+      "sensorId": "temperature_heater",
+      "sensorName": "Heater Block Temp",
+      "unit": "\u00b0C",
+      "normal": {
+        "min": 140.0,
+        "max": 180.0,
+        "description": "Target curing and wetting temperature profile for silver epoxy."
+      },
+      "warning": {
+        "min": 180.0,
+        "max": 195.0,
+        "description": "Thermal overshoot; risk of accelerated resin pre-curing on nozzle."
+      },
+      "critical": {
+        "min": 195.0,
+        "max": 260.0,
+        "description": "Severe thermal runaway risking substrate oxidation and epoxy degradation."
+      },
+      "direction": "HIGHER_IS_WORSE"
+    },
+    {
+      "sensorId": "bond_force",
+      "sensorName": "Placement Bond Force",
+      "unit": "N",
+      "normal": {
+        "min": 4.5,
+        "max": 6.5,
+        "description": "Optimal compression for uniform adhesive bond line thickness (BLT)."
+      },
+      "warning": {
+        "min": 6.5,
+        "max": 8.0,
+        "description": "Excessive force causing epoxy squeeze-out and potential die edge micro-cracking."
+      },
+      "critical": {
+        "min": 8.0,
+        "max": 15.0,
+        "description": "Excessive compression force; high probability of silicon die fracture."
+      },
+      "direction": "HIGHER_IS_WORSE"
+    },
+    {
+      "sensorId": "dispense_pressure",
+      "sensorName": "Epoxy Dispense Pressure",
+      "unit": "bar",
+      "normal": {
+        "min": 3.5,
+        "max": 4.5,
+        "description": "Nominal fluid delivery through dispense needle."
+      },
+      "warning": {
+        "min": 4.5,
+        "max": 5.5,
+        "description": "Epoxy viscosity increase due to pot-life expiration or partial needle clogging."
+      },
+      "critical": {
+        "min": 5.5,
+        "max": 8.0,
+        "description": "Severe needle clogging or cured epoxy blockage in dispensing valve."
+      },
+      "direction": "HIGHER_IS_WORSE"
+    },
+    {
+      "sensorId": "placement_offset",
+      "sensorName": "Placement Positional Offset",
+      "unit": "\u00b5m",
+      "normal": {
+        "min": 0.0,
+        "max": 5.0,
+        "description": "Within high-yield precision placement envelope."
+      },
+      "warning": {
+        "min": 5.0,
+        "max": 10.0,
+        "description": "Optical calibration drift or thermal expansion offset in staging."
+      },
+      "critical": {
+        "min": 10.0,
+        "max": 25.0,
+        "description": "Gross misalignment risking bond pad shorts or wire bonding failure."
+      },
+      "direction": "HIGHER_IS_WORSE"
+    }
+  ],
+  "operatingConditions": {
+    "ambientTemperature": "21.0 - 23.0 \u00b0C (Cleanroom ISO Class 6)",
+    "relativeHumidity": "40% - 50% RH non-condensing",
+    "normalOperatingTemperature": "150.0 - 175.0 \u00b0C (Substrate Heater)",
+    "normalOperatingPressure": "0.50 - 0.60 MPa (CDA pneumatic supply)",
+    "normalOperatingSpeed": "4,500 - 8,000 Units Per Hour (UPH)",
+    "normalCycleTime": "0.45 - 0.80 seconds per placed die",
+    "normalOperatingHours": "20 - 24 hours/day continuous",
+    "recommendedOperatingConditions": "Epoxy syringe must be thawed at room temperature for 60 min before loading; syringe pot-life < 8 hours.",
+    "maximumContinuousOperation": "120 hours before required dispense calibration and collet replacement"
+  },
+  "maintenance": [
+    {
+      "component": "Pickup Collet & Vacuum Tip",
+      "recommendedMaintenanceIntervalHours": 150,
+      "expectedServiceLifeHours": 350,
+      "maintenanceAction": "Inspect rubber/ceramic tip for wear, clean with alcohol swab, or install replacement collet.",
+      "procedureSummary": "Use collet microscope gauge to verify zero tip chipping. Perform vacuum pull test on calibration die."
+    },
+    {
+      "component": "Epoxy Dispensing Valve & Needle",
+      "recommendedMaintenanceIntervalHours": 24,
+      "expectedServiceLifeHours": 500,
+      "maintenanceAction": "Flush fluidics, purge expired epoxy, clean needle tip or replace with new calibrated gauge needle.",
+      "procedureSummary": "Purge 10 test dots onto calibration sheet. Measure dot diameter repeatability with vision system (target \u00b1 5%)."
+    },
+    {
+      "component": "Bond Head Linear Guide & Voice Coil",
+      "recommendedMaintenanceIntervalHours": 600,
+      "expectedServiceLifeHours": 5000,
+      "maintenanceAction": "Clean linear rails, lubricate guide bearings with cleanroom synthetic grease, calibrate voice-coil response.",
+      "procedureSummary": "Perform automated friction compensation test in diagnostic menu. Verify smooth Z-travel."
+    },
+    {
+      "component": "Wafer Ejector Pin Block",
+      "recommendedMaintenanceIntervalHours": 400,
+      "expectedServiceLifeHours": 2500,
+      "maintenanceAction": "Inspect pin sharpness under microscope, check pin height synchronization, replace bent pins.",
+      "procedureSummary": "Verify all 4 pins extend to identical height within 5 \u00b5m using optical depth sensor."
+    },
+    {
+      "component": "Substrate Heater Block & Thermocouples",
+      "recommendedMaintenanceIntervalHours": 800,
+      "expectedServiceLifeHours": 6000,
+      "maintenanceAction": "Check thermocouple contact resistance, verify thermal profile uniformity across all indexing zones.",
+      "procedureSummary": "Place multi-channel thermal logger on heater surface; verify temperature variance < \u00b1 2\u00b0C across surface."
+    }
+  ],
+  "degradationIndicators": [
+    {
+      "parameter": "Arm Traverse Vibration",
+      "normalCondition": "Vibration amplitude between 0.10 and 0.40 mm/s during rapid pick-and-place motions.",
+      "degradedCondition": "Vibration climbs into 0.40 - 0.70 mm/s due to linear guide bearing wear or servo damping loss.",
+      "criticalCondition": "Vibration exceeds 0.70 mm/s; mechanical resonance causes die position jitter during placement.",
+      "indicatorMechanism": "Indicates mechanical raceway pitting on linear slides or loosened mechanical fasteners on bond head carriage."
+    },
+    {
+      "parameter": "Collet Vacuum Pressure",
+      "normalCondition": "Vacuum seal maintains deep negative pressure between -85 and -70 kPa.",
+      "degradedCondition": "Vacuum degrades into -70 to -55 kPa range as rubber tip hardens or collects silicone dust.",
+      "criticalCondition": "Vacuum drops worse than -55 kPa; suction insufficient to hold die during high-acceleration travel.",
+      "indicatorMechanism": "Indicates elastomer tip fatigue, particulate clogging in collet vacuum channel, or solenoid valve seal degradation."
+    },
+    {
+      "parameter": "Heater Block Temperature",
+      "normalCondition": "Stable temperature holding at 140 - 180 \u00b0C.",
+      "degradedCondition": "Temperature drifts to 180 - 195 \u00b0C due to thermocouple contact oxidation or solid-state relay aging.",
+      "criticalCondition": "Temperature exceeds 195 \u00b0C; high risk of epoxy premature skinning and substrate thermal stress.",
+      "indicatorMechanism": "Reflects heating element degradation, loose thermocouple sensor mounting, or PID loop tuning deviation."
+    },
+    {
+      "parameter": "Placement Bond Force",
+      "normalCondition": "Compression force stable at 4.5 - 6.5 N.",
+      "degradedCondition": "Force creeps into 6.5 - 8.0 N range as voice coil calibration drifts.",
+      "criticalCondition": "Force exceeds 8.0 N; high risk of micro-fracturing delicate ultra-thin silicon dies.",
+      "indicatorMechanism": "Indicates load cell amplifier drift, voice coil magnet thermal demagnetization, or mechanical guide binding."
+    },
+    {
+      "parameter": "Epoxy Dispense Pressure",
+      "normalCondition": "Fluid delivery pressure steady at 3.5 - 4.5 bar.",
+      "degradedCondition": "Pressure climbs into 4.5 - 5.5 bar to push increasingly viscous epoxy.",
+      "criticalCondition": "Pressure exceeds 5.5 bar; fluidics nearing complete blockage.",
+      "indicatorMechanism": "Direct indicator of epoxy polymerization in the fluid line or partial dried resin clogging the dispense nozzle orifice."
+    }
+  ],
+  "rulModel": {
+    "baseUsefulLifeHours": 5000,
+    "formulaDescription": "Deterministic multi-parameter linear degradation model for Die Attacher. Weights sum to 1.00.",
+    "weightsSum": 1.0,
+    "parameters": [
+      {
+        "parameter": "Arm Vibration",
+        "sensorId": "vibration_arm",
+        "sensorName": "Arm Vibration",
+        "unit": "mm/s",
+        "weight": 0.25,
+        "healthyLimit": 0.4,
+        "criticalLimit": 1.0,
+        "direction": "HIGHER_IS_WORSE"
+      },
+      {
+        "parameter": "Collet Vacuum",
+        "sensorId": "pressure_vacuum",
+        "sensorName": "Collet Vacuum Pressure",
+        "unit": "kPa",
+        "weight": 0.25,
+        "healthyLimit": -70.0,
+        "criticalLimit": -45.0,
+        "direction": "HIGHER_IS_WORSE"
+      },
+      {
+        "parameter": "Heater Temperature",
+        "sensorId": "temperature_heater",
+        "sensorName": "Heater Block Temp",
+        "unit": "\u00b0C",
+        "weight": 0.2,
+        "healthyLimit": 180.0,
+        "criticalLimit": 215.0,
+        "direction": "HIGHER_IS_WORSE"
+      },
+      {
+        "parameter": "Placement Bond Force",
+        "sensorId": "bond_force",
+        "sensorName": "Placement Bond Force",
+        "unit": "N",
+        "weight": 0.15,
+        "healthyLimit": 6.5,
+        "criticalLimit": 9.0,
+        "direction": "HIGHER_IS_WORSE"
+      },
+      {
+        "parameter": "Dispense Pressure",
+        "sensorId": "dispense_pressure",
+        "sensorName": "Epoxy Dispense Pressure",
+        "unit": "bar",
+        "weight": 0.15,
+        "healthyLimit": 4.5,
+        "criticalLimit": 6.0,
+        "direction": "HIGHER_IS_WORSE"
+      }
+    ]
+  },
+  "symptoms": [
+    {
+      "symptomId": "SYM-DA-01",
+      "symptom": "Collet Vacuum Drop / Die Dropping During Transfer",
+      "severity": "Critical",
+      "relatedSensors": [
+        "pressure_vacuum"
+      ],
+      "possibleCauses": [
+        "Pickup collet elastomer tip abrasion or tearing",
+        "Silicone/epoxy particulate accumulation inside collet vacuum lumen",
+        "Vacuum solenoid valve seat leakage"
+      ],
+      "recommendedAction": "Replace pickup collet, clean vacuum filter line, verify holding vacuum reaches -80 kPa on calibration die."
+    },
+    {
+      "symptomId": "SYM-DA-02",
+      "symptom": "Epoxy Dispensing Volume Shortage / Dot Tail-Off",
+      "severity": "High",
+      "relatedSensors": [
+        "dispense_pressure"
+      ],
+      "possibleCauses": [
+        "Epoxy exceeding pot-life shelf time and undergoing room-temperature crosslinking",
+        "Partial curing of adhesive inside dispense needle cannula",
+        "Pneumatic pressure regulator valve diaphragm failure"
+      ],
+      "recommendedAction": "Purge fluidics, replace dispense needle, thaw and install fresh epoxy syringe."
+    },
+    {
+      "symptomId": "SYM-DA-03",
+      "symptom": "Pick-and-Place Bond Head Linear Traverse Jitter",
+      "severity": "Medium",
+      "relatedSensors": [
+        "vibration_arm",
+        "placement_offset"
+      ],
+      "possibleCauses": [
+        "Voice-coil linear motor magnetic track debris contamination",
+        "Linear guide rail dry friction due to grease degradation",
+        "Servo amplifier velocity feed-forward gain mistuning"
+      ],
+      "recommendedAction": "Clean linear motor magnetic track, apply cleanroom grease to rails, re-run auto-tuning routine."
+    },
+    {
+      "symptomId": "SYM-DA-04",
+      "symptom": "Substrate Stage Over-Temperature Condition",
+      "severity": "High",
+      "relatedSensors": [
+        "temperature_heater"
+      ],
+      "possibleCauses": [
+        "Thermocouple probe mechanical contact separation from heater copper block",
+        "Solid-State Relay (SSR) short circuit failure in conductive mode",
+        "PID temperature controller loop saturation"
+      ],
+      "recommendedAction": "Inspect and tighten thermocouple fastening screw, test SSR continuity, verify 160\u00b0C setpoint stability."
+    },
+    {
+      "symptomId": "SYM-DA-05",
+      "symptom": "Die Micro-Cracking During Z-Placement Touchdown",
+      "severity": "Critical",
+      "relatedSensors": [
+        "bond_force",
+        "placement_offset"
+      ],
+      "possibleCauses": [
+        "Voice-coil touchdown impact force threshold set excessively high",
+        "Z-axis optical encoder scale missing counts during descent",
+        "Uneven epoxy thickness causing mechanical stress concentration"
+      ],
+      "recommendedAction": "Perform Z-axis touchdown force calibration with load cell gauge (set to 5.0 N), inspect encoder scale."
+    }
+  ],
+  "failureScenarios": [
+    {
+      "scenarioId": "SCEN-DA-001",
+      "symptom": "Collet Tip Wear Causing Die Release Failure",
+      "sensorPattern": "pressure_vacuum degrades to -58 kPa; cycle time spikes",
+      "possibleCauses": [
+        "Rubber collet suction cup rim micro-tears",
+        "Positive air purge blow-off solenoid response delayed",
+        "Epoxy bleed adhesive contamination on collet perimeter"
+      ],
+      "severity": "high",
+      "recommendedAction": "Replace pickup collet with new PEEK/rubber tool. Clean collet holder seat. Calibrate blow-off purge pulse duration.",
+      "verificationSteps": [
+        "Test pick-and-place cycle on 20 dummy dies",
+        "Verify zero drop/stick errors"
+      ]
+    },
+    {
+      "scenarioId": "SCEN-DA-002",
+      "symptom": "Epoxy Dispense Needle Progressive Clogging",
+      "sensorPattern": "dispense_pressure rises from 3.8 to 5.4 bar; dot size decreases by 30%",
+      "possibleCauses": [
+        "Conductive silver flakes settling and agglomerating at needle restriction",
+        "Syringe temperature elevated above 28\u00b0C",
+        "Epoxy pot-life exceeded 8 hours"
+      ],
+      "severity": "high",
+      "recommendedAction": "Unload syringe, replace needle with new 25G precision cannula, load fresh batch of epoxy.",
+      "verificationSteps": [
+        "Perform 5 weight test dispenses on precision balance",
+        "Verify dot weight within \u00b1 3% target"
+      ]
+    },
+    {
+      "scenarioId": "SCEN-DA-003",
+      "symptom": "Bond Arm Voice Coil Vibration Resonance",
+      "sensorPattern": "vibration_arm climbs to 0.78 mm/s; placement_offset reaches 8.5 \u00b5m",
+      "possibleCauses": [
+        "Bond head mounting screws loose due to repetitive high-G cycling",
+        "Linear optical encoder tape dirt smudge",
+        "Voice-coil flexible ribbon cable fatigue"
+      ],
+      "severity": "high",
+      "recommendedAction": "Torque all bond head mounting bolts to 1.2 Nm. Clean optical encoder scale with anhydrous ethanol.",
+      "verificationSteps": [
+        "Execute vibration frequency FFT sweep",
+        "Verify arm vibration returns to < 0.35 mm/s"
+      ]
+    },
+    {
+      "scenarioId": "SCEN-DA-004",
+      "symptom": "Substrate Stage Thermocouple Detachment",
+      "sensorPattern": "temperature_heater reads erratic swings (130\u00b0C to 210\u00b0C in seconds)",
+      "possibleCauses": [
+        "Thermocouple clamp screw stripped",
+        "Thermocouple lead wire shield frayed",
+        "Heater cartridge internal resistance imbalance"
+      ],
+      "severity": "high",
+      "recommendedAction": "Replace thermocouple assembly, verify thermal paste application, verify stable reading at 165\u00b0C.",
+      "verificationSteps": [
+        "Log temperature for 15 minutes",
+        "Verify temperature ripple is < \u00b1 1.0\u00b0C"
+      ]
+    },
+    {
+      "scenarioId": "SCEN-DA-005",
+      "symptom": "Wafer Ejector Pin Misalignment and Silicon Chipping",
+      "sensorPattern": "placement_offset drifts; pressure_vacuum fluctuates during pick stroke",
+      "possibleCauses": [
+        "Central ejector pin tip bent from tape puncture collision",
+        "Wafer expander ring tension relaxed",
+        "Ejector Z-axis motor zero-position lost"
+      ],
+      "severity": "critical",
+      "recommendedAction": "Replace 4-pin ejector set. Re-teach wafer table ejector X-Y-Z coordinates with alignment fixture.",
+      "verificationSteps": [
+        "Perform dry ejection test under camera inspection",
+        "Verify concentricity with collet"
+      ]
+    },
+    {
+      "scenarioId": "SCEN-DA-006",
+      "symptom": "Die Tilt & Uneven Epoxy Bond Line Thickness",
+      "sensorPattern": "bond_force creeps to 7.6 N; placement_offset at 6.8 \u00b5m",
+      "possibleCauses": [
+        "Collet shank angle misaligned relative to substrate plane",
+        "Heater stage clamping plate warped from thermal cycling",
+        "Asymmetrical epoxy dot dispense volume"
+      ],
+      "severity": "medium",
+      "recommendedAction": "Perform optical planarity calibration on bond head. Inspect leadframe clamping insert flatness.",
+      "verificationSteps": [
+        "Inspect bond line thickness on cross-section sample (target 25 \u00b1 3 \u00b5m)",
+        "Verify die tilt < 5 \u00b5m"
+      ]
+    },
+    {
+      "scenarioId": "SCEN-DA-007",
+      "symptom": "Vision Alignment Optical Lens Fogging",
+      "sensorPattern": "Placement offset increases to 11.2 \u00b5m; camera lighting intensity alert",
+      "possibleCauses": [
+        "Epoxy volatile solvent vapor condensing on bottom look-down camera lens",
+        "LED strobe illuminator brightness decay",
+        "Focal height shift due to thermal expansion"
+      ],
+      "severity": "high",
+      "recommendedAction": "Clean camera optical windows with lens fluid. Re-calibrate camera pixel-to-micron scaling factor.",
+      "verificationSteps": [
+        "Run dot-grid calibration target",
+        "Verify vision repeatability < 0.8 \u00b5m"
+      ]
+    },
+    {
+      "scenarioId": "SCEN-DA-008",
+      "symptom": "Leadframe Indexing Stepper Motor Jam",
+      "sensorPattern": "Cycle time alert; vibration_arm at 0.55 mm/s; line jam interlock",
+      "possibleCauses": [
+        "Leadframe strip bent or guide track width set too narrow",
+        "Indexer feed claw wear or mechanical backlash",
+        "Epoxy stringing onto indexing track guide"
+      ],
+      "severity": "medium",
+      "recommendedAction": "Clear leadframe jam, clean track rails with IPA, adjust track width with thickness shim.",
+      "verificationSteps": [
+        "Index 50 leadframe strips automatically",
+        "Verify index pitch repeatability < 10 \u00b5m"
+      ]
+    },
+    {
+      "scenarioId": "SCEN-DA-009",
+      "symptom": "Dispense Syringe Temperature Controller Drift",
+      "sensorPattern": "dispense_pressure creeping up; dot shape changing from round to oval",
+      "possibleCauses": [
+        "Peltier cooling/heating jacket fan blocked",
+        "Syringe jacket RTD sensor loose",
+        "Ambient cleanroom draft disrupting thermal balance"
+      ],
+      "severity": "medium",
+      "recommendedAction": "Clean cooling fan filters. Reseat RTD probe inside syringe thermal block.",
+      "verificationSteps": [
+        "Verify syringe maintains 25.0 \u00b1 0.5\u00b0C",
+        "Measure dispense consistency"
+      ]
+    },
+    {
+      "scenarioId": "SCEN-DA-010",
+      "symptom": "Load Cell Zero-Offset Saturation",
+      "sensorPattern": "bond_force registers false baseline offset (+2.5 N at rest)",
+      "possibleCauses": [
+        "Bond head load cell strain gauge pre-stress",
+        "Signal amplifier grounding loop noise",
+        "Cable flex strain on sensor lead wires"
+      ],
+      "severity": "critical",
+      "recommendedAction": "Perform zero tare calibration in service utility. Check sensor cable strain relief.",
+      "verificationSteps": [
+        "Verify 0.0 N reading with head unloaded",
+        "Test 5.0 N precision weight block"
+      ]
+    },
+    {
+      "scenarioId": "SCEN-DA-011",
+      "symptom": "Wafer Stage Vacuum Chuck Tape Slippage",
+      "sensorPattern": "Ejector pin pickup failure rate increases; vision alignment offsets jump",
+      "possibleCauses": [
+        "Wafer stage vacuum level decayed below -60 kPa",
+        "Porosity of stage ceramic disc blocked by adhesive residue",
+        "Tape frame clamping ring latch loose"
+      ],
+      "severity": "medium",
+      "recommendedAction": "Clean ceramic wafer chuck with acetone wipe. Replace vacuum line seal.",
+      "verificationSteps": [
+        "Verify wafer ring clamp lock tension",
+        "Verify -80 kPa vacuum under wafer frame"
+      ]
+    },
+    {
+      "scenarioId": "SCEN-DA-012",
+      "symptom": "Positive Blow-Off Air Pressure Regulator Leak",
+      "sensorPattern": "pressure_vacuum fails to recover quickly after blow-off pulse",
+      "possibleCauses": [
+        "Blow-off solenoid valve plunger seal sticking",
+        "Pneumatic pressure regulator diaphragm pinhole",
+        "Debris in exhaust muffler"
+      ],
+      "severity": "medium",
+      "recommendedAction": "Replace blow-off pneumatic solenoid valve. Clean manifold exhaust port.",
+      "verificationSteps": [
+        "Measure vacuum release transition time (< 20 ms)",
+        "Verify complete die release"
+      ]
+    },
+    {
+      "scenarioId": "SCEN-DA-013",
+      "symptom": "Bond Arm Theta Rotation Motor Backlash",
+      "sensorPattern": "placement_offset theta component drifts \u00b1 0.5 degrees",
+      "possibleCauses": [
+        "Direct-drive theta motor bearing play",
+        "Theta rotary encoder disk contamination",
+        "Collet holder clamp set screw loose"
+      ],
+      "severity": "high",
+      "recommendedAction": "Inspect and tighten collet holder set screw. Execute theta homing and alignment calibration.",
+      "verificationSteps": [
+        "Measure rotational alignment accuracy on glass calibration die (< 0.1 deg)"
+      ]
+    }
+  ]
+}
