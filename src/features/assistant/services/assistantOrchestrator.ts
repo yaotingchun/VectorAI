@@ -28,40 +28,120 @@ import {
 } from '../tools/assistantTools';
 
 const MANUAL_ATTACHMENT_MAP: Record<string, { id: string; title: string; filename: string; pdfUrl: string; size: string }> = {
-  wire_bonder: {
-    id: 'DOC-VAI-MAN-WB-001',
-    title: 'High-Speed Thermosonic Ball-Wedge Wire Bonder Technical Manual (PDF)',
-    filename: 'wire-bonder-manual.pdf',
-    pdfUrl: '/manuals/wire-bonder-manual.pdf',
-    size: '36 KB'
-  },
-  die_attacher: {
-    id: 'DOC-VAI-MAN-DA-001',
-    title: 'Thermo-Compression Precision Die Attacher Technical Manual (PDF)',
-    filename: 'die-attacher-manual.pdf',
-    pdfUrl: '/manuals/die-attacher-manual.pdf',
+  // 11 Canonical Cleanroom V-Factory Models
+  'aoi-inspection': {
+    id: 'DOC-VAI-MAN-AOI-001',
+    title: '3D Optical AOI Metrology & Coplanarity System Technical Manual (PDF)',
+    filename: 'aoi-inspection-manual.pdf',
+    pdfUrl: '/manuals/aoi-inspection-manual.pdf',
     size: '35 KB'
   },
-  wafer_dicing: {
+  'x-ray-inspection': {
+    id: 'DOC-VAI-MAN-XR-001',
+    title: 'Lead-Shielded Microfocus X-Ray NDT Cell Technical Manual (PDF)',
+    filename: 'x-ray-inspection-manual.pdf',
+    pdfUrl: '/manuals/x-ray-inspection-manual.pdf',
+    size: '36 KB'
+  },
+  'laser-marking': {
+    id: 'DOC-VAI-MAN-LM-001',
+    title: 'Galvo Fiber Laser Serialization Marker Technical Manual (PDF)',
+    filename: 'laser-marking-manual.pdf',
+    pdfUrl: '/manuals/laser-marking-manual.pdf',
+    size: '34 KB'
+  },
+  'stocker': {
+    id: 'DOC-VAI-MAN-STK-001',
+    title: 'AMHS Automated Cleanroom FOUP Stocker Technical Manual (PDF)',
+    filename: 'stocker-manual.pdf',
+    pdfUrl: '/manuals/stocker-manual.pdf',
+    size: '34 KB'
+  },
+  'plasma-cleaner': {
+    id: 'DOC-VAI-MAN-PC-001',
+    title: 'RF Argon & Oxygen Plasma Surface Activation Chamber Technical Manual (PDF)',
+    filename: 'plasma-cleaner-manual.pdf',
+    pdfUrl: '/manuals/plasma-cleaner-manual.pdf',
+    size: '36 KB'
+  },
+  'tape-reel': {
+    id: 'DOC-VAI-MAN-TR-001',
+    title: 'Automated High-Speed Tape & Reel Packaging Cell Technical Manual (PDF)',
+    filename: 'tape-reel-manual.pdf',
+    pdfUrl: '/manuals/tape-reel-manual.pdf',
+    size: '35 KB'
+  },
+  'wafer-saw': {
+    id: 'DOC-VAI-MAN-WS-001',
+    title: '300mm Precision Wafer Dicing Saw Technical Manual (PDF)',
+    filename: 'wafer-saw-manual.pdf',
+    pdfUrl: '/manuals/wafer-saw-manual.pdf',
+    size: '38 KB'
+  },
+  'die-attach': {
+    id: 'DOC-VAI-MAN-DA-001',
+    title: 'High-Precision Epoxy & Eutectic Die Bonder Technical Manual (PDF)',
+    filename: 'die-attach-manual.pdf',
+    pdfUrl: '/manuals/die-attach-manual.pdf',
+    size: '39 KB'
+  },
+  'wire-bonding': {
+    id: 'DOC-VAI-MAN-WB-001',
+    title: 'High-Speed Thermosonic Ball Bonder Technical Manual (PDF)',
+    filename: 'wire-bonding-manual.pdf',
+    pdfUrl: '/manuals/wire-bonding-manual.pdf',
+    size: '41 KB'
+  },
+  'molding-press': {
+    id: 'DOC-VAI-MAN-MP-001',
+    title: 'Multi-Cavity Auto Molding Encapsulation Press Technical Manual (PDF)',
+    filename: 'molding-press-manual.pdf',
+    pdfUrl: '/manuals/molding-press-manual.pdf',
+    size: '37 KB'
+  },
+  'test-handler': {
+    id: 'DOC-VAI-MAN-TH-001',
+    title: 'Tri-Temp High-Throughput IC Test Handler Technical Manual (PDF)',
+    filename: 'test-handler-manual.pdf',
+    pdfUrl: '/manuals/test-handler-manual.pdf',
+    size: '38 KB'
+  },
+
+  // Legacy & Alias types for backward compatibility
+  'wire_bonder': {
+    id: 'DOC-VAI-MAN-WB-001',
+    title: 'High-Speed Thermosonic Ball Bonder Technical Manual (PDF)',
+    filename: 'wire-bonder-manual.pdf',
+    pdfUrl: '/manuals/wire-bonder-manual.pdf',
+    size: '41 KB'
+  },
+  'die_attacher': {
+    id: 'DOC-VAI-MAN-DA-001',
+    title: 'High-Precision Epoxy & Eutectic Die Bonder Technical Manual (PDF)',
+    filename: 'die-attacher-manual.pdf',
+    pdfUrl: '/manuals/die-attacher-manual.pdf',
+    size: '39 KB'
+  },
+  'wafer_dicing': {
     id: 'DOC-VAI-MAN-DIC-001',
-    title: 'High-Precision Wafer Dicing Saw Technical Manual (PDF)',
+    title: '300mm Precision Wafer Dicing Saw Technical Manual (PDF)',
     filename: 'wafer-dicing-machine-manual.pdf',
     pdfUrl: '/manuals/wafer-dicing-machine-manual.pdf',
-    size: '36 KB'
+    size: '38 KB'
   },
-  molding: {
+  'molding': {
     id: 'DOC-VAI-MAN-MOLD-001',
-    title: 'Multi-Plunger Transfer Molding Press Technical Manual (PDF)',
+    title: 'Multi-Cavity Auto Molding Encapsulation Press Technical Manual (PDF)',
     filename: 'molding-machine-manual.pdf',
     pdfUrl: '/manuals/molding-machine-manual.pdf',
-    size: '36 KB'
+    size: '37 KB'
   },
-  ic_tester: {
+  'ic_tester': {
     id: 'DOC-VAI-MAN-ATE-001',
-    title: 'High-Speed Automated IC Tester & Sorter Technical Manual (PDF)',
+    title: 'Tri-Temp High-Throughput IC Test Handler Technical Manual (PDF)',
     filename: 'ic-tester-sorter-manual.pdf',
     pdfUrl: '/manuals/ic-tester-sorter-manual.pdf',
-    size: '36 KB'
+    size: '38 KB'
   }
 };
 
@@ -343,16 +423,28 @@ Synthesize a natural, helpful, well-structured response for the user based stric
     }
   } else if (isManualQuery) {
     const q = query.toLowerCase();
-    if (q.includes('wb') || q.includes('bonder') || q.includes('wire')) {
-      attachments.push({ ...MANUAL_ATTACHMENT_MAP.wire_bonder, machineType: 'wire_bonder' });
+    if (q.includes('aoi') || q.includes('optical') || q.includes('metrology')) {
+      attachments.push({ ...MANUAL_ATTACHMENT_MAP['aoi-inspection'], machineType: 'aoi-inspection' });
+    } else if (q.includes('xr') || q.includes('x-ray') || q.includes('xray') || q.includes('ndt')) {
+      attachments.push({ ...MANUAL_ATTACHMENT_MAP['x-ray-inspection'], machineType: 'x-ray-inspection' });
+    } else if (q.includes('lm') || q.includes('laser')) {
+      attachments.push({ ...MANUAL_ATTACHMENT_MAP['laser-marking'], machineType: 'laser-marking' });
+    } else if (q.includes('stk') || q.includes('stocker') || q.includes('amhs')) {
+      attachments.push({ ...MANUAL_ATTACHMENT_MAP['stocker'], machineType: 'stocker' });
+    } else if (q.includes('pc') || q.includes('plasma')) {
+      attachments.push({ ...MANUAL_ATTACHMENT_MAP['plasma-cleaner'], machineType: 'plasma-cleaner' });
+    } else if (q.includes('tr') || q.includes('tape') || q.includes('reel')) {
+      attachments.push({ ...MANUAL_ATTACHMENT_MAP['tape-reel'], machineType: 'tape-reel' });
+    } else if (q.includes('wb') || q.includes('bonder') || q.includes('wire')) {
+      attachments.push({ ...MANUAL_ATTACHMENT_MAP['wire-bonding'], machineType: 'wire-bonding' });
     } else if (q.includes('da') || q.includes('die') || q.includes('attach')) {
-      attachments.push({ ...MANUAL_ATTACHMENT_MAP.die_attacher, machineType: 'die_attacher' });
-    } else if (q.includes('dic') || q.includes('saw') || q.includes('dicing') || q.includes('wafer')) {
-      attachments.push({ ...MANUAL_ATTACHMENT_MAP.wafer_dicing, machineType: 'wafer_dicing' });
-    } else if (q.includes('mold')) {
-      attachments.push({ ...MANUAL_ATTACHMENT_MAP.molding, machineType: 'molding' });
-    } else if (q.includes('ate') || q.includes('test') || q.includes('ic')) {
-      attachments.push({ ...MANUAL_ATTACHMENT_MAP.ic_tester, machineType: 'ic_tester' });
+      attachments.push({ ...MANUAL_ATTACHMENT_MAP['die-attach'], machineType: 'die-attach' });
+    } else if (q.includes('ws') || q.includes('saw') || q.includes('dicing') || q.includes('wafer') || q.includes('dic')) {
+      attachments.push({ ...MANUAL_ATTACHMENT_MAP['wafer-saw'], machineType: 'wafer-saw' });
+    } else if (q.includes('mp') || q.includes('mold')) {
+      attachments.push({ ...MANUAL_ATTACHMENT_MAP['molding-press'], machineType: 'molding-press' });
+    } else if (q.includes('th') || q.includes('ate') || q.includes('test') || q.includes('handler') || q.includes('tester') || q.includes('ic')) {
+      attachments.push({ ...MANUAL_ATTACHMENT_MAP['test-handler'], machineType: 'test-handler' });
     }
   }
 
