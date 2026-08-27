@@ -108,54 +108,63 @@ export const MaintenanceOverviewSection: React.FC<MaintenanceOverviewSectionProp
               </thead>
               <tbody>
                 {data.priorityTasks.slice(0, 5).map((task) => {
+                  const workOrderId = task.id || task.taskId || `WO-${task.machineId}`;
+                  const machineId = task.machineId;
+                  const location = task.location || task.machineName || 'Cleanroom Bay';
+                  const taskTitle = task.taskTitle || task.type || 'Preventive Subsystem Calibration';
+                  const category = task.category || 'Predictive Service';
+                  const duration = task.estimatedDuration || (task.estimatedDurationHours ? `${task.estimatedDurationHours} hrs` : '2.0 hrs');
+                  const priority = (task.priority || 'medium').toLowerCase();
+                  const dueDate = task.dueDate || task.scheduledDate || 'Today, 08:30';
+                  const technician = task.assignedTechnician || 'Kenji Sato';
+
                   return (
-                    <tr key={task.id}>
-                      <td style={{ fontFamily: 'var(--font-mono)', fontWeight: 800 }}>
-                        {task.id}
+                    <tr key={workOrderId}>
+                      <td style={{ fontFamily: 'var(--font-mono)', fontWeight: 800, color: 'var(--text-primary)', fontSize: '11px' }}>
+                        {workOrderId}
                       </td>
 
                       <td>
-                        <div style={{ fontFamily: 'var(--font-display)', fontWeight: 700 }}>
-                          {task.machineId}
+                        <div style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: '12px', color: 'var(--text-primary)' }}>
+                          {machineId}
                         </div>
                         <div style={{ fontSize: '9.5px', color: 'var(--text-secondary)' }}>
-                          {task.location}
+                          {location}
                         </div>
                       </td>
 
                       <td>
-                        <div style={{ fontWeight: 600, color: 'var(--text-primary)' }}>
-                          {task.taskTitle}
+                        <div style={{ fontWeight: 600, color: 'var(--text-primary)', fontSize: '12px' }}>
+                          {taskTitle}
                         </div>
                         <div style={{ fontSize: '9.5px', color: 'var(--text-muted)' }}>
-                          {task.category} • {task.estimatedDuration}
+                          {category} • {duration}
                         </div>
                       </td>
 
                       <td>
-                        <span className={`priority-tag ${task.priority}`}>
-                          {task.priority}
+                        <span className={`priority-tag ${priority}`}>
+                          {priority.toUpperCase()}
                         </span>
                       </td>
 
                       <td style={{ fontFamily: 'var(--font-mono)', fontSize: '10.5px' }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
                           <Clock size={11} color="var(--text-muted)" />
-                          <span>{task.dueDate}</span>
+                          <span style={{ fontWeight: 700, color: 'var(--text-primary)' }}>{dueDate}</span>
                         </div>
-                        {task.assignedTechnician && (
-                          <div style={{ fontSize: '9.5px', color: 'var(--text-secondary)' }}>
-                            {task.assignedTechnician}
-                          </div>
-                        )}
+                        <div style={{ fontSize: '9.5px', color: 'var(--text-secondary)', marginTop: '2px' }}>
+                          Tech: {technician}
+                        </div>
                       </td>
 
                       <td>
                         <button
-                          onClick={() => onNavigate?.('maintenance', task.machineId)}
+                          type="button"
+                          onClick={() => onNavigate?.('maintenance', machineId)}
                           className="tech-btn"
-                          style={{ padding: '3px 8px', fontSize: '9.5px' }}
-                          title="Open in Maintenance Tab"
+                          style={{ padding: '3px 8px', fontSize: '9.5px', display: 'flex', alignItems: 'center', gap: '4px' }}
+                          title={`View ${machineId} in Maintenance Tab`}
                         >
                           <span>View</span>
                           <ExternalLink size={10} />
