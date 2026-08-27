@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useRef } from 'react';
 import {
   Machine,
   MachineCategory,
@@ -12,6 +12,15 @@ import {
   ProgressStep,
   CommunicationChannel,
 } from '../types/factory';
+import {
+  RerouteExecution,
+  MachineFaultScenario,
+} from '../types/rerouting';
+import {
+  PRECONFIGURED_FAULT_SCENARIOS,
+  createRerouteExecution,
+  generateExecutionLogsForScenario,
+} from '../features/rerouting/services/rerouteEngine';
 import rawMachinesData from '../data/machines.json';
 
 interface FactoryContextType {
@@ -19,6 +28,14 @@ interface FactoryContextType {
   weights: ModelWeights;
   maintenanceQueue: MaintenanceTask[];
   events: SystemEvent[];
+  rerouteExecutions: RerouteExecution[];
+  activeExecutionId: string | null;
+  setActiveExecutionId: (id: string | null) => void;
+  triggerReroute: (scenarioOrMachineId: string | MachineFaultScenario, customTargetId?: string) => string;
+  pauseExecution: (executionId: string) => void;
+  resumeExecution: (executionId: string) => void;
+  rollbackExecution: (executionId: string) => void;
+  clearRerouteExecutions: () => void;
   simulateWear: (machineId: string) => void;
   stopWear: (machineId: string) => void;
   performMaintenance: (machineId: string, type: string, description: string, technician: string) => void;
@@ -227,19 +244,30 @@ export const FactoryProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const [weights, setWeights] = useState<ModelWeights>(DEFAULT_WEIGHTS);
   const [maintenanceQueue, setMaintenanceQueue] = useState<MaintenanceTask[]>([]);
   const [events, setEvents] = useState<SystemEvent[]>([]);
+  const [rerouteExecutions, setRerouteExecutions] = useState<RerouteExecution[]>([]);
+  const [activeExecutionId, setActiveExecutionId] = useState<string | null>(null);
+
+  // Interval reference for live async reroute progression
+  const rerouteIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
   // Initialize
   useEffect(() => {
     const initialMachines = createInitialMachines();
     setMachines(initialMachines);
 
-    // Seed initial system logs
+    // Seed initial system logs using real existing machines
     const seedEvents: SystemEvent[] = [
       { id: 'EV-1', timestamp: new Date(Date.now() - 600000).toISOString(), type: 'SYSTEM', message: 'Vector.ai core telemetry interface online.' },
-      { id: 'EV-2', timestamp: new Date(Date.now() - 400000).toISOString(), type: 'WARNING', message: 'ATE-002: Handler turret vibration drift detected (0.95 mm/s).', machineId: 'ATE-002' },
-      { id: 'EV-3', timestamp: new Date(Date.now() - 250000).toISOString(), type: 'CRITICAL', message: 'DA-002: Collet vacuum pressure drop below safety limit (-52 kPa).', machineId: 'DA-002' },
+      { id: 'EV-2', timestamp: new Date(Date.now() - 400000).toISOString(), type: 'WARNING', message: 'TH-02: Handler turret vibration drift detected (0.95 mm/s).', machineId: 'TH-02' },
+      { id: 'EV-3', timestamp: new Date(Date.now() - 250000).toISOString(), type: 'CRITICAL', message: 'DA-02: Collet vacuum pressure drop below safety limit (-52 kPa).', machineId: 'DA-02' },
     ];
     setEvents(seedEvents);
+
+    // Seed initial completed reroute execution using actual real existing machines WS-01 and DA-02
+    const initialExec1 = createRerouteExecution(PRECONFIGURED_FAULT_SCENARIOS[0], 'COMPLETED', 'REROUTE-EXEC-WS-01-INIT');
+    const initialExec2 = createRerouteExecution(PRECONFIGURED_FAULT_SCENARIOS[1], 'COMPLETED', 'REROUTE-EXEC-DA-02-INIT');
+    setRerouteExecutions([initialExec1, initialExec2]);
+    setActiveExecutionId(initialExec1.id);
   }, []);
 
   const logSystemEvent = (type: SystemEvent['type'], message: string, machineId?: string) => {
@@ -491,6 +519,190 @@ Please inspect mechanical envelope and replace pre-allocated spare parts staged 
     });
   }, [machines]);
 
+  // Trigger a new dynamic reroute execution (interactive or simulated)
+  const triggerReroute = (
+    scenarioOrMachineId: string | MachineFaultScenario,
+    customTargetId?: string
+  ): string => {
+    let scenario: MachineFaultScenario;
+
+    if (typeof scenarioOrMachineId === 'string') {
+      const found = PRECONFIGURED_FAULT_SCENARIOS.find(
+        (s) => s.machineId.toLowerCase() === scenarioOrMachineId.toLowerCase() || s.id === scenarioOrMachineId
+      );
+      if (found) {
+        scenario = found;
+      } else {
+        const mach = machines.find((m) => m.id === scenarioOrMachineId) || machines[0];
+        // Find real peer machine in same category/stage
+        const peer = machines.find((m) => m.category === mach.category && m.id !== mach.id) || machines.find((m) => m.id !== mach.id) || machines[1];
+        const defaultTargetId = customTargetId || (peer ? peer.id : 'WS-02');
+        const defaultTargetName = peer ? peer.name : `Fleet Station ${defaultTargetId}`;
+
+        scenario = {
+          id: `SCENARIO-${mach.id}-${Date.now().toString().slice(-4)}`,
+          machineId: mach.id,
+          machineName: mach.name,
+          processStage: mach.stage || 'Wafer Processing',
+          faultTitle: `Critical Telemetry Excursion on ${mach.id}`,
+          severity: 'CRITICAL',
+          triggerTelemetry: {
+            sensorName: mach.sensors[0]?.name || 'telemetry_vibration',
+            triggerValue: 'Threshold Breached',
+            baselineValue: 'Nominal Baseline',
+            criticalLimit: 'Exceeded',
+          },
+          suggestedTargetId: defaultTargetId,
+          suggestedTargetName: defaultTargetName,
+          rootCause: `Degradation spike detected on ${mach.name} (${mach.id}). Autonomous cleanroom lot rerouting initiated to prevent wafer yield loss.`,
+          lotsToReroute: [
+            {
+              lotId: `LOT-VAI-${Math.floor(Math.random() * 8000 + 1000)}`,
+              productFamily: 'Cleanroom Semiconductor Substrate Lot',
+              waferCount: 250,
+              priority: 'CRITICAL',
+              currentStage: mach.stage || 'Production Line',
+              originalMachineId: mach.id,
+              targetMachineId: defaultTargetId,
+              agvCarrierId: `AGV-ALPHA-0${Math.floor(Math.random() * 4 + 1)}`,
+              estimatedScrapSavingsUsd: 175000,
+            },
+          ],
+        };
+      }
+    } else {
+      scenario = scenarioOrMachineId;
+    }
+
+    if (customTargetId) {
+      const targetMach = machines.find((m) => m.id === customTargetId);
+      scenario = {
+        ...scenario,
+        suggestedTargetId: customTargetId,
+        suggestedTargetName: targetMach ? targetMach.name : `Assigned Station ${customTargetId}`,
+      };
+    }
+
+    const execId = `REROUTE-EXEC-${scenario.machineId}-${Date.now().toString().slice(-4)}`;
+    const newExec = createRerouteExecution(scenario, 'IN_PROGRESS', execId, machines);
+
+    // Replace previous execution for the same source tool so duplicate machine entries don't accumulate
+    setRerouteExecutions((prev) => [newExec, ...prev.filter((e) => e.sourceMachineId !== scenario.machineId)]);
+    setActiveExecutionId(execId);
+
+    logSystemEvent(
+      'REROUTE',
+      `DYNAMIC REROUTE INITIATED: Diverting lots from ${scenario.machineId} to ${scenario.suggestedTargetId} (${scenario.faultTitle}).`,
+      scenario.machineId
+    );
+
+    // Run progressive asynchronous step ticking (simulates multi-phase execution)
+    let currentStep = 0;
+    const allLogs = generateExecutionLogsForScenario(scenario);
+
+    if (rerouteIntervalRef.current) {
+      clearInterval(rerouteIntervalRef.current);
+    }
+
+    rerouteIntervalRef.current = setInterval(() => {
+      currentStep++;
+      setRerouteExecutions((prevExecs) => {
+        return prevExecs.map((exec) => {
+          if (exec.id !== execId || exec.status !== 'IN_PROGRESS') return exec;
+
+          const updatedSteps = exec.steps.map((st, sIdx) => {
+            if (sIdx < currentStep) {
+              return { ...st, status: 'COMPLETED' as const, completedAt: new Date().toISOString() };
+            } else if (sIdx === currentStep) {
+              return { ...st, status: 'IN_PROGRESS' as const, startedAt: new Date().toISOString() };
+            }
+            return st;
+          });
+
+          const isFinished = currentStep >= exec.steps.length;
+          const progress = Math.min(100, Math.round((currentStep / exec.steps.length) * 100));
+
+          // Reveal logs up to current step
+          const visibleLogs = allLogs.slice(0, Math.min(allLogs.length, (currentStep + 1) * 2));
+
+          if (isFinished && rerouteIntervalRef.current) {
+            clearInterval(rerouteIntervalRef.current);
+            rerouteIntervalRef.current = null;
+          }
+
+          return {
+            ...exec,
+            status: isFinished ? 'COMPLETED' : 'IN_PROGRESS',
+            progressPercent: progress,
+            currentStepIndex: Math.min(exec.steps.length - 1, currentStep),
+            steps: updatedSteps,
+            logs: visibleLogs,
+            affectedLots: exec.affectedLots.map((lot) => ({
+              ...lot,
+              transferStatus: isFinished ? 'PROCESSED' : currentStep >= 5 ? 'LOADED' : 'IN_TRANSIT',
+            })),
+          };
+        });
+      });
+    }, 1200);
+
+    return execId;
+  };
+
+  const pauseExecution = (executionId: string) => {
+    if (rerouteIntervalRef.current) {
+      clearInterval(rerouteIntervalRef.current);
+      rerouteIntervalRef.current = null;
+    }
+    setRerouteExecutions((prev) =>
+      prev.map((e) => (e.id === executionId ? { ...e, status: 'PAUSED' } : e))
+    );
+    logSystemEvent('REROUTE', `REROUTE EXECUTION PAUSED: ${executionId}`);
+  };
+
+  const resumeExecution = (executionId: string) => {
+    setRerouteExecutions((prev) =>
+      prev.map((e) => (e.id === executionId ? { ...e, status: 'IN_PROGRESS' } : e))
+    );
+    logSystemEvent('REROUTE', `REROUTE EXECUTION RESUMED: ${executionId}`);
+  };
+
+  const rollbackExecution = (executionId: string) => {
+    if (rerouteIntervalRef.current) {
+      clearInterval(rerouteIntervalRef.current);
+      rerouteIntervalRef.current = null;
+    }
+    setRerouteExecutions((prev) =>
+      prev.map((e) =>
+        e.id === executionId
+          ? {
+              ...e,
+              status: 'ROLLED_BACK',
+              logs: [
+                {
+                  id: `LOG-ROLLBACK-${Date.now()}`,
+                  timestamp: new Date().toISOString(),
+                  phase: 'INGESTION_VERIFICATION',
+                  phaseLabel: 'Rollback & Revert',
+                  level: 'WARN',
+                  subsystem: 'MES Supervisor',
+                  message: `MANUAL ROLLBACK: Reverted lot routing back to default schedule. Safety interlock disengaged.`,
+                  reasoningNote: `Operator requested rollback. Original routing tables restored and AGVs redirected to home staging bays.`,
+                },
+                ...e.logs,
+              ],
+            }
+          : e
+      )
+    );
+    logSystemEvent('REROUTE', `REROUTE EXECUTION ROLLED BACK: ${executionId}`);
+  };
+
+  const clearRerouteExecutions = () => {
+    setRerouteExecutions([]);
+    setActiveExecutionId(null);
+  };
+
   const simulateWear = (machineId: string) => {
     setMachines((prev) =>
       prev.map((m) => (m.id === machineId ? { ...m, isSimulatingWear: true } : m))
@@ -584,6 +796,9 @@ Please inspect mechanical envelope and replace pre-allocated spare parts staged 
         };
       })
     );
+
+    // Also trigger automated reroute execution
+    triggerReroute(machineId);
   };
 
   const queryRAG = async (_category: MachineCategory, query: string): Promise<string> => {
@@ -597,6 +812,14 @@ Please inspect mechanical envelope and replace pre-allocated spare parts staged 
         weights,
         maintenanceQueue,
         events,
+        rerouteExecutions,
+        activeExecutionId,
+        setActiveExecutionId,
+        triggerReroute,
+        pauseExecution,
+        resumeExecution,
+        rollbackExecution,
+        clearRerouteExecutions,
         simulateWear,
         stopWear,
         performMaintenance,
