@@ -1,15 +1,9 @@
 import React from 'react';
 import { ReroutePolicyConfigData } from '../../../types/configuration';
 import {
-  Route,
   ShieldAlert,
   Bot,
   Truck,
-  RotateCcw,
-  DollarSign,
-  Layers,
-  CheckCircle,
-  Sliders,
 } from 'lucide-react';
 
 interface ReroutePolicyConfigProps {

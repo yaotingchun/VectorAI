@@ -3,7 +3,6 @@ import { SecurityConfigData, UserRole, ApiToken, AuditLogEntry } from '../../../
 import {
   ShieldCheck,
   Key,
-  Lock,
   Copy,
   Check,
   Plus,
@@ -11,9 +10,7 @@ import {
   Search,
   Filter,
   Download,
-  AlertCircle,
   Clock,
-  User,
 } from 'lucide-react';
 
 interface SecurityAuditConfigProps {

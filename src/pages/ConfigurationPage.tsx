@@ -13,13 +13,13 @@ import {
   SecurityAuditConfig,
 } from '../features/configuration';
 import { getGeminiApiKey, setGeminiApiKey } from '../features/machines/intelligence/llm/geminiDiagnosticService';
-import { CheckCircle2, AlertTriangle, Info } from 'lucide-react';
+import { CheckCircle2 } from 'lucide-react';
 import '../styles/configuration.css';
 
 const CONFIG_STORAGE_KEY = 'vectorai_system_config';
 
 export const ConfigurationPage: React.FC = () => {
-  const { weights, updateWeights, logSystemEvent } = useFactory();
+  const { updateWeights, logSystemEvent } = useFactory();
 
   // Load configuration from localStorage or default
   const [config, setConfig] = useState<SystemConfiguration>(() => {

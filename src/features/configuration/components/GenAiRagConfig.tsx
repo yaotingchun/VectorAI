@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import { GenAiRagConfigData } from '../../../types/configuration';
 import {
-  BrainCircuit,
-  Key,
   Eye,
   EyeOff,
   CheckCircle2,
@@ -11,7 +9,6 @@ import {
   RotateCw,
   BookOpen,
   Database,
-  Layers,
   Sparkles,
 } from 'lucide-react';
 import { getGeminiApiKey, setGeminiApiKey } from '../../machines/intelligence/llm/geminiDiagnosticService';

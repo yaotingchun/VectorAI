@@ -2,15 +2,12 @@ import React, { useState } from 'react';
 import { EdgeProtocolsConfigData, OpcUaNodeMapping } from '../../../types/configuration';
 import {
   Server,
-  Activity,
-  ShieldCheck,
   Zap,
   Plus,
   Trash2,
   Play,
   RotateCw,
   CheckCircle2,
-  AlertCircle,
   Wifi,
   Lock,
   Terminal,
@@ -43,10 +40,6 @@ export const EdgeProtocolsConfig: React.FC<EdgeProtocolsConfigProps> = ({
 
   const updateSecsGem = (fields: Partial<typeof protocols.secsGem>) => {
     onChange({ ...protocols, secsGem: { ...protocols.secsGem, ...fields } });
-  };
-
-  const updateModbus = (fields: Partial<typeof protocols.modbus>) => {
-    onChange({ ...protocols, modbus: { ...protocols.modbus, ...fields } });
   };
 
   const handleAddOpcNode = () => {

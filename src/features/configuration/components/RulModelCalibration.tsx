@@ -2,14 +2,9 @@ import React, { useState } from 'react';
 import { RulCalibrationConfigData, CALIBRATION_PRESETS } from '../../../types/configuration';
 import {
   Cpu,
-  Sliders,
   Sparkles,
   TrendingDown,
   AlertTriangle,
-  Layers,
-  Activity,
-  CheckCircle,
-  HelpCircle,
 } from 'lucide-react';
 
 interface RulModelCalibrationProps {
@@ -24,7 +19,7 @@ export const RulModelCalibration: React.FC<RulModelCalibrationProps> = ({
   // Test probe simulator state
   const [probeDev, setProbeDev] = useState<number>(35);
   const [probeHours, setProbeHours] = useState<number>(240);
-  const [probeRate, setProbeRate] = useState<number>(0.25);
+  const [probeRate] = useState<number>(0.25);
 
   const { weights, criticalThresholdHours, warningThresholdHours, anomalySensitivity, healthScoreDecayFactor, activePresetId } = calibration;
 
@@ -292,7 +287,7 @@ export const RulModelCalibration: React.FC<RulModelCalibrationProps> = ({
               <svg viewBox={`0 0 ${svgWidth} ${svgHeight}`} style={{ width: '100%', height: 'auto', display: 'block' }}>
                 {/* Gridlines */}
                 <line x1="0" y1={svgHeight - 10} x2={svgWidth} y2={svgHeight - 10} stroke="#374151" strokeWidth="1" />
-                <line x1="0" y1="10" x2={svgWidth} y2="10" stroke="#1F2937" strokeWidth="1" strokeDasharray="4" />
+                <line x1="0" y1={10} x2={svgWidth} y2={10} stroke="#1F2937" strokeWidth="1" strokeDasharray="4" />
 
                 {/* Shaded Danger Zone (Critical Threshold) */}
                 <rect

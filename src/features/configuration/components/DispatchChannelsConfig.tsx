@@ -1,18 +1,14 @@
 import React, { useState } from 'react';
 import { DispatchMatrixConfigData, TechnicianRoutingEntry } from '../../../types/configuration';
 import {
-  Bell,
   Mail,
   MessageSquare,
-  Globe,
   Plus,
   Trash2,
   Send,
   CheckCircle2,
   RotateCw,
   Users,
-  Clock,
-  ShieldAlert,
 } from 'lucide-react';
 
 interface DispatchChannelsConfigProps {
