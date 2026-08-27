@@ -1715,13 +1715,13 @@ export const SEED_MACHINES: Machine[] = [
       {
         "id": "ANO-PC02-01",
         "timestamp": "2026-08-27 06:05",
-        "type": "RF Auto-Match Capacitor Drift & Vacuum O-Ring Degradation",
+        "type": "Optical Emission Spectroscopy (OES) Plasma Radical Density Drift",
         "severity": "medium",
-        "description": "RF reflected power spiked to 42W reducing copper pad surface energy below 52 dyn/cm.",
-        "sensor": "RF Reflected Power",
-        "confidence": 0.91,
+        "description": "OES endpoint radical intensity ratio drifted by 18.5% with secondary argon-to-oxygen dissociation variance during 13.56 MHz glow discharge.",
+        "sensor": "Optical Emission Plasma Density",
+        "confidence": 0.88,
         "status": "active",
-        "recommendedAction": "Re-tune RF matching network capacitor and replace vacuum chamber fluoroelastomer O-ring."
+        "recommendedAction": "Perform RAG-guided multi-point mass flow ratio calibration and inspect optical emission collimator window."
       }
     ],
     "machineType": "plasma-cleaner",
@@ -1825,10 +1825,10 @@ export const SEED_MACHINES: Machine[] = [
         "lastUpdated": "1s ago"
       },
       {
-        "sensorId": "rf_reflected_power",
-        "name": "RF Reflected Power",
-        "value": 42,
-        "unit": "W",
+        "sensorId": "density_oes_plasma",
+        "name": "Optical Emission Plasma Density",
+        "value": 64.2,
+        "unit": "%",
         "status": "warning",
         "lastUpdated": "1s ago"
       }
@@ -1983,13 +1983,13 @@ export const SEED_MACHINES: Machine[] = [
       {
         "id": "ANO-TH01-01",
         "timestamp": "2026-08-27 05:10",
-        "type": "Kelvin RF Socket Pogo Pin Contact Resistance Elevation",
+        "type": "Cryogenic LN2 Proportional Injection Valve Thermal Hysteresis",
         "severity": "medium",
-        "description": "Contact resistance on socket channel #4 reached 68 mΩ with actuator jitter during +85°C high-temp soak test.",
-        "sensor": "Socket Actuator Load",
-        "confidence": 0.92,
+        "description": "Cryogenic soak zone temperature instability (-34.2°C vs -40.0°C setpoint) with LN2 proportional injection valve hysteresis.",
+        "sensor": "LN2 Cryogenic Flow Rate",
+        "confidence": 0.86,
         "status": "active",
-        "recommendedAction": "Replace 128-pin high-frequency pogo pin block and clean rotary theta optical encoder."
+        "recommendedAction": "Perform semantic RAG-guided cryogenic valve PID re-tuning and check vacuum insulated transfer line integrity."
       }
     ],
     "firmwareVersion": "v9.0.2",
@@ -2050,10 +2050,10 @@ export const SEED_MACHINES: Machine[] = [
         "lastUpdated": "2s ago"
       },
       {
-        "sensorId": "load_actuator",
-        "name": "Socket Actuator Load",
-        "value": 68,
-        "unit": "N",
+        "sensorId": "flow_cryogenic_ln2",
+        "name": "LN2 Cryogenic Flow Rate",
+        "value": 4.8,
+        "unit": "L/min",
         "status": "warning",
         "lastUpdated": "2s ago"
       }

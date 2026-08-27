@@ -823,7 +823,7 @@ export const INITIAL_FLOOR_MACHINES: FloorMachineAsset[] = [
       agvAccess: true,
       ohtAccess: true,
     },
-    customNotes: 'RF auto-match network reflected power drift (42W) & vacuum seal degradation.',
+    customNotes: 'Optical Emission Spectroscopy (OES) plasma radical density drift (18.5% variance).',
   },
   {
     id: 'WB-01',
@@ -1543,7 +1543,7 @@ export const INITIAL_FLOOR_MACHINES: FloorMachineAsset[] = [
       agvAccess: true,
       ohtAccess: true,
     },
-    customNotes: 'Kelvin RF socket pogo pin contact resistance elevation (68 mΩ).',
+    customNotes: 'Cryogenic LN2 injection valve thermal hysteresis (-34.2°C cold soak drift).',
   },
   {
     id: 'TH-02',

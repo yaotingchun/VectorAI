@@ -37,6 +37,15 @@ class RagVectorIndex {
       const knowledge = getMachineKnowledge(mt);
       const manualId = knowledge.machine.manualId;
       const sourceName = knowledge.machine.name;
+      const protoId = knowledge.machine.prototypeMachineId ? knowledge.machine.prototypeMachineId.toLowerCase() : '';
+      const commonTags = [
+        mt,
+        mt.replace(/-/g, '_'),
+        'machine_manual',
+        'manual',
+        manualId.toLowerCase(),
+        ...(protoId ? [protoId] : [])
+      ];
 
       // 1.1 Chunk Overview & Subsystems (Section 2)
       this.chunks.push({
@@ -49,7 +58,7 @@ class RagVectorIndex {
         section: 'Section 2 — Overview',
         title: `${knowledge.machine.name} Process & Subsystems`,
         content: `${knowledge.machine.description} ${knowledge.machine.manufacturingProcess} Key subsystems: ${knowledge.machine.subsystems.join(', ')}.`,
-        tags: ['overview', 'subsystems', 'process', mt, 'machine_manual']
+        tags: ['overview', 'subsystems', 'process', 'specification', ...commonTags]
       });
 
       // 1.2 Chunk Components (Section 3)
@@ -64,7 +73,7 @@ class RagVectorIndex {
           section: 'Section 3 — Components',
           title: `Component Specification: ${comp.name}`,
           content: `Component: ${comp.name}. Function: ${comp.function}. Important parameters: ${comp.importantParameters}. Degradation indicators: ${comp.degradationIndicators}.`,
-          tags: ['component', comp.name.toLowerCase(), mt, 'machine_manual']
+          tags: ['component', comp.name.toLowerCase(), ...commonTags]
         });
       }
 
@@ -80,7 +89,7 @@ class RagVectorIndex {
           section: 'Section 8 — Degradation Physics',
           title: `Degradation Mechanism: ${deg.parameter}`,
           content: `Degradation indicator: ${deg.parameter}. Physical phenomenon: ${deg.physicalPhenomenon || ''}. Measurable effect: ${deg.measurableEffect || ''}. Significance: ${deg.degradationSignificance || ''}.`,
-          tags: ['degradation', 'rul', deg.parameter.toLowerCase(), mt, 'machine_manual']
+          tags: ['degradation', 'rul', deg.parameter.toLowerCase(), ...commonTags]
         });
       }
 
@@ -96,7 +105,7 @@ class RagVectorIndex {
           section: 'Section 7 — Maintenance',
           title: `Maintenance Procedure: ${maint.component}`,
           content: `Component ${maint.component} has maintenance interval of ${maint.recommendedMaintenanceIntervalHours} hrs (Service life: ${maint.expectedServiceLifeHours} hrs). Action: ${maint.maintenanceAction}. Procedure: ${maint.procedureSummary}`,
-          tags: ['maintenance', 'sop', maint.component.toLowerCase(), mt, 'machine_manual']
+          tags: ['maintenance', 'sop', maint.component.toLowerCase(), ...commonTags]
         });
       }
 
@@ -113,7 +122,7 @@ class RagVectorIndex {
             section: 'Section 10 — Troubleshooting',
             title: `Troubleshooting Symptom: ${sym.symptom}`,
             content: `Symptom: ${sym.symptom}. Severity: ${sym.severity}. Related sensors: ${sym.relatedSensors.join(', ')}. Probable causes: ${sym.possibleCauses.join('; ')}. Recommended action: ${sym.recommendedAction}`,
-            tags: ['troubleshooting', 'symptom', ...sym.relatedSensors.map(s => s.toLowerCase()), mt, 'machine_manual']
+            tags: ['troubleshooting', 'symptom', ...sym.relatedSensors.map(s => s.toLowerCase()), ...commonTags]
           });
         }
       }
@@ -131,7 +140,7 @@ class RagVectorIndex {
             section: 'Section 11 — Failure Scenarios',
             title: `Failure Scenario: ${sc.symptom}`,
             content: `Scenario: ${sc.symptom}. Sensor pattern: ${sc.sensorPattern}. Severity: ${sc.severity}. Probable causes: ${sc.possibleCauses.join('; ')}. Recommended recovery action: ${sc.recommendedAction}.${sc.verificationSteps ? ` Verification steps: ${sc.verificationSteps.join('; ')}.` : ''}`,
-            tags: ['failure_scenario', 'root_cause', sc.symptom.toLowerCase(), mt, 'machine_manual']
+            tags: ['failure_scenario', 'root_cause', sc.symptom.toLowerCase(), ...commonTags]
           });
         }
       }
@@ -211,8 +220,12 @@ class RagVectorIndex {
 
       // 2. Machine Type Scoping
       if (filter?.machineType) {
-        if (chunk.knowledgeType === 'MACHINE' && chunk.machineType !== filter.machineType) {
-          continue;
+        if (chunk.knowledgeType === 'MACHINE') {
+          const normChunkMt = (chunk.machineType || '').toLowerCase().replace(/_/g, '-');
+          const normFilterMt = filter.machineType.toLowerCase().replace(/_/g, '-');
+          if (normChunkMt !== normFilterMt && chunk.machineType !== filter.machineType) {
+            continue;
+          }
         }
       }
 
