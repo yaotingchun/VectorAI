@@ -9,6 +9,7 @@ import { MachineHealthDistribution } from '../components/dashboard/MachineHealth
 import { MachineRiskByProcess } from '../components/dashboard/MachineRiskByProcess';
 import { PredictiveRiskOverview } from '../components/dashboard/PredictiveRiskOverview';
 import { MaintenanceOverviewSection } from '../components/dashboard/MaintenanceOverviewSection';
+import { DashboardRerouteExecutionSection } from '../components/dashboard/DashboardRerouteExecutionSection';
 import '../styles/dashboard.css';
 
 interface DashboardPageProps {
@@ -75,10 +76,17 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onNavigate }) => {
         />
       </div>
 
-      {/* 5. Bottom Section: Factory Maintenance Workload & Priority Work Orders Summary */}
+      {/* 5. Section: Factory Maintenance Workload & Priority Work Orders Summary */}
       <div className="dash-bottom-full-section">
         <MaintenanceOverviewSection
           data={dashboardData.maintenance}
+          onNavigate={onNavigate}
+        />
+      </div>
+
+      {/* 6. Bottom Section: Autonomous Rerouting & Machine Incident Execution Logs with AI Reasoning */}
+      <div className="dash-bottom-full-section">
+        <DashboardRerouteExecutionSection
           onNavigate={onNavigate}
         />
       </div>

@@ -10,7 +10,6 @@ import {
   AlertTriangle, 
   AlertOctagon, 
   Wrench, 
-  Check,
   Bot,
   Loader2
 } from 'lucide-react';
