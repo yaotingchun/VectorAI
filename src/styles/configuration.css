@@ -1,0 +1,656 @@
+/* ==========================================================================
+   VECTOR.AI - CONFIGURATION STUDIO STYLESHEET
+   Industrial Schematic Configuration, Protocol Inspector, Calibration & Tokens
+   ========================================================================== */
+
+.config-studio-root {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+  padding-bottom: 60px;
+  animation: fadeIn 0.25s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Top Configuration Header Bar ────────────────────────────────────────── */
+.config-header-card {
+  background-color: var(--bg-card);
+  border: 1.5px solid var(--border-strong);
+  box-shadow: 3px 3px 0px rgba(18, 19, 21, 0.08);
+  position: relative;
+}
+
+.config-header-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  background-color: var(--bg-surface);
+  border-bottom: 1.5px solid var(--border-strong);
+  flex-wrap: wrap;
+  gap: 14px;
+}
+
+.config-header-left {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.config-meta-strip {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 11px;
+  font-family: var(--font-mono);
+  color: var(--text-muted);
+}
+
+.config-plant-code {
+  background-color: var(--bg-dark);
+  color: var(--text-inverted);
+  padding: 2px 8px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  font-size: 10px;
+}
+
+.config-title-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.config-title {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  color: var(--text-primary);
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.config-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* Sub-Tab Navigation Bar */
+.config-tab-bar {
+  display: flex;
+  align-items: center;
+  overflow-x: auto;
+  background-color: var(--bg-card);
+  padding: 0 12px;
+  border-bottom: 1.5px solid var(--border-strong);
+  gap: 6px;
+}
+
+.config-tab-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  background: transparent;
+  border: none;
+  border-bottom: 3px solid transparent;
+  color: var(--text-secondary);
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all var(--transition-fast);
+}
+
+.config-tab-btn:hover {
+  color: var(--text-primary);
+  background-color: var(--bg-muted);
+}
+
+.config-tab-btn.active {
+  color: var(--text-primary);
+  border-bottom-color: var(--text-primary);
+  background-color: var(--bg-surface);
+}
+
+.config-tab-num {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  opacity: 0.6;
+  font-weight: 700;
+}
+
+.config-tab-badge {
+  font-size: 9px;
+  padding: 1px 6px;
+  background-color: var(--bg-muted);
+  border: 1px solid var(--border-light);
+  border-radius: 2px;
+  color: var(--text-secondary);
+}
+
+.config-tab-btn.active .config-tab-badge {
+  background-color: var(--bg-dark);
+  color: var(--text-inverted);
+  border-color: var(--border-strong);
+}
+
+/* ── Content Grid & Layouts ──────────────────────────────────────────────── */
+.config-content-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.config-grid-2col {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+  gap: 20px;
+}
+
+.config-grid-3col {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+/* ── Technical Schematic Cards ───────────────────────────────────────────── */
+.config-card {
+  background-color: var(--bg-card);
+  border: 1.5px solid var(--border-strong);
+  box-shadow: 3px 3px 0px rgba(18, 19, 21, 0.08);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.config-card-header {
+  padding: 12px 16px;
+  background-color: var(--bg-surface);
+  border-bottom: 1.5px solid var(--border-strong);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.config-card-title {
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.config-card-body {
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* ── Form Controls & Inputs ──────────────────────────────────────────────── */
+.config-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.config-label-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.config-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+}
+
+.config-hint {
+  font-size: 10px;
+  color: var(--text-muted);
+}
+
+.config-input {
+  width: 100%;
+  padding: 8px 12px;
+  background-color: var(--bg-surface);
+  border: 1.5px solid var(--border-strong);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--text-primary);
+  outline: none;
+  transition: all var(--transition-fast);
+}
+
+.config-input:focus {
+  background-color: var(--bg-card);
+  border-color: var(--accent-blue);
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
+}
+
+.config-input:disabled {
+  background-color: var(--bg-muted);
+  color: var(--text-muted);
+  cursor: not-allowed;
+}
+
+.config-select {
+  width: 100%;
+  padding: 8px 12px;
+  background-color: var(--bg-surface);
+  border: 1.5px solid var(--border-strong);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-primary);
+  outline: none;
+  cursor: pointer;
+}
+
+.config-textarea {
+  width: 100%;
+  padding: 8px 12px;
+  background-color: var(--bg-surface);
+  border: 1.5px solid var(--border-strong);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-primary);
+  outline: none;
+  resize: vertical;
+  min-height: 80px;
+}
+
+/* ── Interactive Toggle Switch ───────────────────────────────────────────── */
+.toggle-switch-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-light);
+  gap: 12px;
+}
+
+.toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 44px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
+.toggle-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.toggle-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--bg-muted);
+  border: 1.5px solid var(--border-strong);
+  transition: 0.2s;
+}
+
+.toggle-slider:before {
+  position: absolute;
+  content: "";
+  height: 14px;
+  width: 14px;
+  left: 3px;
+  bottom: 3px;
+  background-color: var(--border-strong);
+  transition: 0.2s;
+}
+
+.toggle-switch input:checked + .toggle-slider {
+  background-color: var(--accent-green);
+}
+
+.toggle-switch input:checked + .toggle-slider:before {
+  transform: translateX(18px);
+  background-color: #FFFFFF;
+}
+
+/* ── Range Slider with Value Chip ────────────────────────────────────────── */
+.range-slider-wrap {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.config-slider {
+  flex: 1;
+  -webkit-appearance: none;
+  height: 6px;
+  background: var(--bg-muted);
+  border: 1px solid var(--border-strong);
+  outline: none;
+}
+
+.config-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  background: var(--bg-dark);
+  border: 1.5px solid var(--border-strong);
+  cursor: pointer;
+  transition: transform 0.1s;
+}
+
+.config-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+  background: var(--accent-amber);
+}
+
+.slider-val-chip {
+  min-width: 60px;
+  padding: 4px 8px;
+  background-color: var(--bg-dark);
+  color: var(--text-inverted);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  text-align: center;
+  border: 1px solid var(--border-strong);
+}
+
+/* ── Formula & Mathematical Visualization ────────────────────────────────── */
+.formula-display-box {
+  background-color: var(--bg-dark);
+  color: var(--text-inverted);
+  border: 1.5px solid var(--border-strong);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  position: relative;
+}
+
+.formula-latex-text {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 700;
+  color: #60A5FA;
+  letter-spacing: 0.05em;
+  word-break: break-all;
+}
+
+.formula-variable-legend {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 8px;
+  border-top: 1px solid #374151;
+  padding-top: 10px;
+}
+
+.formula-legend-item {
+  font-size: 11px;
+  font-family: var(--font-mono);
+  color: #9CA3AF;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.formula-legend-item strong {
+  color: #F3F4F6;
+}
+
+/* ── Live Protocol & Diagnostic Terminal ─────────────────────────────────── */
+.config-terminal {
+  background-color: #0E1012;
+  color: #10B981;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  padding: 14px;
+  border: 1.5px solid var(--border-strong);
+  border-radius: 2px;
+  max-height: 240px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  line-height: 1.6;
+}
+
+.terminal-line {
+  display: flex;
+  gap: 8px;
+}
+
+.terminal-time {
+  color: #6B7280;
+  flex-shrink: 0;
+}
+
+.terminal-msg {
+  word-break: break-word;
+}
+
+.terminal-msg.err {
+  color: #EF4444;
+}
+
+.terminal-msg.warn {
+  color: #F59E0B;
+}
+
+.terminal-msg.info {
+  color: #38BDF8;
+}
+
+/* ── Preset Cards ────────────────────────────────────────────────────────── */
+.preset-card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 12px;
+}
+
+.preset-card {
+  border: 1.5px solid var(--border-light);
+  background-color: var(--bg-surface);
+  padding: 12px 14px;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  text-align: left;
+}
+
+.preset-card:hover {
+  border-color: var(--border-strong);
+  background-color: var(--bg-card);
+  transform: translateY(-2px);
+  box-shadow: 2px 2px 0px rgba(0,0,0,0.1);
+}
+
+.preset-card.active {
+  border-color: var(--accent-amber);
+  border-width: 2px;
+  background-color: var(--bg-card);
+  box-shadow: 0 0 0 1px var(--accent-amber), 3px 3px 0px rgba(0,0,0,0.15);
+}
+
+.preset-card-title {
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.preset-card-desc {
+  font-size: 11px;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+/* ── Data Tables (Tokens, Audit, Nodes) ──────────────────────────────────── */
+.config-table-container {
+  width: 100%;
+  overflow-x: auto;
+  border: 1.5px solid var(--border-strong);
+  background-color: var(--bg-card);
+}
+
+.config-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  text-align: left;
+}
+
+.config-table th {
+  background-color: var(--bg-surface);
+  color: var(--text-secondary);
+  padding: 10px 14px;
+  font-weight: 700;
+  font-size: 10.5px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  border-bottom: 1.5px solid var(--border-strong);
+  border-right: 1px solid var(--border-light);
+}
+
+.config-table th:last-child {
+  border-right: none;
+}
+
+.config-table td {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border-light);
+  border-right: 1px solid var(--border-light);
+  color: var(--text-primary);
+  vertical-align: middle;
+}
+
+.config-table td:last-child {
+  border-right: none;
+}
+
+.config-table tr:hover td {
+  background-color: var(--bg-surface);
+}
+
+/* ── Modals & Dialogs ────────────────────────────────────────────────────── */
+.config-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(18, 19, 21, 0.6);
+  backdrop-filter: blur(2px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+  animation: fadeIn 0.15s ease-out;
+}
+
+.config-modal-card {
+  background-color: var(--bg-card);
+  border: 2px solid var(--border-strong);
+  box-shadow: 8px 8px 0px rgba(18, 19, 21, 0.4);
+  width: 100%;
+  max-width: 600px;
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.config-modal-header {
+  padding: 14px 18px;
+  background-color: var(--bg-surface);
+  border-bottom: 1.5px solid var(--border-strong);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.config-modal-title {
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.config-modal-body {
+  padding: 20px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.config-modal-footer {
+  padding: 14px 18px;
+  background-color: var(--bg-surface);
+  border-top: 1.5px solid var(--border-strong);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+/* ── Toast Notification ──────────────────────────────────────────────────── */
+.config-toast {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  background-color: var(--bg-dark);
+  color: var(--text-inverted);
+  border: 1.5px solid var(--border-strong);
+  box-shadow: 4px 4px 0px rgba(0,0,0,0.3);
+  padding: 12px 18px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  z-index: 1100;
+  animation: slideUp 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes slideUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
