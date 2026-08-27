@@ -7,8 +7,10 @@ export * from './thresholds/thresholdEngine';
 export * from './rul/degradationCalculator';
 export * from './rul/rulEngine';
 export * from './manuals/manualKnowledgeRepository';
+export * from './knowledge/globalKnowledgeRepository';
 export * from './diagnostics/manualDiagnosticEngine';
 export * from './diagnostics/ragDiagnosticEngine';
 export * from './rag/ragRetrievalService';
 export * from './llm/geminiDiagnosticService';
 export * from './agent/machineAgentService';
+

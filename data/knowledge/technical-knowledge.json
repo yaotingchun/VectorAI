@@ -1,0 +1,75 @@
+{
+  "documentId": "DOC-TECH-KNOWLEDGE",
+  "knowledgeType": "TECHNICAL",
+  "sourceName": "VectorAI Industrial Engineering Handbook",
+  "category": "Industrial Engineering & Physics Principles",
+  "version": "1.0",
+  "lastUpdated": "2026-08-26",
+  "title": "Industrial Predictive Maintenance & Equipment Physics Guide",
+  "description": "Consolidated engineering guide covering condition-based predictive maintenance, physical degradation mechanisms across semiconductor packaging machinery, and 5-step industrial troubleshooting protocols.",
+  "sections": [
+    {
+      "sectionId": "SEC-TECH-PDM-1",
+      "sectionName": "Maintenance Paradigms Evolution",
+      "title": "Evolution from Reactive to Predictive Maintenance",
+      "content": "Industrial maintenance paradigms have evolved across three generations: 1. Reactive / Corrective (fixing equipment only after catastrophic failure occurs, causing severe downtime and yield scrap); 2. Preventive / Scheduled (servicing machines at fixed calendar/cycle intervals, leading to unnecessary part replacements and high costs); 3. Predictive / Condition-Based (monitoring real-time physical degradation and scheduling service precisely when component wear approaches safety thresholds).",
+      "tags": ["predictive maintenance", "pdm", "condition-based monitoring", "cbm", "reactive", "preventive", "technical"]
+    },
+    {
+      "sectionId": "SEC-TECH-PDM-2",
+      "sectionName": "Condition-Based Monitoring (CBM) Fundamentals",
+      "title": "Multi-Sensor Telemetry Modalities",
+      "content": "Condition-Based Monitoring relies on continuous physical telemetry across multiple complementary physical modalities: 1. Vibration Analysis (detecting mechanical unbalance, bearing raceway fatigue, and spindle eccentricity); 2. Thermal Monitoring (identifying frictional heating, electrical contact resistance, and cooling system failures); 3. Pneumatic & Vacuum Sensing (detecting line leaks, seal degradation, and regulator drift); 4. Electrical Load Signatures (monitoring motor current spikes and transducer impedance).",
+      "tags": ["cbm", "vibration analysis", "thermal monitoring", "pneumatics", "vacuum", "electrical load", "technical"]
+    },
+    {
+      "sectionId": "SEC-TECH-PDM-3",
+      "sectionName": "Economic & Operational Impact",
+      "title": "Optimizing MTBF, MTTR, and Semiconductor Yield",
+      "content": "Deploying predictive maintenance directly optimizes key plant operational metrics: Mean Time Between Failures (MTBF) is maximized by catching minor sub-system wear before secondary damage occurs; Mean Time to Repair (MTTR) is drastically minimized by delivering pre-diagnosed work orders with exact root causes and parts lists; and Overall Equipment Effectiveness (OEE) and wafer yield are maximized by preventing mid-lot machine crashes.",
+      "tags": ["mtbf", "mttr", "oee", "yield", "economics", "uptime", "technical"]
+    },
+    {
+      "sectionId": "SEC-TECH-DEG-1",
+      "sectionName": "Mechanical Bearing & Spindle Wear",
+      "title": "High-Frequency Vibration & Bearing Raceway Degradation",
+      "content": "High-speed air-bearing and ceramic-bearing spindles (e.g. wafer dicing saws, pick-and-place handlers) degrade due to micro-fretting, air-supply moisture contamination, and abrasive silicon swarf intrusion. Physical wear manifests as elevated radial runout, high-frequency harmonic vibration (> 0.8 mm/s), and thermal rise from increased rotational friction.",
+      "tags": ["bearing wear", "spindle", "vibration drift", "radial runout", "fretting", "technical"]
+    },
+    {
+      "sectionId": "SEC-TECH-DEG-2",
+      "sectionName": "Pneumatic, Hydraulic & Vacuum Degradation",
+      "title": "Seal Wear, Vacuum Leakage & Hydraulic Pressure Decay",
+      "content": "Vacuum collets (die attachers), porous ceramic chucks (wafer dicing), and hydraulic clamping transfer rams (molding presses) degrade through elastomer O-ring embrittlement, particulate contamination, and seal extrusion. Degradation manifests as collet vacuum loss (decaying from -85 kPa to > -55 kPa), clamping pressure decay, and increased vacuum pull-down cycle times.",
+      "tags": ["vacuum leakage", "pneumatic seals", "o-ring degradation", "pressure drop", "hydraulic decay", "technical"]
+    },
+    {
+      "sectionId": "SEC-TECH-DEG-3",
+      "sectionName": "Ultrasonic Transducer & Electrical Contact Degradation",
+      "title": "Piezoelectric Aging, Transducer Resonance Drift & Contact Resistance",
+      "content": "Piezoelectric transducers in thermo-sonic wire bonders degrade through thermal fatigue and crystal micro-cracking, resulting in ultrasonic impedance shifts, resonance drift, and erratic bond current. Similarly, pogo-pin test sockets in IC handlers suffer from gold plating wear and oxide accumulation, manifesting as electrical contact loop resistance rising above 60 mOhm.",
+      "tags": ["ultrasonic transducer", "piezoelectric aging", "contact resistance", "pogo-pin wear", "wire bonder", "ic tester", "technical"]
+    },
+    {
+      "sectionId": "SEC-TECH-TRB-1",
+      "sectionName": "Systematic Root Cause Isolation",
+      "title": "Structured 5-Step Industrial Troubleshooting Protocol",
+      "content": "VectorAI promotes a systematic 5-step troubleshooting methodology: 1. Symptom Verification (validate sensor anomaly against physical gauges and cleanroom baseline); 2. Multi-Sensor Pattern Correlation (cross-reference secondary channels, e.g. correlating temperature rise with vibration drift); 3. Primary Manual SOP Lookup (consult Section 10 & 11 for documented failure modes); 4. Sub-System Isolation (test individual subassemblies such as vacuum regulators, spindles, or heaters); 5. Corrective Action & Verification (execute repair, verify sensor return to nominal, and reset baseline).",
+      "tags": ["troubleshooting", "root cause analysis", "isolation", "sop", "5-step protocol", "technical"]
+    },
+    {
+      "sectionId": "SEC-TECH-TRB-2",
+      "sectionName": "Cross-Sensor Correlation Mechanics",
+      "title": "Distinguishing True Degradation from Sensor Faults",
+      "content": "A critical troubleshooting step is differentiating between genuine mechanical degradation and sensor instrumentation faults. True physical degradation exhibits multi-sensor correlation (e.g. bearing fatigue displays both high-frequency vibration spikes and localized temperature rise). An isolated, instantaneous step-function jump without secondary physical effects indicates sensor calibration drift, loose cabling, or transducer EMI.",
+      "tags": ["sensor correlation", "sensor drift", "instrumentation fault", "false positive mitigation", "technical"]
+    },
+    {
+      "sectionId": "SEC-TECH-TRB-3",
+      "sectionName": "Cleanroom Environmental Considerations",
+      "title": "Environmental Cleanroom Fluctuations vs Equipment Faults",
+      "content": "Semiconductor packaging cleanrooms (Class 1,000 / Class 10,000) experience ambient HVAC fluctuations (temperature +/- 2 deg C, RH +/- 5%). When troubleshooting low-severity thermal or optical alignment warnings, technicians must verify facility-level ambient sensors before tearing down equipment subassemblies.",
+      "tags": ["cleanroom", "ambient hvac", "environmental fluctuation", "facility baseline", "technical"]
+    }
+  ]
+}

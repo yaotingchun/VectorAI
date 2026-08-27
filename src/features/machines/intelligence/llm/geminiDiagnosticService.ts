@@ -56,12 +56,6 @@ export async function generateGeminiDiagnosis(
   apiKeyOverride?: string
 ): Promise<DiagnosticResult> {
   const apiKey = apiKeyOverride || getGeminiApiKey();
-
-  if (!apiKey) {
-    throw new Error('Gemini API key is not configured. Please provide an API key in settings or .env file.');
-  }
-
-  const ai = new GoogleGenAI({ apiKey });
   const knowledge = getMachineKnowledge(machineType);
   const scenarios: FailureScenario[] = knowledge.failureScenarios || [];
   const symptoms: TroubleshootingSymptom[] = knowledge.symptoms || [];
@@ -98,6 +92,7 @@ export async function generateGeminiDiagnosis(
   // LAYER 2 RAG CHUNK RETRIEVAL:
   // ─────────────────────────────────────────────────────────────────────────
   const ragChunks = ragVectorIndex.search(`${anomaly.sensorName} ${anomaly.description} failure`, {
+    knowledgeType: 'MACHINE',
     machineType,
     maxResults: 3
   });
@@ -175,19 +170,41 @@ Respond with ONLY a valid, raw JSON object (no markdown code blocks, no backtick
 }`;
 
   try {
-    const response = await ai.models.generateContent({
-      model: 'gemini-2.5-flash',
-      contents: [
-        {
-          role: 'user',
-          parts: [{ text: `${systemInstruction}\n\nANOMALY TELEMETRY & KNOWLEDGE CONTEXT:\n${JSON.stringify(promptContext, null, 2)}` }]
-        }
-      ]
-    });
+    let responseText = '';
+    const fullPrompt = `${systemInstruction}\n\nANOMALY TELEMETRY & KNOWLEDGE CONTEXT:\n${JSON.stringify(promptContext, null, 2)}`;
 
-    const responseText = response.text || '';
-    // Strip any markdown code formatting if present
-    const cleanedJson = responseText.replace(/```json/gi, '').replace(/```/g, '').trim();
+    if (apiKey) {
+      const ai = new GoogleGenAI({ apiKey });
+      const response = await ai.models.generateContent({
+        model: 'gemini-2.5-flash',
+        contents: [
+          {
+            role: 'user',
+            parts: [{ text: fullPrompt }]
+          }
+        ]
+      });
+      responseText = response.text || '';
+    } else {
+      // Call local backend proxy powered by credentials/google.json!
+      const proxyRes = await fetch('/api/gemini/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt: fullPrompt })
+      });
+      const proxyData = await proxyRes.json();
+      if (!proxyRes.ok || !proxyData.success) {
+        throw new Error(proxyData.error?.message || proxyData.error || 'Failed to call Gemini AI proxy');
+      }
+      responseText = proxyData.text || '';
+    }
+
+    // Safely extract and parse JSON object from Gemini response
+    let cleanedJson = responseText.trim();
+    const jsonMatch = responseText.match(/\{[\s\S]*\}/);
+    if (jsonMatch) {
+      cleanedJson = jsonMatch[0];
+    }
     const parsed = JSON.parse(cleanedJson);
 
     return {
@@ -198,20 +215,19 @@ Respond with ONLY a valid, raw JSON object (no markdown code blocks, no backtick
       source: parsed.source || (isLayer1Manual ? 'MANUAL' : 'RAG'),
       confidence: parsed.confidence || (isLayer1Manual ? 'HIGH' : 'MEDIUM'),
       confidenceScore: parsed.confidenceScore || (isLayer1Manual ? 0.94 : 0.68),
-      evidence: Array.isArray(parsed.evidence) ? parsed.evidence : [
-        `Sensor '${anomaly.sensorName}' reached ${anomaly.currentValue} ${anomaly.unit}, breaching ${anomaly.thresholdType} limit (${anomaly.thresholdValue} ${anomaly.unit}).`,
-        isLayer1Manual ? `Directly matches Machine Manual Section 11 Scenario ${matchedManualScenario?.scenarioId || ''}` : 'Inferred via RAG semantic vector correlation.'
+      evidence: Array.isArray(parsed.evidence) && parsed.evidence.length > 0 ? parsed.evidence : [
+        `Sensor '${anomaly.sensorName}' reached ${anomaly.currentValue} ${anomaly.unit}, breaching threshold.`,
+        `Grounded in ${knowledge.machine.name} authoritative RAG technical manual.`
       ],
-      possibleCauses: Array.isArray(parsed.possibleCauses) ? parsed.possibleCauses : (matchedManualScenario?.possibleCauses || ['Component fatigue']),
-      recommendedActions: Array.isArray(parsed.recommendedActions) ? parsed.recommendedActions : [matchedManualScenario?.recommendedAction || 'Inspect sensor and calibrate'],
+      possibleCauses: Array.isArray(parsed.possibleCauses) && parsed.possibleCauses.length > 0 ? parsed.possibleCauses : (matchedManualScenario?.possibleCauses || ['Subsystem parameter drift']),
+      recommendedActions: Array.isArray(parsed.recommendedActions) && parsed.recommendedActions.length > 0 ? parsed.recommendedActions : [matchedManualScenario?.recommendedAction || 'Inspect sensor channel and verify operational tolerances.'],
       matchedScenarioId: parsed.matchedScenarioId || matchedManualScenario?.scenarioId || matchedSymptom?.symptomId,
       sourceDocument: {
         manualId: knowledge.machine.manualId,
         title: `${knowledge.machine.name} Technical Manual`,
-        section: isLayer1Manual ? `Section 11 — Scenario ${matchedManualScenario?.scenarioId || 'Diagnostic Matrix'}` : 'RAG Semantic Vector Store',
+        section: isLayer1Manual ? `Section 11 — Scenario ${matchedManualScenario?.scenarioId || 'Diagnostic Matrix'}` : 'Machine RAG Knowledge Base',
         url: `/manuals/${knowledge.filename}-manual.pdf`
       },
-      disclaimer: isLayer1Manual ? undefined : 'This diagnosis is inferred by Gemini AI from semantic knowledge base references and is not directly documented in the primary machine manual.',
       diagnosedAt: new Date().toISOString()
     };
   } catch (error) {

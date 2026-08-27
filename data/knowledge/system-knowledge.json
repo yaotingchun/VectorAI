@@ -1,0 +1,159 @@
+{
+  "documentId": "DOC-SYS-KNOWLEDGE",
+  "knowledgeType": "SYSTEM",
+  "sourceName": "VectorAI System & Architecture Knowledge Base",
+  "category": "System Architecture & Core Intelligence",
+  "version": "1.0",
+  "lastUpdated": "2026-08-26",
+  "title": "VectorAI System Architecture & Core Intelligence Framework",
+  "description": "Consolidated specification of VectorAI platform architecture, deterministic anomaly detection, formula-based RUL calculation, machine agent loops, two-layer hybrid diagnostics, and maintenance dispatch automation.",
+  "sections": [
+    {
+      "sectionId": "SEC-SYS-OVERVIEW-1",
+      "sectionName": "Platform Mission & Core Capabilities",
+      "title": "Zero Unplanned Downtime in Semiconductor Packaging",
+      "content": "VectorAI is an industrial-grade intelligence platform engineered to eliminate unplanned equipment downtime across semiconductor manufacturing and packaging facilities. By merging high-frequency edge sensor telemetry with deterministic physics models and hybrid AI reasoning, VectorAI transitions industrial operations from reactive breakdown firefighting to proactive, mathematically explainable predictive maintenance.",
+      "tags": ["overview", "mission", "predictive maintenance", "semiconductor", "vectorai", "system"]
+    },
+    {
+      "sectionId": "SEC-SYS-OVERVIEW-2",
+      "sectionName": "Core Functional Pillars",
+      "title": "The Four Pillars of VectorAI Operations",
+      "content": "VectorAI operates on four foundational pillars: 1. Live Telemetry Ingestion (3-second simulation and edge sensor streaming across vibration, thermal, vacuum, current, and acoustic channels); 2. Deterministic Degradation Modeling (formula-based Remaining Useful Life without black-box ML uncertainty); 3. Two-Layer Hybrid Diagnostics (authoritative manual-first matching backed by RAG and Gemini generative reasoning); 4. Closed-Loop Maintenance Dispatch (automated technician work orders, multi-channel alerting via Email/SMS/Webhooks, and dynamic production line rerouting).",
+      "tags": ["pillars", "telemetry", "rul", "diagnostics", "dispatch", "rerouting", "system"]
+    },
+    {
+      "sectionId": "SEC-SYS-OVERVIEW-3",
+      "sectionName": "Target Industrial Machinery",
+      "title": "Standardized Semiconductor Equipment Fleet",
+      "content": "The VectorAI reference architecture covers five critical semiconductor backend assembly and test equipment types: 1. Wafer Dicing Saws (precision diamond blade spindles); 2. Die Attach Systems (high-speed epoxy/eutectic pick-and-place); 3. Thermo-Sonic Wire Bonders (gold/copper ball bonding transducers); 4. Transfer Molding Systems (multi-plunger EMC encapsulation); 5. Automated IC Test Handlers (gravity-feed socket testing).",
+      "tags": ["equipment", "wafer_dicing", "die_attacher", "wire_bonder", "molding", "ic_tester", "system"]
+    },
+    {
+      "sectionId": "SEC-SYS-ARCH-1",
+      "sectionName": "Multi-Tier Intelligence Pipeline",
+      "title": "Sequential Telemetry-to-Action Processing Pipeline",
+      "content": "VectorAI processes telemetry through a deterministic multi-tier pipeline: Tier 1: Ingestion & Normalization (live sensor values ingested via FactoryContext every 3s); Tier 2: Threshold Engine (evaluates normal, warning, critical boundaries per sensor definition); Tier 3: Deterministic RUL Engine (calculates wear score, remaining hours, and reliability); Tier 4: Machine Agent & Diagnostics (executes Manual-First lookup then falls back to RAG retrieval); Tier 5: Automated Dispatch & Rerouting (triggers work orders and rebalances active production lines).",
+      "tags": ["architecture", "pipeline", "data flow", "thresholds", "rul", "diagnostics", "system"]
+    },
+    {
+      "sectionId": "SEC-SYS-ARCH-2",
+      "sectionName": "State Management & React Contexts",
+      "title": "FactoryContext Single Source of Truth",
+      "content": "The frontend state is managed centrally via FactoryContext.tsx. It maintains active machine states, sensor time-series histories, registered sensor kits, floor plan layout configurations, real-time alert logs, maintenance work order registries, and active simulation parameters. State changes broadcast synchronously across the Dashboard, v-Factory Twin, Machines, and Maintenance modules.",
+      "tags": ["state management", "react", "factory context", "telemetry", "simulation", "system"]
+    },
+    {
+      "sectionId": "SEC-SYS-ARCH-3",
+      "sectionName": "Knowledge & RAG Architecture",
+      "title": "Dual-Scope RAG and Knowledge Repository",
+      "content": "VectorAI employs a shared, unified RAG vector index serving two scopes: 1. Machine Agent Scope (strictly constrained to authoritative machine manuals for component specifications, sensor thresholds, SOPs, and failure scenarios); 2. Global Vector Assistant Scope (broad search across system architecture, website features, maintenance SOPs, and general technical principles). All RAG data is static knowledge; dynamic sensor values are strictly injected at runtime from live services.",
+      "tags": ["rag", "knowledge repository", "vector index", "machine scope", "global scope", "system"]
+    },
+    {
+      "sectionId": "SEC-SYS-ANOMALY-1",
+      "sectionName": "Threshold Boundary Definitions",
+      "title": "Deterministic Threshold Boundaries & Directions",
+      "content": "The Threshold Engine evaluates incoming continuous sensor values against three discrete operating bounds defined in machine specifications: Normal Range ([normal.min, normal.max]), Warning Range ([warning.min, warning.max]), and Critical Range ([critical.min, critical.max]). Each sensor has a configured direction: HIGHER_IS_WORSE (e.g. vibration, temperature, current, resistance) or LOWER_IS_WORSE (e.g. collet vacuum pressure, coolant flow rate, clamp air pressure).",
+      "tags": ["thresholds", "anomaly detection", "normal", "warning", "critical", "direction", "system"]
+    },
+    {
+      "sectionId": "SEC-SYS-ANOMALY-2",
+      "sectionName": "Threshold Classification Types",
+      "title": "Discrete Threshold Event Types",
+      "content": "When a sensor deviates from the nominal operating envelope, the threshold engine generates one of five deterministic threshold types: NORMAL (within operating bounds), WARNING_HIGH (upper warning limit exceeded), WARNING_LOW (lower warning limit breached), CRITICAL_HIGH (upper safety threshold violated), or CRITICAL_LOW (lower vacuum/pressure limit dropped below safe operation).",
+      "tags": ["threshold types", "classification", "warning_high", "critical_high", "warning_low", "critical_low", "system"]
+    },
+    {
+      "sectionId": "SEC-SYS-ANOMALY-3",
+      "sectionName": "Anomaly Severity & Lifecycle",
+      "title": "Anomaly Record Generation and Severity Assignment",
+      "content": "When a breach occurs, an AnomalyRecord is generated containing anomalyId, machineId, sensorId, sensorName, currentValue, unit, thresholdValue, thresholdType, detectedAt timestamp, and severity. Severity is deterministically computed: 'critical' for critical threshold breaches, 'high' or 'medium' for warning threshold breaches depending on distance to critical boundary, and 'low' for minor sub-nominal fluctuations. Anomalies transition through 'active', 'acknowledged', and 'resolved' states.",
+      "tags": ["anomaly record", "severity", "lifecycle", "active", "acknowledged", "resolved", "system"]
+    },
+    {
+      "sectionId": "SEC-SYS-RUL-1",
+      "sectionName": "Mathematical Formulation & Zero-ML Guarantee",
+      "title": "Explainable Weighted Linear Degradation Formula",
+      "content": "VectorAI rejects black-box Machine Learning heuristics for life estimation in mission-critical semiconductor equipment. RUL is computed deterministically using weighted physical degradation formulas derived from technical machine specifications: Degradation Score D = SUM(w_i * d_i) where w_i is the parameter weight (SUM(w_i) = 1.00) and d_i is the individual parameter degradation clamped between 0.0 (healthy baseline) and 1.0 (critical failure limit). Remaining Life Ratio = 1.0 - D. RUL (hours) = BaseUsefulLifeHours * (1.0 - D).",
+      "tags": ["rul", "mathematics", "formula", "zero-ml", "explainable", "weights", "base useful life", "system"]
+    },
+    {
+      "sectionId": "SEC-SYS-RUL-2",
+      "sectionName": "Individual Degradation Calculation",
+      "title": "Boundary Normalization & Directional Mechanics",
+      "content": "Individual degradation d_i is calculated per sensor channel. For HIGHER_IS_WORSE sensors (e.g. vibration, temperature): if value <= healthyLimit then d_i = 0; if value >= criticalLimit then d_i = 1; else d_i = (value - healthyLimit) / (criticalLimit - healthyLimit). For LOWER_IS_WORSE sensors (e.g. vacuum pressure, flow rate): if value >= healthyLimit then d_i = 0; if value <= criticalLimit then d_i = 1; else d_i = (healthyLimit - value) / (healthyLimit - criticalLimit).",
+      "tags": ["degradation calculation", "normalization", "limits", "sensor degradation", "system"]
+    },
+    {
+      "sectionId": "SEC-SYS-RUL-3",
+      "sectionName": "Model Reliability & Validation",
+      "title": "Sensor Completeness & Model Reliability Scoring",
+      "content": "Each RUL calculation produces a strict reliability audit: Reliability Status is 'HIGH' if 100% of model parameter sensors are online and valid; 'MEDIUM' if at least 70% of parameter weights are active; 'LOW' if critical weighted channels are missing. A complete breakdown of each parameter's percentage contribution to total wear is generated for operator explainability.",
+      "tags": ["reliability", "sensor completeness", "explainability", "contributions", "system"]
+    },
+    {
+      "sectionId": "SEC-SYS-AGENT-1",
+      "sectionName": "Agent Analysis Lifecycle",
+      "title": "Continuous Machine State Evaluation Loop",
+      "content": "The Machine Agent runs continuously for every registered machine in the facility. In each analysis cycle, the agent: 1. Ingests current sensor telemetry from FactoryContext; 2. Runs the Threshold Engine to detect active anomalies; 3. Executes the Deterministic RUL Engine to update degradation and remaining useful life hours; 4. Triggers the Diagnostic Engine for all active anomalies; 5. Synthesizes prioritized, actionable maintenance recommendations.",
+      "tags": ["machine agent", "monitoring", "lifecycle", "analysis loop", "diagnostics", "system"]
+    },
+    {
+      "sectionId": "SEC-SYS-AGENT-2",
+      "sectionName": "Machine-Specific Knowledge Scoping",
+      "title": "Strict Isolation to Machine Domain Knowledge",
+      "content": "When analyzing equipment, the Machine Agent operates strictly within the authoritative domain knowledge of the targeted machine model. During anomaly diagnosis, it queries only Section 10 (Symptoms), Section 11 (Failure Scenarios), and RAG chunks indexed specifically for that machineType. System-level, UI, or unrelated machine manuals are strictly quarantined from machine diagnostic decisions.",
+      "tags": ["machine scoping", "isolation", "domain knowledge", "machine agent", "system"]
+    },
+    {
+      "sectionId": "SEC-SYS-AGENT-3",
+      "sectionName": "Actionable Dispatch Synthesis",
+      "title": "Health Score & Recommendation Generation",
+      "content": "The Machine Agent computes an overall Machine Health Score (0-100%) by combining maximum sensor deviations, degradation score, and time since baseline. If RUL drops below 48 hours or health drops below 50%, the agent escalates machine status to CRITICAL, issues immediate warning alarms, suggests batch rerouting for wire bonders, and prepares automated technician dispatch payloads.",
+      "tags": ["health score", "escalation", "critical status", "recommendations", "dispatch", "system"]
+    },
+    {
+      "sectionId": "SEC-SYS-DIAG-1",
+      "sectionName": "Layer 1: Authoritative Manual Matching",
+      "title": "Deterministic Exact Symptom & Scenario Lookup",
+      "content": "When a sensor anomaly occurs, the Diagnostic Engine initiates Layer 1 (Manual-First) evaluation. It searches Section 11 (Failure Scenarios) and Section 10 (Troubleshooting Symptoms) of the machine's authoritative technical manual. If a multi-sensor pattern or symptom keyword matches, the engine immediately outputs a HIGH-confidence MANUAL diagnosis containing exact verified root causes, step-by-step corrective actions, and verification checklists directly cited from the manual.",
+      "tags": ["layer 1", "manual-first", "high confidence", "failure scenarios", "troubleshooting symptoms", "system"]
+    },
+    {
+      "sectionId": "SEC-SYS-DIAG-2",
+      "sectionName": "Layer 2: RAG Fallback & Semantic Inference",
+      "title": "Semantic Knowledge Retrieval on Manual Miss",
+      "content": "If no direct match exists in Section 10 or 11, the system seamlessly escalates to Layer 2 (RAG Fallback). The engine queries the scoped machine RAG index (ragVectorIndex) to retrieve relevant component specifications, degradation physics, and maintenance SOP chunks. It produces a MEDIUM/LOW-confidence RAG diagnosis with explicit evidence citations, inferred probable causes, recommended preventive actions, and an inference disclaimer.",
+      "tags": ["layer 2", "rag fallback", "semantic retrieval", "inference disclaimer", "rag diagnosis", "system"]
+    },
+    {
+      "sectionId": "SEC-SYS-DIAG-3",
+      "sectionName": "Live Generative AI Synthesis (Gemini LLM)",
+      "title": "Grounded Gemini LLM Diagnostic Reasoning",
+      "content": "When enabled, the live Gemini LLM diagnostic service (geminiDiagnosticService) accepts active anomaly telemetry and injects either Layer 1 grounded manual evidence or Layer 2 retrieved RAG chunks into the LLM prompt. Gemini synthesizes a natural language technical diagnosis while adhering strictly to the provided document citations, preserving source attribution (MANUAL vs RAG) and confidence scores.",
+      "tags": ["gemini", "llm", "generative ai", "hybrid reasoning", "grounded prompt", "system"]
+    },
+    {
+      "sectionId": "SEC-SYS-MAINT-1",
+      "sectionName": "Work Order Generation & Service Matrix",
+      "title": "Automated Work Order Generation and Prioritization",
+      "content": "VectorAI continuously cross-references active machine health, cumulative operating hours, and scheduled intervals against the preventive maintenance matrix. When RUL degrades below warning/critical thresholds or scheduled hours elapse, automated work orders are generated with prioritized classifications (CRITICAL, HIGH, MEDIUM, LOW), assigned technician roles, estimated downtime durations, and required spare parts lists.",
+      "tags": ["work orders", "service matrix", "prioritization", "maintenance scheduling", "system"]
+    },
+    {
+      "sectionId": "SEC-SYS-MAINT-2",
+      "sectionName": "Technician Dispatch Protocol",
+      "title": "Interactive Dispatch Modal & Multi-Channel Alerting",
+      "content": "Operators and plant managers can trigger rapid technician dispatch from the Maintenance interface or Machine Details. The system packages full machine metadata, active anomaly logs, sensor telemetry snapshots, and recommended SOPs into an actionable dispatch payload, broadcasting via Email, SMS, and Webhook channels to assigned maintenance teams.",
+      "tags": ["technician dispatch", "dispatch modal", "email", "sms", "webhook", "alerts", "system"]
+    },
+    {
+      "sectionId": "SEC-SYS-MAINT-3",
+      "sectionName": "Closed-Loop Resolution & Baseline Reset",
+      "title": "Maintenance Execution and Sensor Baseline Calibration",
+      "content": "Upon completion of physical maintenance on the factory floor, technicians record task completion in VectorAI. Executing the 'Perform Maintenance / Reset Baseline' action resets sensor operating hours, recalibrates sensor values to nominal baseline, eliminates active anomaly alerts, restores machine health score to 100%, and logs a permanent record to the maintenance audit trail.",
+      "tags": ["maintenance execution", "baseline reset", "audit trail", "health restoration", "system"]
+    }
+  ]
+}

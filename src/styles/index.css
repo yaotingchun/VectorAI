@@ -237,6 +237,7 @@ html, body, #root {
   flex: 1;
   overflow-y: auto;
   padding: clamp(16px, 2vw, 28px);
+  padding-bottom: 84px;
   display: flex;
   flex-direction: column;
   width: 100%;
