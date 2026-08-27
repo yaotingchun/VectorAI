@@ -268,3 +268,59 @@ export interface MachineAgentAnalysis {
   recommendations: string[];
   analyzedAt: string;
 }
+
+// -------------------------------------------------------------------------
+// 7. GLOBAL RAG & KNOWLEDGE LAYER CONTRACTS
+// -------------------------------------------------------------------------
+
+export type KnowledgeType = 'MACHINE' | 'SYSTEM' | 'WEBSITE' | 'TECHNICAL';
+
+export interface GlobalKnowledgeSection {
+  sectionId: string;
+  sectionName: string;
+  title: string;
+  content: string;
+  tags: string[];
+}
+
+export interface GlobalKnowledgeDocument {
+  documentId: string;
+  knowledgeType: KnowledgeType;
+  sourceName: string;
+  category: string;
+  version: string;
+  lastUpdated: string;
+  title: string;
+  description: string;
+  sections: GlobalKnowledgeSection[];
+}
+
+export interface RagChunk {
+  chunkId: string;
+  knowledgeType: KnowledgeType;
+  machineType?: MachineTypeId;
+  manualId?: string;
+  documentId?: string;
+  sourceName: string;
+  section: string;
+  title: string;
+  content: string;
+  tags: string[];
+  embedding?: number[];
+}
+
+export interface RagSearchFilter {
+  knowledgeType?: KnowledgeType | KnowledgeType[];
+  machineType?: MachineTypeId;
+  documentId?: string;
+  sourceName?: string;
+  section?: string;
+  maxResults?: number;
+  minScore?: number;
+}
+
+export interface RagRetrievalResult {
+  chunk: RagChunk;
+  similarityScore: number; // 0.0 to 1.0
+}
+

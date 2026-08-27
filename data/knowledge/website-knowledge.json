@@ -1,0 +1,117 @@
+{
+  "documentId": "DOC-WEB-KNOWLEDGE",
+  "knowledgeType": "WEBSITE",
+  "sourceName": "VectorAI Website & UI Guide",
+  "category": "Website Navigation & UI Reference",
+  "version": "1.0",
+  "lastUpdated": "2026-08-26",
+  "title": "VectorAI Website & User Interface Operations Guide",
+  "description": "Consolidated UI documentation covering Dashboard KPIs, Machine Inspector subtabs, Accelerated Wear simulation, Prediction curves, Maintenance Dispatch modal, and Technical Document viewers.",
+  "sections": [
+    {
+      "sectionId": "SEC-WEB-DASH-1",
+      "sectionName": "Top-Level KPI Overview Cards",
+      "title": "Real-Time Factory Health & Operational Metrics",
+      "content": "The top of the Dashboard displays high-level factory telemetry KPI cards: 1. Overall Factory Health Score (weighted average health of all active machines); 2. Fleet Status Breakdown (counts of Healthy, Warning, Critical, and Maintenance machines); 3. Average Fleet RUL (remaining operational hours across all running equipment); 4. Critical Alert Counter (active unacknowledged threshold alarms).",
+      "tags": ["dashboard", "kpi", "fleet health", "fleet status", "rul average", "ui", "website"]
+    },
+    {
+      "sectionId": "SEC-WEB-DASH-2",
+      "sectionName": "Machine Telemetry Fleet Table",
+      "title": "Interactive Machine Overview & Quick Navigation",
+      "content": "The central section contains the live Machine Telemetry Grid/Table, listing every equipment node (DIC-001, DA-001, WB-001, MOLD-001, ATE-001, etc.). Each row presents the machine status badge, real-time health score, current RUL hours, operational hours since baseline, and primary sensor readings. Clicking any machine row opens the comprehensive Machine Detail view.",
+      "tags": ["machine table", "fleet overview", "telemetry grid", "navigation", "website"]
+    },
+    {
+      "sectionId": "SEC-WEB-DASH-3",
+      "sectionName": "Live System Event Log",
+      "title": "Synchronized Plant Telemetry Event Timeline",
+      "content": "The Dashboard features a real-time System Event Log showing the latest telemetry events, automated warning/critical state transitions, dynamic process rerouting alerts, and maintenance completions. Events update live every 3 seconds alongside the simulation ticker.",
+      "tags": ["event log", "timeline", "telemetry stream", "live events", "website"]
+    },
+    {
+      "sectionId": "SEC-WEB-MACH-1",
+      "sectionName": "Fleet Toolbar & Filtering System",
+      "title": "Multi-Criteria Machine Filtering & Search",
+      "content": "The Machines tab top toolbar provides multi-dimensional filtering: Filter by Machine Status (All, Healthy, Warning, Critical, Maintenance, Offline), Filter by Machine Type (Wafer Dicing, Die Attacher, Wire Bonder, Molding, IC Tester), Free-text search by ID/Name/Location, View mode toggle (Card Grid vs Table List), and bulk status summary pills.",
+      "tags": ["machines tab", "toolbar", "filters", "search", "grid view", "table view", "website"]
+    },
+    {
+      "sectionId": "SEC-WEB-MACH-2",
+      "sectionName": "Machine Detail Inspector Subtabs",
+      "title": "Six Dedicated Machine Detail Subtabs",
+      "content": "Selecting a machine opens the Machine Detail view featuring 6 specialized subtabs: 1. Overview (high-level health score, operational status, RUL summary, and interactive wear simulation controls); 2. Sensors (live continuous telemetry meters with normal/warning/critical gauge visualizers); 3. Anomalies (active threshold violations, severity badges, and diagnostic recommendations); 4. Prediction (detailed RUL parameter decomposition and multi-sensor degradation graphs); 5. Maintenance (scheduled work orders, service history, and technician dispatch); 6. Documents (authoritative PDF manual viewer and knowledge sync status).",
+      "tags": ["machine detail", "subtabs", "overview", "sensors", "anomalies", "prediction", "maintenance", "documents", "website"]
+    },
+    {
+      "sectionId": "SEC-WEB-MACH-3",
+      "sectionName": "Interactive Accelerated Wear Simulation",
+      "title": "Real-Time Fast-Forward Wear Simulation Controls",
+      "content": "The Machine Overview subtab provides an interactive 'Simulate Accelerated Wear' toggle button. Enabling accelerated wear fast-forwards mechanical/electrical degradation at 60x real-time speed, allowing operators and engineers to observe live threshold crossings, anomaly triggering, and automated dynamic rerouting in real time.",
+      "tags": ["accelerated wear", "simulation", "interactive controls", "fast forward", "website"]
+    },
+    {
+      "sectionId": "SEC-WEB-PRED-1",
+      "sectionName": "RUL Prediction Overview Card",
+      "title": "Remaining Useful Life Hours & Reliability Rating",
+      "content": "The Prediction interface displays the calculated RUL in hours, converted into estimated operating days and maintenance windows. It shows the overall Degradation Percentage, Remaining Life Ratio, Base Useful Life specification, and the Model Reliability status ('HIGH', 'MEDIUM', 'LOW') based on sensor stream completeness.",
+      "tags": ["prediction tab", "rul card", "reliability", "degradation percentage", "operating days", "website"]
+    },
+    {
+      "sectionId": "SEC-WEB-PRED-2",
+      "sectionName": "Parameter Wear Contribution Table",
+      "title": "Explainable Multi-Sensor Parameter Breakdown",
+      "content": "The Prediction view provides a transparent parameter contribution matrix. For each model sensor, it shows: Current Value vs Healthy/Critical Limits, Model Weight percentage, Individual Degradation score (0.0 to 1.0), and Percentage Share of Total Wear. This gives maintenance teams complete visibility into exactly which mechanical component is driving machine degradation.",
+      "tags": ["parameter contributions", "explainability", "wear share", "sensor breakdown", "website"]
+    },
+    {
+      "sectionId": "SEC-WEB-PRED-3",
+      "sectionName": "Interactive Degradation Trend Chart",
+      "title": "Multi-Sensor Degradation Trajectory Curves",
+      "content": "The interactive SVG DegradationChart plots continuous historical telemetry trends against warning and critical thresholds. It projects future degradation trajectories based on current wear rates, allowing engineers to visualize exactly when a sensor is projected to violate safety limits.",
+      "tags": ["degradation chart", "trends", "trajectory", "thresholds", "svg chart", "website"]
+    },
+    {
+      "sectionId": "SEC-WEB-MAINT-1",
+      "sectionName": "Maintenance Matrix & Service Calendar",
+      "title": "Scheduled Service Matrix & Preventive Maintenance Pipeline",
+      "content": "The Maintenance Tab aggregates all preventive and predictive maintenance tasks across the facility. It features an interactive Service Calendar and Gantt-style matrix tracking scheduled maintenance windows, upcoming technician assignments, and cumulative machine operating hours.",
+      "tags": ["maintenance tab", "calendar", "service matrix", "work orders", "scheduling", "website"]
+    },
+    {
+      "sectionId": "SEC-WEB-MAINT-2",
+      "sectionName": "Interactive Work Order Dispatch Modal",
+      "title": "Technician Work Order Dispatch Interface",
+      "content": "Clicking 'Dispatch Technician' opens the Dispatch Modal. The modal displays: 1. Machine Identification & Cleanroom Zone; 2. Diagnostic Summary & Triggering Anomaly; 3. Live Sensor Telemetry Snapshot at time of dispatch; 4. Standard Operating Procedure (SOP) Action Checklist; 5. Communication Channel selector (Email, SMS, Webhook) with live notification preview.",
+      "tags": ["dispatch modal", "work order", "sop checklist", "telemetry snapshot", "notifications", "website"]
+    },
+    {
+      "sectionId": "SEC-WEB-MAINT-3",
+      "sectionName": "Maintenance Execution & Audit Log",
+      "title": "Service Completion Logging & Historical Records",
+      "content": "The Maintenance Tab includes a completed service log recording date, technician, machine ID, replaced components, downtime duration, and post-service sensor verification readings, providing a fully auditable compliance record.",
+      "tags": ["audit log", "service records", "compliance", "history", "website"]
+    },
+    {
+      "sectionId": "SEC-WEB-DOCS-1",
+      "sectionName": "Knowledge Extraction Status Banner",
+      "title": "Authoritative Model Knowledge Synchronization Status",
+      "content": "The Machine Documents subtab displays a 'Domain Knowledge Extraction Status' banner confirming that the machine's authoritative specification has been extracted, validated, and synchronized into VectorAI's internal intelligence engine. It summarizes the extracted sensor thresholds, preventive maintenance intervals, failure scenarios, and deterministic RUL parameters.",
+      "tags": ["documents subtab", "knowledge status", "synchronization", "authoritative manual", "website"]
+    },
+    {
+      "sectionId": "SEC-WEB-DOCS-2",
+      "sectionName": "Authoritative PDF Technical Manual Viewer",
+      "title": "Direct PDF Technical Manual Preview & Download",
+      "content": "The subtab presents the authoritative equipment technical manual (e.g. High-Speed Thermo-Sonic Wire Bonder Technical Manual PDF). Users can view the complete PDF in a dedicated embedded viewer or open/download the manual in a new browser tab for offline maintenance reference.",
+      "tags": ["pdf viewer", "technical manual", "download", "preview", "website"]
+    },
+    {
+      "sectionId": "SEC-WEB-DOCS-3",
+      "sectionName": "Document Metadata & Version Control",
+      "title": "Document Revisions and Cleanroom Specifications",
+      "content": "Each document card lists the manual ID (e.g. VAI-MAN-WB-001), document revision (v1.0), release date, synthetic prototype disclaimer, and associated tags, ensuring operators reference the exact approved version for the machinery on the factory floor.",
+      "tags": ["document metadata", "version control", "manual id", "cleanroom specs", "website"]
+    }
+  ]
+}

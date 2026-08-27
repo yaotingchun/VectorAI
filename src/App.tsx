@@ -10,6 +10,7 @@ import { MaintenancePage } from './pages/MaintenancePage';
 import { ConfigurationPage } from './pages/ConfigurationPage';
 import { DetailTab } from './features/machines';
 import { FactoryProvider } from './context/FactoryContext';
+import { VectorAssistant } from './features/assistant';
 
 export const App: React.FC = () => {
   const [activeTab, setActiveTab] = useState<TabId>('dashboard');
@@ -113,8 +114,17 @@ export const App: React.FC = () => {
       <AppLayout activeTab={activeTab} onSelectTab={setActiveTab} onNavigate={handleNavigate}>
         {renderActivePage()}
       </AppLayout>
+
+      {/* Persistent Global VectorAI Assistant */}
+      <VectorAssistant
+        currentPage={activeTab}
+        currentMachineId={focusedMachineId}
+        currentSubTab={focusedDetailTab}
+        onNavigate={handleNavigateTab}
+      />
     </FactoryProvider>
   );
 };
 
 export default App;
+

@@ -20,9 +20,10 @@ export function diagnoseFromRag(
   const knowledge = getMachineKnowledge(machineType);
   const manualMeta = knowledge.machine;
 
-  // Search RAG knowledge chunks
+  // Search RAG knowledge chunks strictly within MACHINE scope
   const searchQuery = `${anomaly.sensorName} ${anomaly.description} degradation failure`;
   const retrievalResults = ragVectorIndex.search(searchQuery, {
+    knowledgeType: 'MACHINE',
     machineType,
     maxResults: 3
   });
