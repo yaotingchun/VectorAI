@@ -79,7 +79,7 @@ class RagVectorIndex {
           sourceName,
           section: 'Section 8 — Degradation Physics',
           title: `Degradation Mechanism: ${deg.parameter}`,
-          content: `Degradation indicator: ${deg.parameter}. Normal condition: ${deg.normalCondition}. Degraded: ${deg.degradedCondition}. Critical: ${deg.criticalCondition}. Physical mechanism: ${deg.indicatorMechanism}.`,
+          content: `Degradation indicator: ${deg.parameter}. Physical phenomenon: ${deg.physicalPhenomenon || ''}. Measurable effect: ${deg.measurableEffect || ''}. Significance: ${deg.degradationSignificance || ''}.`,
           tags: ['degradation', 'rul', deg.parameter.toLowerCase(), mt, 'machine_manual']
         });
       }

@@ -1,0 +1,256 @@
+{
+  "filename": "aoi-inspection",
+  "aliases": [],
+  "machine": {
+    "name": "3D Optical AOI Metrology & Coplanarity System",
+    "type": "aoi-inspection",
+    "prototypeMachineId": "AOI-01",
+    "manualId": "VAI-MAN-AOI-001",
+    "version": "1.0",
+    "generatedDate": "2026-08-27",
+    "documentStatus": "Synthetic Cleanroom Technical Manual",
+    "purpose": "VectorAI Demonstration and Operational Intelligence",
+    "disclaimer": "SYNTHETIC PROTOTYPE TECHNICAL MANUAL\n\nThis document is artificially generated for the VectorAI demonstration and software development.\n\nThe specifications, thresholds, service-life values, maintenance intervals, and operating parameters are synthetic and must not be used for real industrial equipment operation or maintenance.",
+    "processStage": "Bay 5A: 3D Optical AOI Metrology",
+    "description": "High-speed automated optical inspection and 3D laser profilometry line for inspecting molded IC package surface defects, lead coplanarity, ball grid height, and package dimensional tolerances.",
+    "manufacturingProcess": "Molded leadframe strips or BGA trays travel along a dual-lane SMEMA conveyor. Multi-wavelength RGB+W dome illumination and dual-telecentric cameras capture 100MP images while 3D laser triangulation sensors reconstruct micron-level height maps of leads and solder balls.",
+    "subsystems": [
+      "Dual-Telecentric 100MP High-Resolution Imaging Camera",
+      "High-Speed 3D Laser Triangulation Profilometer",
+      "Multi-Angle RGBW Programmable Dome Strobe Illuminator",
+      "Granite Base Air-Bearing Linear Motion Gantry",
+      "Automated SMEMA Dual-Lane Cassette Indexer"
+    ]
+  },
+  "components": [
+    {
+      "name": "3D Laser Triangulation Head",
+      "function": "Scans package surface height and lead coplanarity at 50 kHz.",
+      "importantParameters": "Height measurement resolution (0.1µm), laser power (mW), sensor temp (°C).",
+      "degradationIndicators": "Laser diode power decay, height measurement noise."
+    },
+    {
+      "name": "Camera Motion Gantry",
+      "function": "Translates optical sensor across package matrix at high speed.",
+      "importantParameters": "Gantry acceleration (G), vibration (mm/s), position jitter (µm).",
+      "degradationIndicators": "Gantry vibration rise (>0.2 mm/s), position encoder error."
+    },
+    {
+      "name": "RGBW LED Dome Illuminator",
+      "function": "Provides structured multi-angle illumination for defect contrast.",
+      "importantParameters": "Illumination uniformity (%), LED pulse timing (µs).",
+      "degradationIndicators": "Brightness decay (>10%), strobe timing jitter."
+    }
+  ],
+  "sensors": [
+    {
+      "sensorId": "vibration_camera_gantry",
+      "name": "Camera Gantry Vibration",
+      "unit": "mm/s",
+      "purpose": "Monitors optical gantry motion vibration and rail smoothness.",
+      "minScale": 0,
+      "maxScale": 1,
+      "normalRange": [
+        0.02,
+        0.15
+      ],
+      "warningRange": [
+        0.15,
+        0.35
+      ],
+      "criticalRange": [
+        0.35,
+        1
+      ],
+      "direction": "HIGHER_IS_WORSE"
+    },
+    {
+      "sensorId": "temp_optics",
+      "name": "Optical Sensor Temp",
+      "unit": "°C",
+      "purpose": "Measures CMOS image sensor and laser diode temperature.",
+      "minScale": 15,
+      "maxScale": 50,
+      "normalRange": [
+        20,
+        26
+      ],
+      "warningRange": [
+        26,
+        34
+      ],
+      "criticalRange": [
+        34,
+        50
+      ],
+      "direction": "HIGHER_IS_WORSE"
+    },
+    {
+      "sensorId": "optical_intensity",
+      "name": "Illumination Uniformity",
+      "unit": "%",
+      "purpose": "Monitors calibrated brightness uniformity of LED dome lights.",
+      "minScale": 50,
+      "maxScale": 100,
+      "normalRange": [
+        95,
+        100
+      ],
+      "warningRange": [
+        85,
+        95
+      ],
+      "criticalRange": [
+        50,
+        85
+      ],
+      "direction": "LOWER_IS_WORSE"
+    }
+  ],
+  "thresholds": [
+    {
+      "sensorId": "vibration_camera_gantry",
+      "sensorName": "Camera Gantry Vibration",
+      "unit": "mm/s",
+      "normal": {
+        "min": 0.02,
+        "max": 0.15,
+        "description": "Sub-micron optical sharpness"
+      },
+      "warning": {
+        "min": 0.15,
+        "max": 0.35,
+        "description": "Gantry bearing wear or belt looseness"
+      },
+      "critical": {
+        "min": 0.35,
+        "max": 1,
+        "description": "Image blur causing false defect classification"
+      },
+      "direction": "HIGHER_IS_WORSE"
+    },
+    {
+      "sensorId": "optical_intensity",
+      "sensorName": "Illumination Uniformity",
+      "unit": "%",
+      "normal": {
+        "min": 95,
+        "max": 100,
+        "description": "Calibrated optical illumination"
+      },
+      "warning": {
+        "min": 85,
+        "max": 95,
+        "description": "LED strobe aging"
+      },
+      "critical": {
+        "min": 50,
+        "max": 85,
+        "description": "Severe defect escape risk"
+      },
+      "direction": "LOWER_IS_WORSE"
+    }
+  ],
+  "operatingConditions": {
+    "ambientTemperature": "21.0 - 22.5 °C (Cleanroom ISO 6)",
+    "relativeHumidity": "45.0 - 55.0 %",
+    "normalOperatingTemperature": "23.0 °C",
+    "normalOperatingPressure": "6.0 bar (Clean CDA for air-bearings)",
+    "normalOperatingSpeed": "12 sec / strip scan",
+    "normalCycleTime": "12.0 sec / leadframe strip",
+    "normalOperatingHours": "24/7 continuous inline QA",
+    "recommendedOperatingConditions": "Optical lenses free of dust, calibration target scanned every 24h",
+    "maximumContinuousOperation": "360 hours before optical recalibration"
+  },
+  "maintenance": [
+    {
+      "component": "Optical Telecentric Lens",
+      "recommendedMaintenanceIntervalHours": 360,
+      "expectedServiceLifeHours": 8000,
+      "maintenanceAction": "Lens optical cleaning and 3D target calibration",
+      "procedureSummary": "Clean front telecentric element with optical lens paper, run 3D grid calibration target."
+    }
+  ],
+  "degradationIndicators": [
+    {
+      "parameter": "Gantry Vibration",
+      "physicalPhenomenon": "Linear guide bearing race micro-pitting",
+      "measurableEffect": "Vibration amplitude climbs above 0.20 mm/s",
+      "degradationSignificance": "Causes motion blur and false coplanarity rejections",
+      "primarySensorId": "vibration_camera_gantry"
+    }
+  ],
+  "rulModel": {
+    "baseUsefulLifeHours": 3200,
+    "baseLifeUnit": "hours",
+    "modelName": "3D Optical AOI Degradation Model",
+    "formulaDescription": "RUL = BaseLife * (1 - (0.50*wear_gantry_vib + 0.30*wear_opt_temp + 0.20*wear_light))",
+    "weightsSum": 1,
+    "parameters": [
+      {
+        "parameter": "Gantry Vibration",
+        "sensorId": "vibration_camera_gantry",
+        "sensorName": "Camera Gantry Vibration",
+        "unit": "mm/s",
+        "weight": 0.5,
+        "healthyLimit": 0.1,
+        "criticalLimit": 0.4,
+        "direction": "HIGHER_IS_WORSE"
+      },
+      {
+        "parameter": "Optics Temp",
+        "sensorId": "temp_optics",
+        "sensorName": "Optical Sensor Temp",
+        "unit": "°C",
+        "weight": 0.3,
+        "healthyLimit": 23,
+        "criticalLimit": 35,
+        "direction": "HIGHER_IS_WORSE"
+      },
+      {
+        "parameter": "Light Intensity",
+        "sensorId": "optical_intensity",
+        "sensorName": "Illumination Uniformity",
+        "unit": "%",
+        "weight": 0.2,
+        "healthyLimit": 98,
+        "criticalLimit": 80,
+        "direction": "LOWER_IS_WORSE"
+      }
+    ]
+  },
+  "symptoms": [
+    {
+      "symptomId": "SYM-AOI-001",
+      "symptom": "False Defect Classification Rate > 1.5%",
+      "severity": "medium",
+      "relatedSensors": [
+        "vibration_camera_gantry",
+        "optical_intensity"
+      ],
+      "possibleCauses": [
+        "Gantry rail vibration",
+        "LED strobe brightness decay",
+        "Lens dust"
+      ],
+      "recommendedAction": "Clean telecentric lens and execute standard 3D target calibration."
+    }
+  ],
+  "failureScenarios": [
+    {
+      "scenarioId": "SCEN-AOI-001",
+      "symptom": "Camera Gantry Motion Jitter & Optical Blur",
+      "severity": "warning",
+      "sensorPattern": "vibration_camera_gantry > 0.25 mm/s",
+      "possibleCauses": [
+        "Linear motor bearing wear",
+        "Air-bearing pressure drop"
+      ],
+      "recommendedAction": "Inspect air-bearing CDA pressure and calibrate linear motion encoder.",
+      "verificationSteps": [
+        "Verify gantry repeatability (< 0.5µm)",
+        "Inspect test target resolution chart"
+      ]
+    }
+  ]
+}

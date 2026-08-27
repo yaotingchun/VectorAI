@@ -97,7 +97,7 @@ export const App: React.FC = () => {
           />
         );
       case 'maintenance':
-        return <MaintenancePage />;
+        return <MaintenancePage initialMachineId={focusedMachineId || undefined} />;
       case 'configuration':
         return <ConfigurationPage />;
       default:

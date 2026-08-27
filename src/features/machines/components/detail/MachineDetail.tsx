@@ -6,6 +6,7 @@ import { MachineStatusBadge } from '../MachineStatusBadge';
 import { MachineOverview } from './MachineOverview';
 import { SensorStatus } from './SensorStatus';
 import { HealthTrendChart } from './HealthTrendChart';
+import { RULTrendChart } from './RULTrendChart';
 import { RULCard } from './RULCard';
 import { AnomalySummary } from './AnomalySummary';
 import { MaintenanceSummary } from './MaintenanceSummary';
@@ -247,9 +248,12 @@ export const MachineDetail: React.FC<MachineDetailProps> = ({
         {activeTab === 'overview' && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
             <MachineOverview machine={machine} />
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '16px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '16px', alignItems: 'start' }}>
               <RULCard rul={machine.rul} machine={machine} />
-              <HealthTrendChart trendData={machine.healthTrend} currentScore={machine.healthScore} />
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                <HealthTrendChart trendData={machine.healthTrend} currentScore={machine.healthScore} />
+                <RULTrendChart machine={machine} />
+              </div>
             </div>
           </div>
         )}
@@ -294,7 +298,7 @@ export const MachineDetail: React.FC<MachineDetailProps> = ({
         {activeTab === 'maintenance' && (
           <MaintenanceSummary
             maintenance={machine.maintenance}
-            onNavigateToMaintenance={onNavigateToMaintenance}
+            onNavigateToMaintenance={() => onNavigateToMaintenance && onNavigateToMaintenance(machine.id)}
           />
         )}
 

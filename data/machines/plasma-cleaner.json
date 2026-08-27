@@ -1,0 +1,276 @@
+{
+  "filename": "plasma-cleaner",
+  "aliases": [],
+  "machine": {
+    "name": "RF Argon & Oxygen Plasma Surface Activation Chamber",
+    "type": "plasma-cleaner",
+    "prototypeMachineId": "PC-01",
+    "manualId": "VAI-MAN-PC-001",
+    "version": "1.0",
+    "generatedDate": "2026-08-27",
+    "documentStatus": "Synthetic Cleanroom Technical Manual",
+    "purpose": "VectorAI Demonstration and Operational Intelligence",
+    "disclaimer": "SYNTHETIC PROTOTYPE TECHNICAL MANUAL\n\nThis document is artificially generated for the VectorAI demonstration and software development.\n\nThe specifications, thresholds, service-life values, maintenance intervals, and operating parameters are synthetic and must not be used for real industrial equipment operation or maintenance.",
+    "processStage": "Bay 3A: Plasma Activation",
+    "description": "Low-pressure 13.56 MHz RF plasma treatment chamber for micro-cleaning organic contaminants and activating metal bond pads (Au, Cu, Al) on die-attached leadframes prior to wire bonding.",
+    "manufacturingProcess": "Magazines of leadframes are loaded into an automated vacuum chamber. A dry mechanical pump evicts air down to < 10 Pa. Pure argon and oxygen gases are energized by a 13.56 MHz RF match network into a glow-discharge plasma, stripping organic monolayers and increasing copper surface energy to > 72 dyn/cm.",
+    "subsystems": [
+      "13.56 MHz RF Generator & Solid-State Auto-Match Network",
+      "Stainless Steel Vacuum Process Chamber with Fluoroelastomer Seals",
+      "Dry Roots Vacuum Pump & Roughing Valve Manifold",
+      "High-Precision Gas Mass Flow Controllers (MFCs for Ar, O2, H2)",
+      "Optical Emission Spectroscopy (OES) Plasma Density Endpoint Sensor"
+    ]
+  },
+  "components": [
+    {
+      "name": "RF Auto-Match Network",
+      "function": "Matches generator 50Ω impedance to dynamic plasma chamber impedance.",
+      "importantParameters": "Reflected power (W), forward power (W), tune/load capacitor pos (%).",
+      "degradationIndicators": "Reflected power surge (>30W), tuning hunt time (>5s)."
+    },
+    {
+      "name": "Dry Vacuum Pump Stack",
+      "function": "Evacuates chamber down to operating base pressure (10-100 Pa).",
+      "importantParameters": "Chamber base pressure (Pa), pump vibration (mm/s), pump temp (°C).",
+      "degradationIndicators": "Pump vibration rise (>0.4 mm/s), base pressure degradation."
+    },
+    {
+      "name": "Process Gas MFCs",
+      "function": "Regulates precise mass flow of ultra-pure Argon (Ar) and Oxygen (O2).",
+      "importantParameters": "Flow rate (sccm), gas inlet pressure (bar).",
+      "degradationIndicators": "MFC flow hunt, solenoid response drift."
+    },
+    {
+      "name": "Chamber Door Fluoroelastomer Seal",
+      "function": "Maintains hermetic vacuum seal during high-frequency plasma cycle.",
+      "importantParameters": "Chamber leak-up rate (Pa/min), door clamp pressure.",
+      "degradationIndicators": "Leak rate > 2 Pa/min, visual elastomer cracking."
+    }
+  ],
+  "sensors": [
+    {
+      "sensorId": "vibration_vacuum_pump",
+      "name": "Vacuum Pump Vibration",
+      "unit": "mm/s",
+      "purpose": "Monitors dry vacuum pump rotor bearing condition.",
+      "minScale": 0,
+      "maxScale": 2,
+      "normalRange": [
+        0.08,
+        0.3
+      ],
+      "warningRange": [
+        0.3,
+        0.7
+      ],
+      "criticalRange": [
+        0.7,
+        2
+      ],
+      "direction": "HIGHER_IS_WORSE"
+    },
+    {
+      "sensorId": "chamber_pressure",
+      "name": "Chamber Pressure",
+      "unit": "kPa",
+      "purpose": "Measures vacuum chamber process pressure during plasma glow.",
+      "minScale": 0,
+      "maxScale": 150,
+      "normalRange": [
+        70,
+        95
+      ],
+      "warningRange": [
+        95,
+        120
+      ],
+      "criticalRange": [
+        120,
+        150
+      ],
+      "direction": "HIGHER_IS_WORSE"
+    },
+    {
+      "sensorId": "rf_reflected_power",
+      "name": "RF Reflected Power",
+      "unit": "W",
+      "purpose": "Measures reflected electromagnetic power from plasma impedance mismatch.",
+      "minScale": 0,
+      "maxScale": 100,
+      "normalRange": [
+        5,
+        22
+      ],
+      "warningRange": [
+        22,
+        38
+      ],
+      "criticalRange": [
+        38,
+        100
+      ],
+      "direction": "HIGHER_IS_WORSE"
+    }
+  ],
+  "thresholds": [
+    {
+      "sensorId": "rf_reflected_power",
+      "sensorName": "RF Reflected Power",
+      "unit": "W",
+      "normal": {
+        "min": 5,
+        "max": 22,
+        "description": "Nominal RF energy transfer (>95% efficiency)"
+      },
+      "warning": {
+        "min": 22,
+        "max": 38,
+        "description": "Impedance auto-match capacitor drift"
+      },
+      "critical": {
+        "min": 38,
+        "max": 100,
+        "description": "Plasma de-energized: Insufficient surface activation"
+      },
+      "direction": "HIGHER_IS_WORSE"
+    },
+    {
+      "sensorId": "chamber_pressure",
+      "sensorName": "Chamber Pressure",
+      "unit": "kPa",
+      "normal": {
+        "min": 70,
+        "max": 95,
+        "description": "Optimal argon glow pressure"
+      },
+      "warning": {
+        "min": 95,
+        "max": 120,
+        "description": "Chamber vacuum micro-leak or MFC drift"
+      },
+      "critical": {
+        "min": 120,
+        "max": 150,
+        "description": "Severe vacuum seal failure"
+      },
+      "direction": "HIGHER_IS_WORSE"
+    }
+  ],
+  "operatingConditions": {
+    "ambientTemperature": "21.0 - 23.0 °C (Cleanroom ISO 6)",
+    "relativeHumidity": "40.0 - 50.0 %",
+    "normalOperatingTemperature": "42.0 °C (Chamber electrode)",
+    "normalOperatingPressure": "85.0 kPa (Operating glow regime)",
+    "normalOperatingSpeed": "RF 13.56 MHz (300W Forward Power)",
+    "normalCycleTime": "65.0 sec / magazine batch",
+    "normalOperatingHours": "24/7 continuous inline batch operation",
+    "recommendedOperatingConditions": "Argon gas purity > 99.999%, reflected power < 20W",
+    "maximumContinuousOperation": "250 hours before chamber electrode cleaning"
+  },
+  "maintenance": [
+    {
+      "component": "RF Auto-Match Capacitor",
+      "recommendedMaintenanceIntervalHours": 720,
+      "expectedServiceLifeHours": 4000,
+      "maintenanceAction": "Impedance match capacitor tuning & contact deoxidation",
+      "procedureSummary": "Inspect variable capacitor stepper motor, verify 50Ω load balance with dummy RF load."
+    },
+    {
+      "component": "Fluoroelastomer Chamber O-Ring",
+      "recommendedMaintenanceIntervalHours": 360,
+      "expectedServiceLifeHours": 1500,
+      "maintenanceAction": "O-ring replacement and vacuum grease application",
+      "procedureSummary": "Remove chamber door O-ring, inspect groove for particulates, apply high-vacuum Krytox grease."
+    }
+  ],
+  "degradationIndicators": [
+    {
+      "parameter": "RF Reflected Power",
+      "physicalPhenomenon": "Auto-match vacuum variable capacitor dielectric wear",
+      "measurableEffect": "Reflected power surges to 42W",
+      "degradationSignificance": "Reduces surface activation energy below 50 dyn/cm, leading to bond lift-off",
+      "primarySensorId": "rf_reflected_power"
+    },
+    {
+      "parameter": "Vacuum Pump Vibration",
+      "physicalPhenomenon": "Pump mechanical bearing micro-flaking",
+      "measurableEffect": "Vibration amplitude climbs above 0.50 mm/s",
+      "degradationSignificance": "Pump motor seizure risk during high-vacuum pump-down",
+      "primarySensorId": "vibration_vacuum_pump"
+    }
+  ],
+  "rulModel": {
+    "baseUsefulLifeHours": 2800,
+    "baseLifeUnit": "hours",
+    "modelName": "RF Plasma Activation Degradation Model",
+    "formulaDescription": "RUL = BaseLife * (1 - (0.50*wear_rf_refl + 0.30*wear_press + 0.20*wear_pump_vib))",
+    "weightsSum": 1,
+    "parameters": [
+      {
+        "parameter": "RF Reflected Power",
+        "sensorId": "rf_reflected_power",
+        "sensorName": "RF Reflected Power",
+        "unit": "W",
+        "weight": 0.5,
+        "healthyLimit": 18,
+        "criticalLimit": 45,
+        "direction": "HIGHER_IS_WORSE"
+      },
+      {
+        "parameter": "Chamber Pressure",
+        "sensorId": "chamber_pressure",
+        "sensorName": "Chamber Pressure",
+        "unit": "kPa",
+        "weight": 0.3,
+        "healthyLimit": 85,
+        "criticalLimit": 125,
+        "direction": "HIGHER_IS_WORSE"
+      },
+      {
+        "parameter": "Pump Vibration",
+        "sensorId": "vibration_vacuum_pump",
+        "sensorName": "Vacuum Pump Vibration",
+        "unit": "mm/s",
+        "weight": 0.2,
+        "healthyLimit": 0.2,
+        "criticalLimit": 0.8,
+        "direction": "HIGHER_IS_WORSE"
+      }
+    ]
+  },
+  "symptoms": [
+    {
+      "symptomId": "SYM-PC-001",
+      "symptom": "Low Surface Energy (< 52 dyn/cm on Copper)",
+      "severity": "high",
+      "relatedSensors": [
+        "rf_reflected_power",
+        "chamber_pressure"
+      ],
+      "possibleCauses": [
+        "RF match network out of tune",
+        "Chamber O-ring leak",
+        "O2 gas MFC blocked"
+      ],
+      "recommendedAction": "Tune RF matching network and measure contact angle with goniometer."
+    }
+  ],
+  "failureScenarios": [
+    {
+      "scenarioId": "SCEN-PC-001",
+      "symptom": "RF Auto-Match Capacitor Drift & Vacuum O-Ring Degradation",
+      "severity": "warning",
+      "sensorPattern": "rf_reflected_power > 35W, chamber_pressure > 105 kPa",
+      "possibleCauses": [
+        "Vacuum variable capacitor electrode oxidation",
+        "Chamber seal micro-permeation"
+      ],
+      "recommendedAction": "Re-tune RF matching network capacitor and replace fluoroelastomer chamber seal.",
+      "verificationSteps": [
+        "Execute helium leak detector test (< 1x10^-8 mbar*L/s)",
+        "Run water droplet contact angle test (< 15 degrees)"
+      ]
+    }
+  ]
+}

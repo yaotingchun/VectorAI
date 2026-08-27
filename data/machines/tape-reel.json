@@ -1,0 +1,256 @@
+{
+  "filename": "tape-reel",
+  "aliases": [],
+  "machine": {
+    "name": "Automated High-Speed Tape & Reel Packaging Cell",
+    "type": "tape-reel",
+    "prototypeMachineId": "TR-01",
+    "manualId": "VAI-MAN-TR-001",
+    "version": "1.0",
+    "generatedDate": "2026-08-27",
+    "documentStatus": "Synthetic Cleanroom Technical Manual",
+    "purpose": "VectorAI Demonstration and Operational Intelligence",
+    "disclaimer": "SYNTHETIC PROTOTYPE TECHNICAL MANUAL\n\nThis document is artificially generated for the VectorAI demonstration and software development.\n\nThe specifications, thresholds, service-life values, maintenance intervals, and operating parameters are synthetic and must not be used for real industrial equipment operation or maintenance.",
+    "processStage": "Bay 6B: Tape & Reel Packaging",
+    "description": "Automated tape and reel packaging system for loading tested IC packages into carrier tape pockets, sealing anti-static cover tape, and winding completed reels for customer shipping.",
+    "manufacturingProcess": "Tested IC devices are picked from test trays and placed into embossed carrier tape pockets with orientation verified by vision cameras. A constant-temperature floating heat seal bar seals anti-static cover tape over carrier pockets, and finished tape is wound onto 13-inch ESD reels.",
+    "subsystems": [
+      "Rotary Component Pickup & Orientation Check Vision System",
+      "Embossed Carrier Tape Indexer & Sprocket Drive",
+      "Constant-Temperature Floating Heat Seal Bar Mechanism",
+      "Cover Tape Tensioner & Dynamic Peel Force Sensor",
+      "13-Inch ESD Reel Stacker & Automatic Winder"
+    ]
+  },
+  "components": [
+    {
+      "name": "Heat Seal Bar",
+      "function": "Applies controlled heat and pressure to seal cover tape over carrier pockets.",
+      "importantParameters": "Seal bar temp (°C), seal pressure (bar), dwell time (ms).",
+      "degradationIndicators": "Temperature fluctuation (>±3°C), heater element resistance drift."
+    },
+    {
+      "name": "Tape Indexer Sprocket Drive",
+      "function": "Indexes carrier tape pocket-by-pocket with high precision.",
+      "importantParameters": "Indexer vibration (mm/s), step positioning accuracy (µm).",
+      "degradationIndicators": "Indexer mechanical vibration (>0.5 mm/s), pocket pitch drift."
+    },
+    {
+      "name": "Cover Tape Tensioner & Peel Sensor",
+      "function": "Maintains uniform tape tension and verifies peel strength compliance.",
+      "importantParameters": "Tape peel force (N), tensioner spring load (N).",
+      "degradationIndicators": "Peel force out of 0.3 - 0.7N EIA-481 spec, tape tearing."
+    }
+  ],
+  "sensors": [
+    {
+      "sensorId": "vibration_indexer",
+      "name": "Indexer Vibration",
+      "unit": "mm/s",
+      "purpose": "Monitors carrier tape indexing motor and sprocket bearing vibration.",
+      "minScale": 0,
+      "maxScale": 1.5,
+      "normalRange": [
+        0.1,
+        0.38
+      ],
+      "warningRange": [
+        0.38,
+        0.75
+      ],
+      "criticalRange": [
+        0.75,
+        1.5
+      ],
+      "direction": "HIGHER_IS_WORSE"
+    },
+    {
+      "sensorId": "temp_sealer",
+      "name": "Heat Seal Bar Temp",
+      "unit": "°C",
+      "purpose": "Measures continuous sealing temperature on cover tape.",
+      "minScale": 100,
+      "maxScale": 240,
+      "normalRange": [
+        168,
+        182
+      ],
+      "warningRange": [
+        182,
+        200
+      ],
+      "criticalRange": [
+        200,
+        240
+      ],
+      "direction": "HIGHER_IS_WORSE"
+    },
+    {
+      "sensorId": "peel_force",
+      "name": "Tape Peel Force",
+      "unit": "N",
+      "purpose": "Measures dynamic cover tape peel strength compliance per EIA-481.",
+      "minScale": 0,
+      "maxScale": 2,
+      "normalRange": [
+        0.35,
+        0.55
+      ],
+      "warningRange": [
+        0.55,
+        0.85
+      ],
+      "criticalRange": [
+        0.85,
+        2
+      ],
+      "direction": "HIGHER_IS_WORSE"
+    }
+  ],
+  "thresholds": [
+    {
+      "sensorId": "temp_sealer",
+      "sensorName": "Heat Seal Bar Temp",
+      "unit": "°C",
+      "normal": {
+        "min": 168,
+        "max": 182,
+        "description": "Optimal EIA-481 seal adhesion"
+      },
+      "warning": {
+        "min": 182,
+        "max": 200,
+        "description": "Cover tape melting risk"
+      },
+      "critical": {
+        "min": 200,
+        "max": 240,
+        "description": "Carrier pocket distortion and component damage"
+      },
+      "direction": "HIGHER_IS_WORSE"
+    },
+    {
+      "sensorId": "peel_force",
+      "sensorName": "Tape Peel Force",
+      "unit": "N",
+      "normal": {
+        "min": 0.35,
+        "max": 0.55,
+        "description": "Compliant peel strength"
+      },
+      "warning": {
+        "min": 0.55,
+        "max": 0.85,
+        "description": "Peel strength approaching upper specification limit"
+      },
+      "critical": {
+        "min": 0.85,
+        "max": 2,
+        "description": "Non-compliant seal: Customer feeder jam risk"
+      },
+      "direction": "HIGHER_IS_WORSE"
+    }
+  ],
+  "operatingConditions": {
+    "ambientTemperature": "21.0 - 23.0 °C (Cleanroom ISO 7)",
+    "relativeHumidity": "40.0 - 50.0 %",
+    "normalOperatingTemperature": "175.0 °C (Seal Bar)",
+    "normalOperatingPressure": "6.0 bar (CDA), -85 kPa (Vacuum)",
+    "normalOperatingSpeed": "4.0 sec / pocket index",
+    "normalCycleTime": "4.0 sec / packaging cycle",
+    "normalOperatingHours": "24/7 continuous packaging",
+    "recommendedOperatingConditions": "EIA-481 peel force between 0.3 - 0.6 N, seal blade cleaned daily",
+    "maximumContinuousOperation": "300 hours before seal blade de-gunking"
+  },
+  "maintenance": [
+    {
+      "component": "Floating Heat Seal Blade",
+      "recommendedMaintenanceIntervalHours": 250,
+      "expectedServiceLifeHours": 2000,
+      "maintenanceAction": "Seal blade residue removal & thermocouple calibration",
+      "procedureSummary": "Clean brass seal blade with non-abrasive brass brush, calibrate surface pyrometer."
+    }
+  ],
+  "degradationIndicators": [
+    {
+      "parameter": "Heat Seal Bar Temp",
+      "physicalPhenomenon": "Cartridge heater aging & thermocouple detachment",
+      "measurableEffect": "Seal temperature drifts above 185°C",
+      "degradationSignificance": "Causes cover tape over-sealing and peel force violation",
+      "primarySensorId": "temp_sealer"
+    }
+  ],
+  "rulModel": {
+    "baseUsefulLifeHours": 2400,
+    "baseLifeUnit": "hours",
+    "modelName": "Tape & Reel Packaging Degradation Model",
+    "formulaDescription": "RUL = BaseLife * (1 - (0.45*wear_temp_sealer + 0.35*wear_peel + 0.20*wear_vib))",
+    "weightsSum": 1,
+    "parameters": [
+      {
+        "parameter": "Seal Temp",
+        "sensorId": "temp_sealer",
+        "sensorName": "Heat Seal Bar Temp",
+        "unit": "°C",
+        "weight": 0.45,
+        "healthyLimit": 175,
+        "criticalLimit": 205,
+        "direction": "HIGHER_IS_WORSE"
+      },
+      {
+        "parameter": "Peel Force",
+        "sensorId": "peel_force",
+        "sensorName": "Tape Peel Force",
+        "unit": "N",
+        "weight": 0.35,
+        "healthyLimit": 0.45,
+        "criticalLimit": 0.9,
+        "direction": "HIGHER_IS_WORSE"
+      },
+      {
+        "parameter": "Indexer Vibration",
+        "sensorId": "vibration_indexer",
+        "sensorName": "Indexer Vibration",
+        "unit": "mm/s",
+        "weight": 0.2,
+        "healthyLimit": 0.3,
+        "criticalLimit": 0.85,
+        "direction": "HIGHER_IS_WORSE"
+      }
+    ]
+  },
+  "symptoms": [
+    {
+      "symptomId": "SYM-TR-001",
+      "symptom": "Cover Tape Peel Force Out of EIA-481 Spec",
+      "severity": "high",
+      "relatedSensors": [
+        "temp_sealer",
+        "peel_force"
+      ],
+      "possibleCauses": [
+        "Seal bar temperature drift",
+        "Seal pressure misalignment",
+        "Cover tape adhesive degradation"
+      ],
+      "recommendedAction": "Calibrate seal bar temperature and inspect floating pressure springs."
+    }
+  ],
+  "failureScenarios": [
+    {
+      "scenarioId": "SCEN-TR-001",
+      "symptom": "Cover Tape Seal Bar Temp Fluctuation & Peel Force Variance",
+      "severity": "warning",
+      "sensorPattern": "temp_sealer > 185°C, peel_force > 0.65 N",
+      "possibleCauses": [
+        "Heater thermocouple contact degradation",
+        "Adhesive residue on seal bar"
+      ],
+      "recommendedAction": "Clean brass seal blade and recalibrate temperature controller PID loop.",
+      "verificationSteps": [
+        "Execute 10-meter peel force test on calibrated pull tester (0.35-0.55N verified)",
+        "Inspect pocket seal width under optical comparator"
+      ]
+    }
+  ]
+}
