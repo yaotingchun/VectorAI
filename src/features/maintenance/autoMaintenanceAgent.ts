@@ -89,17 +89,17 @@ export interface AgentFacilityOverview {
 
 const MACHINE_SCENARIOS: Record<string, Partial<AgentScenario>> = {
   'WB-04': {
-    headline: 'Ultrasonic Transducer Resonance Drift & NSOP Risk',
+    headline: 'Piezo Transducer Thermal Runaway & Acoustic Resonance Decoupling',
     whatHappened:
-      'Transducer head vibration reached 2.85 mm/s (warning threshold 1.2 mm/s) with resonance shift (+4.2 kHz) causing NSOP risk during 18µm Cu bonding.',
+      'Transducer head vibration spiked to 3.42 mm/s (critical limit 2.5 mm/s) with temperature reaching 69.2°C causing severe NSOP risk during 18µm Cu wire bonding.',
     physicalMechanism:
-      'PZT piezo ceramic transducer resonance drift and capillary tool tip erosion from high-speed copper ball thermosonic bonding cycles.',
+      'PZT piezo ceramic transducer resonance drift (+4.2 kHz) and capillary tool tip thermal erosion from high-speed copper ball thermosonic bonding cycles.',
     riskProgression:
-      'Non-stick on pad (NSOP), lifted ball bonds, and open-circuit micro-interconnect defects if capillary is not replaced and resonance retuned within 24h.',
-    scrapRiskEstimate: '$28,000 in high-density multi-chip module lots',
+      'Non-stick on pad (NSOP), lifted ball bonds, and open-circuit micro-interconnect defects if capillary is not replaced and resonance retuned immediately.',
+    scrapRiskEstimate: '$48,000 in high-density multi-chip module lots',
     sopReference: 'SOP-WB-910: Ultrasonic Transducer & Capillary Replacement',
     recommendedAction:
-      'Replace capillary tool (25µm ceramic), retune PZT piezo transducer stack resonance frequency at 138.4 kHz, and verify bond pull strength > 6.5g.',
+      'Immediate emergency tool stop: Replace capillary tool (25µm ceramic), retune PZT piezo transducer stack resonance frequency at 138.4 kHz, and verify bond pull strength > 6.5g.',
     requiredParts: ['Capillary Tool 25µm Ceramic', 'PZT Transducer Stack Calibrator', 'High-Purity Au/Cu Calibration Wire'],
     assignedTechnician: 'Kenji Sato',
     technicianRole: 'Lead Ultrasonic Wire Bond Specialist',
@@ -108,26 +108,26 @@ const MACHINE_SCENARIOS: Record<string, Partial<AgentScenario>> = {
       label: 'WhatsApp (+1-555-019-8834)',
       address: '+1-555-019-8834',
     },
-    estimatedDowntimeHours: 2.5,
+    estimatedDowntimeHours: 2.0,
     anomalyTitle: 'Ultrasonic Transducer Resonance Drift',
-    anomalySeverity: 'WARNING',
+    anomalySeverity: 'CRITICAL',
     anomalySensor: 'Ultrasonic Vibration (vibration_ultrasonic)',
-    aiIdentifiedCondition: 'Ultrasonic Transducer Resonance Frequency Shift',
+    aiIdentifiedCondition: 'Ultrasonic Transducer Resonance Frequency Shift & Thermal Saturation',
     aiManualReference: "Wire Bonder Manual Section 9 Diagnostic Scenario 'SCEN-WB-002'",
     rootCauseTags: ['Piezoelectric transducer drift', 'Capillary tip wear', 'Resonance mismatch'],
   },
   'WS-02': {
     headline: 'High-Speed Spindle Ceramic Bearing Harmonic Micro-Spalling',
     whatHappened:
-      'Spindle radial vibration elevated to 0.42 mm/s at 30,000 RPM. Motor load elevated by 12% indicating early blade micro-binding.',
+      'Spindle radial vibration elevated to 1.65 mm/s (warning threshold 1.2 mm/s) at 28,000 RPM with coolant temperature reaching 38.4°C.',
     physicalMechanism:
-      'Micro-pitting on spindle air-bearing ceramic races caused by silicon slurry ingress past the labyrinth seal.',
+      'Micro-pitting on spindle air-bearing ceramic races caused by silicon slurry ingress past the labyrinth seal generating 12.4 kHz harmonics.',
     riskProgression:
-      'Wafer backside chipping along die scribe lines and potential high-speed spindle wobble.',
+      'Wafer backside chipping along die scribe lines and blade binding during 300mm substrate dicing.',
     scrapRiskEstimate: '$31,000 in GaN power semiconductor wafers',
     sopReference: 'SOP-DIC-214: Spindle Bearing & Diamond Blade Re-Truing',
     recommendedAction:
-      'Schedule maintenance within 24h window. Replace hubbed diamond dicing blade, flush deionized coolant flow, and balance spindle.',
+      'Schedule maintenance within 24h window. Replace resinoid diamond dicing blade, flush deionized coolant flow, and dynamic-balance spindle rotor.',
     requiredParts: ['Resinoid Diamond Blade 2-inch Hubbed', 'Labyrinth Seal Gasket', 'High-Purity Spindle Synthetic Lubricant'],
     assignedTechnician: 'Kenji Sato',
     technicianRole: 'Precision Machining & Spindle Engineer',
@@ -136,7 +136,7 @@ const MACHINE_SCENARIOS: Record<string, Partial<AgentScenario>> = {
       label: 'Email (kenji.sato@vectorai.internal)',
       address: 'kenji.sato@vectorai.internal',
     },
-    estimatedDowntimeHours: 1.5,
+    estimatedDowntimeHours: 2.5,
     anomalyTitle: 'Spindle Bearing Harmonic Anomaly',
     anomalySeverity: 'WARNING',
     anomalySensor: 'Spindle Radial Vibration (vibration_spindle)',
@@ -145,17 +145,17 @@ const MACHINE_SCENARIOS: Record<string, Partial<AgentScenario>> = {
     rootCauseTags: ['Silicon slurry ingress past labyrinth seal', 'Ceramic ball abrasive wear', 'Blade hub deflection'],
   },
   'DA-02': {
-    headline: 'Vacuum Collet Pickup Timing & Ejector Pin Calibration',
+    headline: 'Collet Vacuum Seal Leakage & Ejector Pin Timing Drift',
     whatHappened:
-      'Collet vacuum pressure registered -80 kPa with slight pickup timing variance during multi-die transfer.',
+      'Collet vacuum pressure dropped to -54 kPa (normal -82 kPa) with pickup timing jitter during multi-die transfer.',
     physicalMechanism:
-      'Vacuum line micro-filter particulate loading and central ejector needle tip surface wear.',
+      'Vacuum line solenoid filter particulate loading and central ejector needle tip seal wear causing suction drop.',
     riskProgression:
-      'Minor die placement tilt and epoxy bond-line thickness (BLT) variance if uncorrected.',
-    scrapRiskEstimate: '$14,000 in flip-chip die assemblies',
+      'Die placement tilt and epoxy bond-line thickness (BLT) variance leading to thermal resistance defects.',
+    scrapRiskEstimate: '$22,000 in flip-chip and BGA interposer assemblies',
     sopReference: 'SOP-DA-501: Wafer Table Ejector Mechanism & Coordinate Re-Teaching',
     recommendedAction:
-      'Flush vacuum solenoid filter, re-teach pickup coordinates, and verify optical fiducial camera calibration.',
+      'Flush vacuum solenoid filter, replace silicone collet seal, and re-teach ejector needle Z-coordinates.',
     requiredParts: ['Vacuum Line Filter Cartridge', 'Ejector Pin Set (0.3mm)', 'Silicone Pick-Up Collet'],
     assignedTechnician: 'Marcus Thorne',
     technicianRole: 'Die Attach Systems Specialist',
@@ -164,26 +164,55 @@ const MACHINE_SCENARIOS: Record<string, Partial<AgentScenario>> = {
       label: 'Email (marcus.thorne@vectorai.internal)',
       address: 'marcus.thorne@vectorai.internal',
     },
-    estimatedDowntimeHours: 1.0,
-    anomalyTitle: 'Collet Vacuum Line Minor Variance',
-    anomalySeverity: 'INFO',
+    estimatedDowntimeHours: 1.5,
+    anomalyTitle: 'Collet Vacuum Pressure Drop',
+    anomalySeverity: 'WARNING',
     anomalySensor: 'Collet Vacuum Pressure (pressure_vacuum)',
-    aiIdentifiedCondition: 'Vacuum Filter Particulate Buildup',
+    aiIdentifiedCondition: 'Vacuum Filter Particulate Buildup & Seal Degradation',
     aiManualReference: "Die Bonder Manual Section 11 Diagnostic Scenario 'SCEN-DA-005'",
-    rootCauseTags: ['Vacuum line particulate accumulation', 'Ejector needle wear'],
+    rootCauseTags: ['Vacuum line particulate accumulation', 'Ejector needle wear', 'Collet seal degradation'],
   },
-  'MP-02': {
-    headline: 'Hydraulic Platen Ram Seal & Degate Trimmer Inspection',
+  'PC-02': {
+    headline: 'RF Matching Network Reflected Power Surge & Chamber O-Ring Leak',
     whatHappened:
-      'Hydraulic clamp pressure stable at 138 bar; platen temperature registered 174.8°C with nominal transfer curve.',
+      'RF reflected power surged to 42W (normal 18W) with chamber pressure rising to 108 kPa during argon plasma cycle.',
     physicalMechanism:
-      'Epoxy molding compound (EMC) resin flash micro-accumulation in mold chase air vents.',
-    riskProgression: 'Controlled state: Routine preventive window approaching in 14 days.',
-    scrapRiskEstimate: '$0 (Proactive Service)',
+      'RF auto-match network variable vacuum capacitor electrode oxidation and fluoroelastomer chamber seal micro-permeation.',
+    riskProgression:
+      'Copper wire bond pad surface activation energy drops below 52 dyn/cm, leading to subsequent bond shear failures.',
+    scrapRiskEstimate: '$18,500 in wire bonding adhesion scrap',
+    sopReference: 'SOP-PLA-402: RF Match Network Tuning & Vacuum Chamber Overhaul',
+    recommendedAction:
+      'Re-tune RF auto-match network capacitor, inspect RF coaxial feedthrough, and replace chamber fluoroelastomer O-ring.',
+    requiredParts: ['Fluoroelastomer Vacuum O-Ring #214', 'RF Match Vacuum Variable Capacitor', 'Argon Gas Mass Flow Filter'],
+    assignedTechnician: 'Elena Vance',
+    technicianRole: 'Plasma Surface Chemical Engineer',
+    communicationChannel: {
+      type: 'EMAIL',
+      label: 'Email (elena.vance@vectorai.internal)',
+      address: 'elena.vance@vectorai.internal',
+    },
+    estimatedDowntimeHours: 2.0,
+    anomalyTitle: 'RF Reflected Power Surge',
+    anomalySeverity: 'WARNING',
+    anomalySensor: 'RF Reflected Power (rf_reflected_power)',
+    aiIdentifiedCondition: 'RF Auto-Match Network Impedance Misalignment',
+    aiManualReference: "Plasma Cleaner Technical Manual Section 8 Diagnostic Scenario 'SCEN-PLA-003'",
+    rootCauseTags: ['RF auto-match capacitor drift', 'Chamber O-ring micro-leak', 'Argon flow fluctuation'],
+  },
+  'MP-03': {
+    headline: 'Hydraulic Transfer Ram Pressure Spike & Mold Cavity Vent Flash',
+    whatHappened:
+      'Hydraulic ram pressure climbed to 178 bar (normal 135 bar) with mold chase temperature registering 188.5°C.',
+    physicalMechanism:
+      'Transfer cylinder piston seal wear combined with epoxy resin flash accumulation in mold cavity vents restricting resin flow.',
+    riskProgression:
+      'Resin transfer voiding, package incomplete fill (short shot), and leadframe flash bleed.',
+    scrapRiskEstimate: '$26,000 in encapsulated package scrap',
     sopReference: 'SOP-MOL-301: EMC Mold Cavity Descaling & Seal Inspection',
     recommendedAction:
-      'Execute scheduled air vent descaling, inspect platen thermocouple calibration, and verify degassing vacuum.',
-    requiredParts: ['Mold Cavity Release Agent (High Temp)', 'Hydraulic O-Ring Seal Kit'],
+      'Schedule ultrasonic cleaning of mold chase air vents and replace hydraulic cylinder piston ring seals.',
+    requiredParts: ['Hydraulic Piston Seal Ring Set', 'Mold Chase Release Foil', 'Ultrasonic Vent Cleaner Solution'],
     assignedTechnician: 'Marcus Thorne',
     technicianRole: 'Encapsulation Systems Engineer',
     communicationChannel: {
@@ -191,26 +220,54 @@ const MACHINE_SCENARIOS: Record<string, Partial<AgentScenario>> = {
       label: 'Email (marcus.thorne@vectorai.internal)',
       address: 'marcus.thorne@vectorai.internal',
     },
-    estimatedDowntimeHours: 2.0,
-    anomalyTitle: 'Routine Platen Descaling Scheduled',
+    estimatedDowntimeHours: 3.0,
+    anomalyTitle: 'Hydraulic Ram Pressure Exceedance',
+    anomalySeverity: 'WARNING',
+    anomalySensor: 'Hydraulic Pressure (pressure_hydraulic)',
+    aiIdentifiedCondition: 'Mold Chase Vent Blockage & Piston Seal Wear',
+    aiManualReference: "Molding Press Technical Manual Section 12 Diagnostic Scenario 'SCEN-MOL-004'",
+    rootCauseTags: ['EMC resin flash vent blockage', 'Hydraulic ram seal wear', 'Heater platen thermal gradient'],
+  },
+  'LM-02': {
+    headline: 'Planned 500-Hour Optical Window Cleaning & F-Theta Calibration',
+    whatHappened:
+      'Machine placed in scheduled offline maintenance state for periodic 500-hour optical beam inspection.',
+    physicalMechanism:
+      'Routine fiber laser optical collimator lens particulate purge and OCR fiducial verification.',
+    riskProgression: 'Controlled scheduled outage (zero scrap risk; workload routed to LM-01).',
+    scrapRiskEstimate: '$0 (Planned PM Outage)',
+    sopReference: 'SOP-LSR-105: Fiber Laser Collimator Wipe & 2D Verification',
+    recommendedAction:
+      'Complete optical lens wipe and run 2D DataMatrix verification target lot before re-energizing beam.',
+    requiredParts: ['Laser Optical Lens Wipe Kit', 'F-Theta Quartz Window', '2D Calibration Target Sheet'],
+    assignedTechnician: 'Marcus Thorne',
+    technicianRole: 'Laser Serialization Engineer',
+    communicationChannel: {
+      type: 'EMAIL',
+      label: 'Email (marcus.thorne@vectorai.internal)',
+      address: 'marcus.thorne@vectorai.internal',
+    },
+    estimatedDowntimeHours: 1.0,
+    anomalyTitle: 'Scheduled Optical Maintenance',
     anomalySeverity: 'INFO',
-    anomalySensor: 'Mold Platen Thermocouple (temperature_mold)',
-    aiIdentifiedCondition: 'Preventive Interval Window Approaching',
-    aiManualReference: 'Molding Technical Manual SOP-MOL-301',
-    rootCauseTags: ['EMC resin flash micro-accumulation', 'Preventive interval trigger'],
+    anomalySensor: 'Fiber Laser Power (laser_power)',
+    aiIdentifiedCondition: 'Planned Preventive Maintenance Routine',
+    aiManualReference: 'Laser Marker Manual SOP-LSR-105',
+    rootCauseTags: ['Scheduled maintenance interval', 'Beam collimator cleaning'],
   },
   'TH-01': {
-    headline: 'Tri-Temp Test Soak Thermal Calibration & Socket Contact Check',
+    headline: 'Kelvin RF Socket Pogo Pin Contact Resistance Elevation',
     whatHappened:
-      'Thermal soak chamber temperature stable at +85°C. Handler vibration 0.52 mm/s (nominal).',
+      'Contact resistance on test socket channel #4 elevated to 68 mΩ during +85°C soak test with handler vibration at 0.78 mm/s.',
     physicalMechanism:
-      'Kelvin socket probe contact cycle accumulation after 120,000 DUT touch-downs.',
-    riskProgression: 'Nominal operation: Contact resistance within 25 mΩ specification.',
-    scrapRiskEstimate: '$0 (Nominal Test)',
+      'High-frequency Kelvin contact pogo pin tip wear and oxide buildup after 120,000 DUT touch-down cycles.',
+    riskProgression:
+      'Parametric test false-rejection rate increase (+1.4%) and yield loss on high-temp qualification lots.',
+    scrapRiskEstimate: '$19,000 in false-reject re-test cost',
     sopReference: 'SOP-ATE-605: Handler Linear Rail & Pogo Pin Replacement',
     recommendedAction:
-      'Clean Kelvin socket test pins with optical contact brush and verify soak chamber thermistor calibration.',
-    requiredParts: ['Kelvin Test Socket Insert', 'Pogo Pin Contact Set (128-pin)', 'Optical Encoder Cleaner'],
+      'Replace 128-pin Kelvin high-frequency pogo pin contactor block and clean rotary theta optical encoder.',
+    requiredParts: ['128-Pin Kelvin High-Frequency Contactor Block', 'Optical Rotary Encoder Cleaner', 'DUT Interface Board Seal'],
     assignedTechnician: 'Kenji Sato',
     technicianRole: 'ATE Test Cell Automation Specialist',
     communicationChannel: {
@@ -218,13 +275,13 @@ const MACHINE_SCENARIOS: Record<string, Partial<AgentScenario>> = {
       label: 'WhatsApp (+1-555-019-8834)',
       address: '+1-555-019-8834',
     },
-    estimatedDowntimeHours: 1.0,
-    anomalyTitle: 'Socket Contact Cycle Check',
-    anomalySeverity: 'INFO',
-    anomalySensor: 'Socket Actuator Load (load_actuator)',
-    aiIdentifiedCondition: 'Routine Socket Inspection',
-    aiManualReference: 'ATE Technical Manual SOP-ATE-605',
-    rootCauseTags: ['DUT touch-down cycle count', 'Contact resistance check'],
+    estimatedDowntimeHours: 1.5,
+    anomalyTitle: 'Kelvin Socket Contact Resistance Elevation',
+    anomalySeverity: 'WARNING',
+    anomalySensor: 'Handler Vibration & Socket Actuator Load',
+    aiIdentifiedCondition: 'Pogo Pin Contactor Wear & Contact Resistance Drift',
+    aiManualReference: "ATE Handler Technical Manual Section 10 Diagnostic Scenario 'SCEN-ATE-007'",
+    rootCauseTags: ['Pogo pin contact wear', 'Oxide accumulation', 'High-temp soak contact degradation'],
   },
   'ATE-002': {
     headline: 'Carriage Track Alignment & Optical Jitter Drift',

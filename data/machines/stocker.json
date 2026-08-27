@@ -1,0 +1,259 @@
+{
+  "filename": "stocker",
+  "aliases": [],
+  "machine": {
+    "name": "AMHS Automated Cleanroom FOUP Stocker",
+    "type": "stocker",
+    "prototypeMachineId": "STK-01",
+    "manualId": "VAI-MAN-STK-001",
+    "version": "1.0",
+    "generatedDate": "2026-08-27",
+    "documentStatus": "Synthetic Cleanroom Technical Manual",
+    "purpose": "VectorAI Demonstration and Operational Intelligence",
+    "disclaimer": "SYNTHETIC PROTOTYPE TECHNICAL MANUAL\n\nThis document is artificially generated for the VectorAI demonstration and software development.\n\nThe specifications, thresholds, service-life values, maintenance intervals, and operating parameters are synthetic and must not be used for real industrial equipment operation or maintenance.",
+    "processStage": "Bay 1: Wafer Dicing & Prep",
+    "description": "Automated Material Handling System (AMHS) cleanroom stocker for storing, buffering, and N2-purging 300mm Front Opening Unified Pods (FOUPs) between wafer prep and assembly bays.",
+    "manufacturingProcess": "Overhead Hoist Transport (OHT) vehicles deposit FOUP carriers at load ports. A high-speed dual-axis Cartesian robotic crane transfers cassettes into storage bays while ultra-pure N2 purge nozzles prevent surface oxidation and moisture adsorption.",
+    "subsystems": [
+      "Dual-Axis Cartesian Robotic Crane & Gripper",
+      "Ultra-High-Purity N2 Purge Gas Manifold",
+      "FOUP Smart Load Port & RFID Cassette Reader",
+      "Ceiling OHT Vehicle Rail Interface & Buffer Station",
+      "Laminar Airflow Fan Filter Unit (FFU) & Particle Ionizer"
+    ]
+  },
+  "components": [
+    {
+      "name": "Robotic Crane Gripper",
+      "function": "Transfers 300mm FOUPs between load ports and storage shelving.",
+      "importantParameters": "Crane velocity (m/s), vibration (mm/s), gripper clamping force (N).",
+      "degradationIndicators": "Crane track chatter (>0.3 mm/s), gripper timing delays."
+    },
+    {
+      "name": "N2 Purge Manifold",
+      "function": "Delivers continuous 99.999% purity N2 gas into FOUP purge ports.",
+      "importantParameters": "N2 purge pressure (kPa), mass flow rate (SLPM), moisture (ppb).",
+      "degradationIndicators": "Purge pressure drop (<40 kPa), manifold solenoid valve leakage."
+    },
+    {
+      "name": "Load Port Docking Mechanism",
+      "function": "Clamps FOUP and opens automated door under ISO 1 mini-environment.",
+      "importantParameters": "Door seal vacuum level (kPa), latch actuation torque (Nm).",
+      "degradationIndicators": "Door seal vacuum drop, latch alignment timeout."
+    }
+  ],
+  "sensors": [
+    {
+      "sensorId": "vibration_crane",
+      "name": "Robotic Crane Vibration",
+      "unit": "mm/s",
+      "purpose": "Monitors crane linear guide rail vibration and bearing smoothness.",
+      "minScale": 0,
+      "maxScale": 1.5,
+      "normalRange": [
+        0.05,
+        0.25
+      ],
+      "warningRange": [
+        0.25,
+        0.6
+      ],
+      "criticalRange": [
+        0.6,
+        1.5
+      ],
+      "direction": "HIGHER_IS_WORSE"
+    },
+    {
+      "sensorId": "pressure_n2",
+      "name": "N2 Purge Pressure",
+      "unit": "kPa",
+      "purpose": "Monitors nitrogen purge line pressure delivered to stored FOUPs.",
+      "minScale": 0,
+      "maxScale": 100,
+      "normalRange": [
+        45,
+        60
+      ],
+      "warningRange": [
+        30,
+        45
+      ],
+      "criticalRange": [
+        0,
+        30
+      ],
+      "direction": "LOWER_IS_WORSE"
+    },
+    {
+      "sensorId": "temp_stocker",
+      "name": "Internal Enclosure Temp",
+      "unit": "°C",
+      "purpose": "Measures ambient temperature within sealed stocker bay.",
+      "minScale": 15,
+      "maxScale": 35,
+      "normalRange": [
+        20,
+        23
+      ],
+      "warningRange": [
+        23,
+        26
+      ],
+      "criticalRange": [
+        26,
+        35
+      ],
+      "direction": "HIGHER_IS_WORSE"
+    }
+  ],
+  "thresholds": [
+    {
+      "sensorId": "vibration_crane",
+      "sensorName": "Robotic Crane Vibration",
+      "unit": "mm/s",
+      "normal": {
+        "min": 0.05,
+        "max": 0.25,
+        "description": "Smooth linear motion"
+      },
+      "warning": {
+        "min": 0.25,
+        "max": 0.6,
+        "description": "Rail particulate or guide wheel flat spot"
+      },
+      "critical": {
+        "min": 0.6,
+        "max": 1.5,
+        "description": "Imminent crane jam or motor bearing failure"
+      },
+      "direction": "HIGHER_IS_WORSE"
+    },
+    {
+      "sensorId": "pressure_n2",
+      "sensorName": "N2 Purge Pressure",
+      "unit": "kPa",
+      "normal": {
+        "min": 45,
+        "max": 60,
+        "description": "Optimal N2 purge barrier"
+      },
+      "warning": {
+        "min": 30,
+        "max": 45,
+        "description": "Purge manifold pressure drop"
+      },
+      "critical": {
+        "min": 0,
+        "max": 30,
+        "description": "Loss of N2 purge: Wafer oxidation risk"
+      },
+      "direction": "LOWER_IS_WORSE"
+    }
+  ],
+  "operatingConditions": {
+    "ambientTemperature": "20.5 - 22.0 °C (Cleanroom ISO 5)",
+    "relativeHumidity": "40.0 - 50.0 %",
+    "normalOperatingTemperature": "21.2 °C",
+    "normalOperatingPressure": "52.0 kPa (N2 Purge)",
+    "normalOperatingSpeed": "600 mm/s (Crane Transfer)",
+    "normalCycleTime": "15.0 sec / FOUP transfer",
+    "normalOperatingHours": "24/7 continuous automated buffer",
+    "recommendedOperatingConditions": "N2 purity > 99.999%, cleanroom class ISO 1 inside enclosure",
+    "maximumContinuousOperation": "720 hours before crane track optical inspection"
+  },
+  "maintenance": [
+    {
+      "component": "Crane Linear Guide Rail",
+      "recommendedMaintenanceIntervalHours": 720,
+      "expectedServiceLifeHours": 8000,
+      "maintenanceAction": "Linear guide rail wipe and cleanroom perfluoropolyether grease lube",
+      "procedureSummary": "Clean stainless steel guide rail with lint-free wipes and apply vacuum-grade PFPE grease."
+    },
+    {
+      "component": "N2 Mass Flow Filter",
+      "recommendedMaintenanceIntervalHours": 2160,
+      "expectedServiceLifeHours": 8760,
+      "maintenanceAction": "Filter cartridge replacement & seal integrity leak test",
+      "procedureSummary": "Isolate N2 supply, swap 0.003µm particulate filter, verify zero pressure drop across manifold."
+    }
+  ],
+  "degradationIndicators": [
+    {
+      "parameter": "Crane Vibration",
+      "physicalPhenomenon": "Guide wheel polymer roller delamination",
+      "measurableEffect": "Vibration amplitude spikes during acceleration",
+      "degradationSignificance": "Risk of FOUP cassette micro-shaking and wafer scuffing",
+      "primarySensorId": "vibration_crane"
+    },
+    {
+      "parameter": "N2 Purge Pressure",
+      "physicalPhenomenon": "Purge nozzle seal O-ring wear",
+      "measurableEffect": "Line pressure decays below 40 kPa",
+      "degradationSignificance": "Oxygen concentration in FOUP rises above 5 ppm",
+      "primarySensorId": "pressure_n2"
+    }
+  ],
+  "rulModel": {
+    "baseUsefulLifeHours": 4500,
+    "baseLifeUnit": "hours",
+    "modelName": "Stocker Crane & Purge RUL Model",
+    "formulaDescription": "RUL = BaseLife * (1 - (0.55*wear_crane_vib + 0.45*wear_n2_press))",
+    "weightsSum": 1,
+    "parameters": [
+      {
+        "parameter": "Crane Vibration",
+        "sensorId": "vibration_crane",
+        "sensorName": "Robotic Crane Vibration",
+        "unit": "mm/s",
+        "weight": 0.55,
+        "healthyLimit": 0.15,
+        "criticalLimit": 0.8,
+        "direction": "HIGHER_IS_WORSE"
+      },
+      {
+        "parameter": "N2 Purge Pressure",
+        "sensorId": "pressure_n2",
+        "sensorName": "N2 Purge Pressure",
+        "unit": "kPa",
+        "weight": 0.45,
+        "healthyLimit": 52,
+        "criticalLimit": 25,
+        "direction": "LOWER_IS_WORSE"
+      }
+    ]
+  },
+  "symptoms": [
+    {
+      "symptomId": "SYM-STK-001",
+      "symptom": "Crane Positioning Timeout / Jitter",
+      "severity": "high",
+      "relatedSensors": [
+        "vibration_crane"
+      ],
+      "possibleCauses": [
+        "Linear encoder glass scale dirt",
+        "Drive belt tension loss",
+        "Guide roller flat spot"
+      ],
+      "recommendedAction": "Clean optical encoder scale with isopropanol and adjust timing belt tension."
+    }
+  ],
+  "failureScenarios": [
+    {
+      "scenarioId": "SCEN-STK-001",
+      "symptom": "Crane Guide Rail Roller Wear & Micro-Chatter",
+      "severity": "warning",
+      "sensorPattern": "vibration_crane > 0.45 mm/s",
+      "possibleCauses": [
+        "Urethane drive roller wear",
+        "Rail alignment deviation"
+      ],
+      "recommendedAction": "Replace crane guide roller assemblies and execute dynamic axis calibration.",
+      "verificationSteps": [
+        "Inspect roller surface",
+        "Run 10-cycle automated pickup repeatability test (< 0.1mm tolerance)"
+      ]
+    }
+  ]
+}

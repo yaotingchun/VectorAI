@@ -229,10 +229,14 @@ export interface StructuredMachineKnowledge {
   }[];
   degradationIndicators: {
     parameter: string;
-    normalCondition: string;
-    degradedCondition: string;
-    criticalCondition: string;
-    indicatorMechanism: string;
+    normalCondition?: string;
+    degradedCondition?: string;
+    criticalCondition?: string;
+    indicatorMechanism?: string;
+    physicalPhenomenon?: string;
+    measurableEffect?: string;
+    degradationSignificance?: string;
+    primarySensorId?: string;
   }[];
   rulModel: {
     baseUsefulLifeHours: number;

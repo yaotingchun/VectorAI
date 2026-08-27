@@ -1,0 +1,256 @@
+{
+  "filename": "x-ray-inspection",
+  "aliases": [],
+  "machine": {
+    "name": "Lead-Shielded Microfocus X-Ray NDT Cell",
+    "type": "x-ray-inspection",
+    "prototypeMachineId": "XR-01",
+    "manualId": "VAI-MAN-XR-001",
+    "version": "1.0",
+    "generatedDate": "2026-08-27",
+    "documentStatus": "Synthetic Cleanroom Technical Manual",
+    "purpose": "VectorAI Demonstration and Operational Intelligence",
+    "disclaimer": "SYNTHETIC PROTOTYPE TECHNICAL MANUAL\n\nThis document is artificially generated for the VectorAI demonstration and software development.\n\nThe specifications, thresholds, service-life values, maintenance intervals, and operating parameters are synthetic and must not be used for real industrial equipment operation or maintenance.",
+    "processStage": "Bay 5B: Lead-Shielded X-Ray",
+    "description": "Non-destructive testing (NDT) microfocus X-ray inspection station for detecting internal die-attach voids, wire bond sweeps, bridging, and solder ball voids within encapsulated IC packages.",
+    "manufacturingProcess": "A 130 kV open microfocus X-ray tube emits high-energy X-ray photons through encapsulated packages onto a high-resolution flat panel detector (FPD). A 5-axis motorized manipulator tilts and rotates the sample to generate 3D computed tomography (CT) slices.",
+    "subsystems": [
+      "130 kV Open Microfocus High-Voltage X-Ray Source",
+      "High-Resolution Digital Flat Panel Detector (FPD)",
+      "5-Axis Precision Sample Manipulator Stage",
+      "Lead-Shielded Radiation Enclosure with Safety Interlocks",
+      "Closed-Loop Water Chiller Tube Cooling System"
+    ]
+  },
+  "components": [
+    {
+      "name": "130 kV Microfocus Tube",
+      "function": "Generates sub-micron focal spot X-ray beam.",
+      "importantParameters": "High voltage (kV), target current (µA), target temp (°C).",
+      "degradationIndicators": "Filament current degradation, target pitting, voltage arc."
+    },
+    {
+      "name": "Flat Panel Detector (FPD)",
+      "function": "Converts X-ray photons into high-contrast digital radiograph.",
+      "importantParameters": "Detector temperature (°C), pixel defect count, frame rate (fps).",
+      "degradationIndicators": "Detector temperature rise, dead pixel cluster accumulation."
+    },
+    {
+      "name": "5-Axis Manipulator Stage",
+      "function": "Positions and rotates IC packages in X/Y/Z/Tilt/Rotate axes.",
+      "importantParameters": "Stage vibration (mm/s), rotation backlash (arcsec).",
+      "degradationIndicators": "Manipulator mechanical chatter, positional drift."
+    }
+  ],
+  "sensors": [
+    {
+      "sensorId": "tube_voltage",
+      "name": "Tube High Voltage",
+      "unit": "kV",
+      "purpose": "Measures acceleration voltage supplied to microfocus X-ray tube.",
+      "minScale": 0,
+      "maxScale": 160,
+      "normalRange": [
+        120,
+        135
+      ],
+      "warningRange": [
+        135,
+        148
+      ],
+      "criticalRange": [
+        148,
+        160
+      ],
+      "direction": "HIGHER_IS_WORSE"
+    },
+    {
+      "sensorId": "tube_temp",
+      "name": "Target Anode Temp",
+      "unit": "°C",
+      "purpose": "Measures tungsten target anode cooling temperature.",
+      "minScale": 15,
+      "maxScale": 70,
+      "normalRange": [
+        30,
+        42
+      ],
+      "warningRange": [
+        42,
+        55
+      ],
+      "criticalRange": [
+        55,
+        70
+      ],
+      "direction": "HIGHER_IS_WORSE"
+    },
+    {
+      "sensorId": "vibration_stage",
+      "name": "Manipulator Vibration",
+      "unit": "mm/s",
+      "purpose": "Monitors mechanical vibration of 5-axis sample manipulator.",
+      "minScale": 0,
+      "maxScale": 1.5,
+      "normalRange": [
+        0.1,
+        0.35
+      ],
+      "warningRange": [
+        0.35,
+        0.7
+      ],
+      "criticalRange": [
+        0.7,
+        1.5
+      ],
+      "direction": "HIGHER_IS_WORSE"
+    }
+  ],
+  "thresholds": [
+    {
+      "sensorId": "tube_voltage",
+      "sensorName": "Tube High Voltage",
+      "unit": "kV",
+      "normal": {
+        "min": 120,
+        "max": 135,
+        "description": "Nominal X-ray photon energy"
+      },
+      "warning": {
+        "min": 135,
+        "max": 148,
+        "description": "High-voltage generator load drift"
+      },
+      "critical": {
+        "min": 148,
+        "max": 160,
+        "description": "Tube arcing & filament burnout risk"
+      },
+      "direction": "HIGHER_IS_WORSE"
+    },
+    {
+      "sensorId": "tube_temp",
+      "sensorName": "Target Anode Temp",
+      "unit": "°C",
+      "normal": {
+        "min": 30,
+        "max": 42,
+        "description": "Stable chiller thermal dissipation"
+      },
+      "warning": {
+        "min": 42,
+        "max": 55,
+        "description": "Cooling fluid flow restriction"
+      },
+      "critical": {
+        "min": 55,
+        "max": 70,
+        "description": "Tungsten target thermal melting"
+      },
+      "direction": "HIGHER_IS_WORSE"
+    }
+  ],
+  "operatingConditions": {
+    "ambientTemperature": "21.0 - 22.5 °C (Cleanroom ISO 6)",
+    "relativeHumidity": "40.0 - 50.0 %",
+    "normalOperatingTemperature": "34.8 °C (Target Anode)",
+    "normalOperatingPressure": "Atmospheric inside chamber, < 10^-4 Pa inside tube",
+    "normalOperatingSpeed": "45 sec / 3D CT scan",
+    "normalCycleTime": "45.0 sec / sample tray",
+    "normalOperatingHours": "24/7 continuous volumetric QA",
+    "recommendedOperatingConditions": "Chiller water flow > 3.0 L/min, radiation leakage < 0.5 µSv/h",
+    "maximumContinuousOperation": "500 hours before filament cathode replacement"
+  },
+  "maintenance": [
+    {
+      "component": "Tungsten Filament Cathode",
+      "recommendedMaintenanceIntervalHours": 500,
+      "expectedServiceLifeHours": 1200,
+      "maintenanceAction": "Filament replacement and vacuum tube roughing",
+      "procedureSummary": "Vent tube, replace tungsten filament hairpin, pump down to < 1x10^-4 Pa."
+    }
+  ],
+  "degradationIndicators": [
+    {
+      "parameter": "Tube Anode Temp",
+      "physicalPhenomenon": "Cooling water circuit micro-calcification",
+      "measurableEffect": "Target temperature exceeds 45°C",
+      "degradationSignificance": "Accelerates target surface pitting and reduces image resolution",
+      "primarySensorId": "tube_temp"
+    }
+  ],
+  "rulModel": {
+    "baseUsefulLifeHours": 2450,
+    "baseLifeUnit": "hours",
+    "modelName": "Microfocus X-Ray Tube & Stage Degradation Model",
+    "formulaDescription": "RUL = BaseLife * (1 - (0.50*wear_tube_temp + 0.30*wear_voltage + 0.20*wear_stage_vib))",
+    "weightsSum": 1,
+    "parameters": [
+      {
+        "parameter": "Tube Temp",
+        "sensorId": "tube_temp",
+        "sensorName": "Target Anode Temp",
+        "unit": "°C",
+        "weight": 0.5,
+        "healthyLimit": 35,
+        "criticalLimit": 60,
+        "direction": "HIGHER_IS_WORSE"
+      },
+      {
+        "parameter": "Tube Voltage",
+        "sensorId": "tube_voltage",
+        "sensorName": "Tube High Voltage",
+        "unit": "kV",
+        "weight": 0.3,
+        "healthyLimit": 130,
+        "criticalLimit": 155,
+        "direction": "HIGHER_IS_WORSE"
+      },
+      {
+        "parameter": "Stage Vibration",
+        "sensorId": "vibration_stage",
+        "sensorName": "Manipulator Vibration",
+        "unit": "mm/s",
+        "weight": 0.2,
+        "healthyLimit": 0.25,
+        "criticalLimit": 0.8,
+        "direction": "HIGHER_IS_WORSE"
+      }
+    ]
+  },
+  "symptoms": [
+    {
+      "symptomId": "SYM-XR-001",
+      "symptom": "Radiographic Image Contrast Loss / Noise",
+      "severity": "high",
+      "relatedSensors": [
+        "tube_voltage",
+        "tube_temp"
+      ],
+      "possibleCauses": [
+        "Tungsten target pitting",
+        "Chiller cooling restriction",
+        "FPD detector gain drift"
+      ],
+      "recommendedAction": "Rotate target to fresh spot and verify chiller coolant flow."
+    }
+  ],
+  "failureScenarios": [
+    {
+      "scenarioId": "SCEN-XR-001",
+      "symptom": "X-Ray Target Anode Overheating & Voltage Instability",
+      "severity": "warning",
+      "sensorPattern": "tube_temp > 45°C, tube_voltage > 140 kV",
+      "possibleCauses": [
+        "Chiller heat exchanger fouling",
+        "Filament emission drift"
+      ],
+      "recommendedAction": "Flush tube cooling chiller and calibrate filament emission current.",
+      "verificationSteps": [
+        "Measure cooling flow rate (> 3.2 L/min)",
+        "Verify image resolution with JIMA resolution test chart (< 2µm)"
+      ]
+    }
+  ]
+}

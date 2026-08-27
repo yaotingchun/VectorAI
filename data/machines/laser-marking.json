@@ -1,0 +1,255 @@
+{
+  "filename": "laser-marking",
+  "aliases": [],
+  "machine": {
+    "name": "Galvo Fiber Laser Serialization Marker",
+    "type": "laser-marking",
+    "prototypeMachineId": "LM-01",
+    "manualId": "VAI-MAN-LM-001",
+    "version": "1.0",
+    "generatedDate": "2026-08-27",
+    "documentStatus": "Synthetic Cleanroom Technical Manual",
+    "purpose": "VectorAI Demonstration and Operational Intelligence",
+    "disclaimer": "SYNTHETIC PROTOTYPE TECHNICAL MANUAL\n\nThis document is artificially generated for the VectorAI demonstration and software development.\n\nThe specifications, thresholds, service-life values, maintenance intervals, and operating parameters are synthetic and must not be used for real industrial equipment operation or maintenance.",
+    "processStage": "Bay 5C: Laser Marking Cell",
+    "description": "Pulsed 30W fiber laser marking and serialization system for inscribing high-contrast 2D DataMatrix barcodes, human-readable alphanumeric text, and lot codes onto molded package surfaces.",
+    "manufacturingProcess": "A 1064nm pulsed MOPA fiber laser delivers focused beam pulses through a dual-axis galvanometer scanner head and telecentric F-theta lens, vaporizing top epoxy resin monolayers without compromising package internal integrity.",
+    "subsystems": [
+      "30W Pulsed MOPA Fiber Laser Source (1064 nm)",
+      "Dual-Axis High-Speed Galvanometer Scanner",
+      "F-Theta Telecentric Quartz Scanning Lens",
+      "Fume Extraction Duct & Dual HEPA Filter Manifold",
+      "High-Speed 2D DataMatrix OCR Verification Camera"
+    ]
+  },
+  "components": [
+    {
+      "name": "MOPA Fiber Laser Source",
+      "function": "Emits 30W pulsed 1064nm laser beam.",
+      "importantParameters": "Average power (W), pulse frequency (kHz), diode pump current (A).",
+      "degradationIndicators": "Laser power degradation (<26W), pulse shape instability."
+    },
+    {
+      "name": "Galvo Scanner Mirrors",
+      "function": "Steers laser beam in X/Y axes at velocities up to 8,000 mm/s.",
+      "importantParameters": "Galvo motor temp (°C), position feedback error (µrad).",
+      "degradationIndicators": "Galvo temp rise (>35°C), barcode edge distortion."
+    },
+    {
+      "name": "F-Theta Scan Lens",
+      "function": "Focuses laser beam into flat focal plane across entire package strip.",
+      "importantParameters": "Focal length (mm), optical transmission (%).",
+      "degradationIndicators": "Epoxy fume residue on lens, beam spot widening."
+    }
+  ],
+  "sensors": [
+    {
+      "sensorId": "laser_power",
+      "name": "Fiber Laser Power",
+      "unit": "W",
+      "purpose": "Measures optical output power delivered by fiber laser.",
+      "minScale": 0,
+      "maxScale": 40,
+      "normalRange": [
+        28,
+        32
+      ],
+      "warningRange": [
+        22,
+        28
+      ],
+      "criticalRange": [
+        0,
+        22
+      ],
+      "direction": "LOWER_IS_WORSE"
+    },
+    {
+      "sensorId": "galvo_temp",
+      "name": "Galvo Head Temp",
+      "unit": "°C",
+      "purpose": "Measures galvanometer scanner servo motor temperature.",
+      "minScale": 15,
+      "maxScale": 60,
+      "normalRange": [
+        24,
+        32
+      ],
+      "warningRange": [
+        32,
+        42
+      ],
+      "criticalRange": [
+        42,
+        60
+      ],
+      "direction": "HIGHER_IS_WORSE"
+    },
+    {
+      "sensorId": "exhaust_flow",
+      "name": "Exhaust Air Velocity",
+      "unit": "m/s",
+      "purpose": "Measures fume extraction air velocity at marking nozzle.",
+      "minScale": 0,
+      "maxScale": 20,
+      "normalRange": [
+        10,
+        14
+      ],
+      "warningRange": [
+        6,
+        10
+      ],
+      "criticalRange": [
+        0,
+        6
+      ],
+      "direction": "LOWER_IS_WORSE"
+    }
+  ],
+  "thresholds": [
+    {
+      "sensorId": "laser_power",
+      "sensorName": "Fiber Laser Power",
+      "unit": "W",
+      "normal": {
+        "min": 28,
+        "max": 32,
+        "description": "Nominal mark depth and contrast"
+      },
+      "warning": {
+        "min": 22,
+        "max": 28,
+        "description": "Pump diode degradation"
+      },
+      "critical": {
+        "min": 0,
+        "max": 22,
+        "description": "Unreadable 2D barcode marking"
+      },
+      "direction": "LOWER_IS_WORSE"
+    },
+    {
+      "sensorId": "galvo_temp",
+      "sensorName": "Galvo Head Temp",
+      "unit": "°C",
+      "normal": {
+        "min": 24,
+        "max": 32,
+        "description": "Stable mirror positioning"
+      },
+      "warning": {
+        "min": 32,
+        "max": 42,
+        "description": "Galvo driver thermal stress"
+      },
+      "critical": {
+        "min": 42,
+        "max": 60,
+        "description": "Thermal drift and mark distortion"
+      },
+      "direction": "HIGHER_IS_WORSE"
+    }
+  ],
+  "operatingConditions": {
+    "ambientTemperature": "21.0 - 23.0 °C (Cleanroom ISO 7)",
+    "relativeHumidity": "40.0 - 50.0 %",
+    "normalOperatingTemperature": "28.5 °C (Galvo)",
+    "normalOperatingPressure": "Exhaust duct air velocity > 10.0 m/s",
+    "normalOperatingSpeed": "5.0 sec / leadframe strip",
+    "normalCycleTime": "5.0 sec / strip serialization",
+    "normalOperatingHours": "24/7 continuous inline marking",
+    "recommendedOperatingConditions": "F-theta lens cleaned every 500 hours, exhaust filter checked weekly",
+    "maximumContinuousOperation": "500 hours before scheduled optical calibration"
+  },
+  "maintenance": [
+    {
+      "component": "F-Theta Quartz Scan Lens",
+      "recommendedMaintenanceIntervalHours": 500,
+      "expectedServiceLifeHours": 8000,
+      "maintenanceAction": "Optical window cleaning & 2D DataMatrix OCR calibration",
+      "procedureSummary": "Wipe lens with spectroscopic-grade methanol, verify barcode grade A on ISO/IEC 15415 standard."
+    }
+  ],
+  "degradationIndicators": [
+    {
+      "parameter": "Laser Output Power",
+      "physicalPhenomenon": "Fiber pump laser diode emission decay",
+      "measurableEffect": "Power drops from 30W to < 24W",
+      "degradationSignificance": "Causes shallow marks and OCR verification failures",
+      "primarySensorId": "laser_power"
+    }
+  ],
+  "rulModel": {
+    "baseUsefulLifeHours": 3500,
+    "baseLifeUnit": "hours",
+    "modelName": "Laser Marker Optical & Thermal Degradation Model",
+    "formulaDescription": "RUL = BaseLife * (1 - (0.50*wear_laser_power + 0.30*wear_galvo_temp + 0.20*wear_exhaust))",
+    "weightsSum": 1,
+    "parameters": [
+      {
+        "parameter": "Laser Power",
+        "sensorId": "laser_power",
+        "sensorName": "Fiber Laser Power",
+        "unit": "W",
+        "weight": 0.5,
+        "healthyLimit": 30,
+        "criticalLimit": 20,
+        "direction": "LOWER_IS_WORSE"
+      },
+      {
+        "parameter": "Galvo Temp",
+        "sensorId": "galvo_temp",
+        "sensorName": "Galvo Head Temp",
+        "unit": "°C",
+        "weight": 0.3,
+        "healthyLimit": 28,
+        "criticalLimit": 45,
+        "direction": "HIGHER_IS_WORSE"
+      },
+      {
+        "parameter": "Exhaust Flow",
+        "sensorId": "exhaust_flow",
+        "sensorName": "Exhaust Air Velocity",
+        "unit": "m/s",
+        "weight": 0.2,
+        "healthyLimit": 12,
+        "criticalLimit": 5,
+        "direction": "LOWER_IS_WORSE"
+      }
+    ]
+  },
+  "symptoms": [
+    {
+      "symptomId": "SYM-LM-001",
+      "symptom": "2D DataMatrix Barcode Readability Grade < B",
+      "severity": "high",
+      "relatedSensors": [
+        "laser_power",
+        "exhaust_flow"
+      ],
+      "possibleCauses": [
+        "F-theta lens smoke residue",
+        "Laser power drop",
+        "Exhaust filter loaded"
+      ],
+      "recommendedAction": "Wipe scan lens and replace fume extraction pre-filter."
+    }
+  ],
+  "failureScenarios": [
+    {
+      "scenarioId": "SCEN-LM-001",
+      "symptom": "Planned Optical Window Cleaning & F-Theta Calibration",
+      "severity": "low",
+      "sensorPattern": "laser_power == 0 W (Machine offline)",
+      "possibleCauses": [
+        "Scheduled 500-hour preventive maintenance interval"
+      ],
+      "recommendedAction": "Complete optical lens wipe and run 2D DataMatrix verification target lot.",
+      "verificationSteps": [
+        "Verify laser power with thermal power meter (> 29.5W)",
+        "Scan verification target sheet (Grade A verified)"
+      ]
+    }
+  ]
+}

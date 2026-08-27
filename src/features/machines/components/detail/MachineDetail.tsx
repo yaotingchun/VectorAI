@@ -294,7 +294,7 @@ export const MachineDetail: React.FC<MachineDetailProps> = ({
         {activeTab === 'maintenance' && (
           <MaintenanceSummary
             maintenance={machine.maintenance}
-            onNavigateToMaintenance={onNavigateToMaintenance}
+            onNavigateToMaintenance={() => onNavigateToMaintenance && onNavigateToMaintenance(machine.id)}
           />
         )}
 

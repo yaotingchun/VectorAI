@@ -12,7 +12,8 @@ import {
   TrendingDown,
   Sparkles,
   CheckCircle2,
-  ArrowRight
+  ArrowRight,
+  Wrench
 } from 'lucide-react';
 import { Machine } from '../../types/machine';
 import { getPredictionScenario } from '../../../prediction/data/predictionScenarios';
@@ -415,16 +416,17 @@ export const MachinePrediction: React.FC<MachinePredictionProps> = ({
             <button
               onClick={() => {
                 if (onNavigateToMaintenance) {
-                  onNavigateToMaintenance(machine.maintenance?.workOrderId);
+                  onNavigateToMaintenance(machine.id);
                 } else if (onSelectTab) {
                   onSelectTab('maintenance');
                 }
               }}
               className="tech-btn primary"
-              style={{ padding: '8px 16px', fontSize: '11px' }}
+              style={{ padding: '8px 16px', fontSize: '11px', display: 'flex', alignItems: 'center', gap: '6px' }}
+              title={`Redirect to Maintenance tab and view log for ${machine.id}`}
             >
-              <RefreshCcw size={13} />
-              <span>SCHEDULE / OPEN MAINTENANCE</span>
+              <Wrench size={13} />
+              <span>OPEN MAINTENANCE</span>
               <ArrowRight size={12} />
             </button>
 

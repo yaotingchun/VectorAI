@@ -1694,6 +1694,7 @@ const DispatchCard: React.FC<{
   return (
     <>
       <div
+        id={`maintenance-task-${task.machineId}`}
         style={{
           border: '1.5px solid var(--border-strong)',
           backgroundColor: 'var(--bg-card)',
@@ -1702,6 +1703,7 @@ const DispatchCard: React.FC<{
           gap: '0',
           boxShadow: '2px 2px 0px rgba(0,0,0,0.05)',
           borderLeft: `4px solid ${windowInfo.color}`,
+          scrollMarginTop: '80px'
         }}
       >
         {/* Top Header - CLICKABLE MACHINE TITLE */}
@@ -2236,9 +2238,11 @@ const DispatchCard: React.FC<{
   );
 };
 
-// ─── Main Maintenance Page Component ─────────────────────────────────────────
+interface MaintenancePageProps {
+  initialMachineId?: string | null;
+}
 
-export const MaintenancePage: React.FC = () => {
+export const MaintenancePage: React.FC<MaintenancePageProps> = ({ initialMachineId }) => {
   const {
     machines,
     maintenanceQueue,
@@ -2250,8 +2254,27 @@ export const MaintenancePage: React.FC = () => {
   const [currentCalendarDate, setCurrentCalendarDate] = useState<Date>(new Date());
   const [selectedDay, setSelectedDay] = useState<number | null>(new Date().getDate());
 
-  // Selected Machine Scenario Modal State
+  // Selected Machine Scenario Modal State (only opened on explicit click)
   const [modalMachineId, setModalMachineId] = useState<string | null>(null);
+
+  React.useEffect(() => {
+    if (initialMachineId) {
+      setModalMachineId(null);
+      const scrollToElement = () => {
+        const el = document.getElementById(`maintenance-task-${initialMachineId}`);
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          el.style.transition = 'box-shadow 0.3s ease, border-color 0.3s ease';
+          el.style.boxShadow = '0 0 0 2px var(--accent-blue), 0 6px 20px rgba(37, 99, 235, 0.2)';
+          setTimeout(() => {
+            el.style.boxShadow = '';
+          }, 3000);
+        }
+      };
+      setTimeout(scrollToElement, 150);
+      setTimeout(scrollToElement, 400);
+    }
+  }, [initialMachineId]);
 
   // Run Auto Maintenance Agent on current live machines to obtain scenario dossiers
   const agentOverview = React.useMemo(() => {
@@ -2745,6 +2768,7 @@ export const MaintenancePage: React.FC = () => {
                 completedTasks.map((task) => (
                   <div
                     key={task.id}
+                    id={`maintenance-task-${task.machineId}`}
                     style={{
                       border: '1px solid var(--border-light)',
                       backgroundColor: 'var(--bg-surface)',
@@ -2753,6 +2777,7 @@ export const MaintenancePage: React.FC = () => {
                       display: 'flex',
                       flexDirection: 'column',
                       gap: '4px',
+                      scrollMarginTop: '80px'
                     }}
                   >
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>

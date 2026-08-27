@@ -12,33 +12,45 @@ import {
   TroubleshootingSymptom
 } from '../types/intelligence';
 
-// Import raw structured machine JSONs
-import waferDicingJson from '../../../../../data/machines/wafer-dicing-machine.json';
-import dieAttacherJson from '../../../../../data/machines/die-attacher.json';
-import wireBonderJson from '../../../../../data/machines/wire-bonder.json';
-import moldingJson from '../../../../../data/machines/molding-machine.json';
-import icTesterJson from '../../../../../data/machines/ic-tester-sorter.json';
+// Import raw structured machine JSONs for all 11 cleanroom equipment models
+import waferSawJson from '../../../../../data/machines/wafer-saw.json';
+import stockerJson from '../../../../../data/machines/stocker.json';
+import dieAttachJson from '../../../../../data/machines/die-attach.json';
+import plasmaCleanerJson from '../../../../../data/machines/plasma-cleaner.json';
+import wireBondingJson from '../../../../../data/machines/wire-bonding.json';
+import moldingPressJson from '../../../../../data/machines/molding-press.json';
+import aoiInspectionJson from '../../../../../data/machines/aoi-inspection.json';
+import xRayInspectionJson from '../../../../../data/machines/x-ray-inspection.json';
+import laserMarkingJson from '../../../../../data/machines/laser-marking.json';
+import testHandlerJson from '../../../../../data/machines/test-handler.json';
+import tapeReelJson from '../../../../../data/machines/tape-reel.json';
 
 const KNOWLEDGE_REGISTRY: Record<string, StructuredMachineKnowledge> = {
-  // Canonical Cleanroom V-Factory Types
-  'wafer-saw': waferDicingJson as unknown as StructuredMachineKnowledge,
-  'stocker': waferDicingJson as unknown as StructuredMachineKnowledge,
-  'die-attach': dieAttacherJson as unknown as StructuredMachineKnowledge,
-  'plasma-cleaner': dieAttacherJson as unknown as StructuredMachineKnowledge,
-  'wire-bonding': wireBonderJson as unknown as StructuredMachineKnowledge,
-  'molding-press': moldingJson as unknown as StructuredMachineKnowledge,
-  'aoi-inspection': icTesterJson as unknown as StructuredMachineKnowledge,
-  'x-ray-inspection': icTesterJson as unknown as StructuredMachineKnowledge,
-  'laser-marking': icTesterJson as unknown as StructuredMachineKnowledge,
-  'test-handler': icTesterJson as unknown as StructuredMachineKnowledge,
-  'tape-reel': icTesterJson as unknown as StructuredMachineKnowledge,
+  // Canonical Cleanroom V-Factory Types (11 Models)
+  'wafer-saw': waferSawJson as unknown as StructuredMachineKnowledge,
+  'stocker': stockerJson as unknown as StructuredMachineKnowledge,
+  'die-attach': dieAttachJson as unknown as StructuredMachineKnowledge,
+  'plasma-cleaner': plasmaCleanerJson as unknown as StructuredMachineKnowledge,
+  'wire-bonding': wireBondingJson as unknown as StructuredMachineKnowledge,
+  'molding-press': moldingPressJson as unknown as StructuredMachineKnowledge,
+  'aoi-inspection': aoiInspectionJson as unknown as StructuredMachineKnowledge,
+  'x-ray-inspection': xRayInspectionJson as unknown as StructuredMachineKnowledge,
+  'laser-marking': laserMarkingJson as unknown as StructuredMachineKnowledge,
+  'test-handler': testHandlerJson as unknown as StructuredMachineKnowledge,
+  'tape-reel': tapeReelJson as unknown as StructuredMachineKnowledge,
 
-  // Legacy snake_case types for backward compatibility
-  'wafer_dicing': waferDicingJson as unknown as StructuredMachineKnowledge,
-  'die_attacher': dieAttacherJson as unknown as StructuredMachineKnowledge,
-  'wire_bonder': wireBonderJson as unknown as StructuredMachineKnowledge,
-  'molding': moldingJson as unknown as StructuredMachineKnowledge,
-  'ic_tester': icTesterJson as unknown as StructuredMachineKnowledge
+  // Legacy & Alias types for backward compatibility
+  'wafer_dicing': waferSawJson as unknown as StructuredMachineKnowledge,
+  'wafer-dicing-machine': waferSawJson as unknown as StructuredMachineKnowledge,
+  'die_attacher': dieAttachJson as unknown as StructuredMachineKnowledge,
+  'die-attacher': dieAttachJson as unknown as StructuredMachineKnowledge,
+  'wire_bonder': wireBondingJson as unknown as StructuredMachineKnowledge,
+  'wire-bonder': wireBondingJson as unknown as StructuredMachineKnowledge,
+  'molding': moldingPressJson as unknown as StructuredMachineKnowledge,
+  'molding-machine': moldingPressJson as unknown as StructuredMachineKnowledge,
+  'ic_tester': testHandlerJson as unknown as StructuredMachineKnowledge,
+  'ic-tester-sorter': testHandlerJson as unknown as StructuredMachineKnowledge,
+  'tester': testHandlerJson as unknown as StructuredMachineKnowledge,
 };
 
 /**
@@ -48,7 +60,7 @@ export function getMachineKnowledge(machineType: MachineTypeId | string): Struct
   const normalizedKey = machineType.toLowerCase().replace(/_/g, '-');
   const knowledge = KNOWLEDGE_REGISTRY[machineType] || KNOWLEDGE_REGISTRY[normalizedKey] || KNOWLEDGE_REGISTRY['wire-bonding'];
   if (!knowledge) {
-    return wireBonderJson as unknown as StructuredMachineKnowledge;
+    return wireBondingJson as unknown as StructuredMachineKnowledge;
   }
   return knowledge;
 }
