@@ -149,6 +149,27 @@
         "description": "Tungsten target thermal melting"
       },
       "direction": "HIGHER_IS_WORSE"
+    },
+    {
+      "sensorId": "vibration_stage",
+      "sensorName": "Manipulator Vibration",
+      "unit": "mm/s",
+      "normal": {
+        "min": 0.1,
+        "max": 0.35,
+        "description": "Monitors mechanical vibration of 5-axis sample manipulator."
+      },
+      "warning": {
+        "min": 0.35,
+        "max": 0.7,
+        "description": "Warning threshold drift"
+      },
+      "critical": {
+        "min": 0.7,
+        "max": 1.5,
+        "description": "Critical operating limit"
+      },
+      "direction": "HIGHER_IS_WORSE"
     }
   ],
   "operatingConditions": {

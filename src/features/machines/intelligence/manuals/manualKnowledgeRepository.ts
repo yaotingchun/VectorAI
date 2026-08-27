@@ -3,7 +3,7 @@
 // Single Source of Truth for Extracted Technical Manual Knowledge
 // =========================================================================
 
-import { MachineTypeId } from '../../data/machineTypes';
+import { MachineTypeId, MACHINE_TYPES } from '../../data/machineTypes';
 import { 
   StructuredMachineKnowledge, 
   RulModelDefinition, 
@@ -89,9 +89,73 @@ export function getRulModelForMachine(machineType: MachineTypeId | string): RulM
 
 /**
  * Retrieve sensor threshold specifications for a machine type.
+ * Guarantees threshold objects exist for 100% of the machine's sensors.
  */
 export function getThresholdsForMachine(machineType: MachineTypeId | string): MachineSensorThreshold[] {
-  return getMachineKnowledge(machineType).thresholds;
+  const knowledge = getMachineKnowledge(machineType);
+  const existingThresholds: MachineSensorThreshold[] = knowledge.thresholds ? [...knowledge.thresholds] : [];
+  const existingIds = new Set(existingThresholds.map((t) => t.sensorId));
+
+  // Check knowledge.sensors for any sensors missing from thresholds
+  if (knowledge.sensors && Array.isArray(knowledge.sensors)) {
+    knowledge.sensors.forEach((s: any) => {
+      const sId = s.sensorId || s.id;
+      if (sId && !existingIds.has(sId)) {
+        const normMin = Array.isArray(s.normalRange) ? s.normalRange[0] : 0;
+        const normMax = Array.isArray(s.normalRange) ? s.normalRange[1] : 100;
+        const warnMin = Array.isArray(s.warningRange) ? s.warningRange[0] : normMax;
+        const warnMax = Array.isArray(s.warningRange) ? s.warningRange[1] : normMax * 1.2;
+        const critMin = Array.isArray(s.criticalRange) ? s.criticalRange[0] : warnMax;
+        const critMax = Array.isArray(s.criticalRange) ? s.criticalRange[1] : warnMax * 1.5;
+        const direction = s.direction || 'HIGHER_IS_WORSE';
+
+        existingThresholds.push({
+          sensorId: sId,
+          sensorName: s.name || sId,
+          unit: s.unit || '',
+          normal: { min: normMin, max: normMax, description: s.purpose || 'Nominal operating range' },
+          warning: { min: warnMin, max: warnMax, description: 'Warning threshold drift' },
+          critical: { min: critMin, max: critMax, description: 'Critical operating limit' },
+          direction: direction as 'HIGHER_IS_WORSE' | 'LOWER_IS_WORSE'
+        });
+        existingIds.add(sId);
+      }
+    });
+  }
+
+  // Also check MACHINE_TYPES for any sensors defined in the schema
+  const typeDef = MACHINE_TYPES[machineType as string] || MACHINE_TYPES[String(machineType).toLowerCase().replace(/_/g, '-')];
+  if (typeDef && typeDef.sensors) {
+    typeDef.sensors.forEach((s) => {
+      if (!existingIds.has(s.id)) {
+        const normMin = s.normalRange[0];
+        const normMax = s.normalRange[1];
+        const isLowerWorse = s.criticalThreshold.max < normMin || (s.warningThreshold.max < normMax && s.criticalThreshold.max <= s.warningThreshold.max);
+        const direction = isLowerWorse ? 'LOWER_IS_WORSE' : 'HIGHER_IS_WORSE';
+
+        existingThresholds.push({
+          sensorId: s.id,
+          sensorName: s.name,
+          unit: s.unit,
+          normal: { min: normMin, max: normMax, description: s.description || 'Nominal operating envelope' },
+          warning: {
+            min: isLowerWorse ? (s.warningThreshold.min ?? s.criticalThreshold.max) : (s.warningThreshold.min ?? normMax),
+            max: s.warningThreshold.max,
+            description: 'Warning threshold exceedance'
+          },
+          critical: {
+            min: isLowerWorse ? (s.criticalThreshold.min ?? s.min) : (s.criticalThreshold.min ?? s.warningThreshold.max),
+            max: s.criticalThreshold.max,
+            description: 'Critical operating limit breach'
+          },
+          direction: direction as 'HIGHER_IS_WORSE' | 'LOWER_IS_WORSE'
+        });
+        existingIds.add(s.id);
+      }
+    });
+  }
+
+  return existingThresholds;
 }
 
 /**

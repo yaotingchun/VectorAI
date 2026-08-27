@@ -151,6 +151,27 @@
         "description": "Pogo pin crushing and package lead damage"
       },
       "direction": "HIGHER_IS_WORSE"
+    },
+    {
+      "sensorId": "temperature_chamber",
+      "sensorName": "Soak Chamber Temp",
+      "unit": "°C",
+      "normal": {
+        "min": 80,
+        "max": 90,
+        "description": "Measures device thermal soak chamber temperature."
+      },
+      "warning": {
+        "min": 90,
+        "max": 105,
+        "description": "Warning threshold drift"
+      },
+      "critical": {
+        "min": 105,
+        "max": 160,
+        "description": "Critical operating limit"
+      },
+      "direction": "HIGHER_IS_WORSE"
     }
   ],
   "operatingConditions": {

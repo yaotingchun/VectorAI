@@ -157,6 +157,27 @@
         "description": "PZT thermal runaway and Curie point degradation"
       },
       "direction": "HIGHER_IS_WORSE"
+    },
+    {
+      "sensorId": "load_clamp",
+      "sensorName": "Clamping Force",
+      "unit": "N",
+      "normal": {
+        "min": 60,
+        "max": 75,
+        "description": "Monitors dynamic force exerted by capillary on die pad."
+      },
+      "warning": {
+        "min": 75,
+        "max": 85,
+        "description": "Warning threshold drift"
+      },
+      "critical": {
+        "min": 85,
+        "max": 120,
+        "description": "Critical operating limit"
+      },
+      "direction": "HIGHER_IS_WORSE"
     }
   ],
   "operatingConditions": {

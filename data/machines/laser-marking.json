@@ -149,6 +149,27 @@
         "description": "Thermal drift and mark distortion"
       },
       "direction": "HIGHER_IS_WORSE"
+    },
+    {
+      "sensorId": "exhaust_flow",
+      "sensorName": "Exhaust Air Velocity",
+      "unit": "m/s",
+      "normal": {
+        "min": 10,
+        "max": 14,
+        "description": "Measures fume extraction air velocity at marking nozzle."
+      },
+      "warning": {
+        "min": 6,
+        "max": 10,
+        "description": "Warning threshold drift"
+      },
+      "critical": {
+        "min": 0,
+        "max": 6,
+        "description": "Critical operating limit"
+      },
+      "direction": "LOWER_IS_WORSE"
     }
   ],
   "operatingConditions": {

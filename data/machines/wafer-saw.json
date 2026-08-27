@@ -200,6 +200,27 @@
         "description": "Blade micro-binding and motor stall risk"
       },
       "direction": "HIGHER_IS_WORSE"
+    },
+    {
+      "sensorId": "pressure_coolant",
+      "sensorName": "Coolant Jet Pressure",
+      "unit": "bar",
+      "normal": {
+        "min": 2.5,
+        "max": 4,
+        "description": "Monitors fluid pressure delivered to dual cutting nozzles."
+      },
+      "warning": {
+        "min": 1.5,
+        "max": 2.5,
+        "description": "Warning threshold drift"
+      },
+      "critical": {
+        "min": 0,
+        "max": 1.5,
+        "description": "Critical operating limit"
+      },
+      "direction": "LOWER_IS_WORSE"
     }
   ],
   "operatingConditions": {

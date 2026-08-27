@@ -155,6 +155,27 @@
         "description": "Severe vacuum seal failure"
       },
       "direction": "HIGHER_IS_WORSE"
+    },
+    {
+      "sensorId": "vibration_vacuum_pump",
+      "sensorName": "Vacuum Pump Vibration",
+      "unit": "mm/s",
+      "normal": {
+        "min": 0.08,
+        "max": 0.3,
+        "description": "Monitors dry vacuum pump rotor bearing condition."
+      },
+      "warning": {
+        "min": 0.3,
+        "max": 0.7,
+        "description": "Warning threshold drift"
+      },
+      "critical": {
+        "min": 0.7,
+        "max": 2,
+        "description": "Critical operating limit"
+      },
+      "direction": "HIGHER_IS_WORSE"
     }
   ],
   "operatingConditions": {

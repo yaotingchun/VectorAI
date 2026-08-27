@@ -149,6 +149,27 @@
         "description": "Non-compliant seal: Customer feeder jam risk"
       },
       "direction": "HIGHER_IS_WORSE"
+    },
+    {
+      "sensorId": "vibration_indexer",
+      "sensorName": "Indexer Vibration",
+      "unit": "mm/s",
+      "normal": {
+        "min": 0.1,
+        "max": 0.38,
+        "description": "Monitors carrier tape indexing motor and sprocket bearing vibration."
+      },
+      "warning": {
+        "min": 0.38,
+        "max": 0.75,
+        "description": "Warning threshold drift"
+      },
+      "critical": {
+        "min": 0.75,
+        "max": 1.5,
+        "description": "Critical operating limit"
+      },
+      "direction": "HIGHER_IS_WORSE"
     }
   ],
   "operatingConditions": {

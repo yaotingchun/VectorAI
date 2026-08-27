@@ -151,6 +151,27 @@
         "description": "Epoxy premature gelation"
       },
       "direction": "HIGHER_IS_WORSE"
+    },
+    {
+      "sensorId": "load_plunger",
+      "sensorName": "Plunger Load",
+      "unit": "kN",
+      "normal": {
+        "min": 18,
+        "max": 30,
+        "description": "Measures mechanical force applied to epoxy transfer plunger."
+      },
+      "warning": {
+        "min": 30,
+        "max": 42,
+        "description": "Warning threshold drift"
+      },
+      "critical": {
+        "min": 42,
+        "max": 60,
+        "description": "Critical operating limit"
+      },
+      "direction": "HIGHER_IS_WORSE"
     }
   ],
   "operatingConditions": {
