@@ -92,9 +92,9 @@ export const MachinesPage: React.FC<MachinesPageProps> = ({
   // Integration callbacks
   const handleViewOnFactory = (machineId: string) => {
     if (onNavigateTab) {
-      onNavigateTab('rerouting', machineId);
+      onNavigateTab('vfactory', machineId);
     } else {
-      alert(`[Rerouting Integration] Navigating to Rerouting with focus on machine ${machineId}`);
+      alert(`[v-Factory Integration] Navigating to v-Factory with focus on machine ${machineId}`);
     }
   };
 

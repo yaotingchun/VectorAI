@@ -1161,12 +1161,12 @@ export const DashboardRerouteExecutionSection: React.FC<DashboardRerouteExecutio
               </div>
             </div>
             <button
-              onClick={() => onNavigate && onNavigate('rerouting', activeExecution.sourceMachineId)}
+              onClick={() => onNavigate && onNavigate('vfactory', activeExecution.sourceMachineId)}
               className="tech-btn"
               style={{ fontSize: '11px', padding: '6px 12px', border: '1px solid var(--border-strong)', backgroundColor: 'var(--bg-card)', color: 'var(--text-primary)' }}
             >
               <Radio size={13} />
-              <span>OPEN FULL REROUTING PAGE</span>
+              <span>OPEN FACTORY FLOOR TWIN</span>
             </button>
           </div>
 

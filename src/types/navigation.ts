@@ -1,7 +1,7 @@
 export type TabId =
   | 'dashboard'
   | 'vfactory'
-  | 'rerouting'
+  | 'products'
   | 'machines'
   | 'prediction'
   | 'maintenance'
@@ -32,11 +32,11 @@ export const NAV_ITEMS: NavItem[] = [
     description: 'Digital twin simulation, spatial floor mapping, and multi-line visualizer.',
   },
   {
-    id: 'rerouting',
-    label: 'Rerouting',
-    code: 'ROUTE // DYN-FLOW',
+    id: 'products',
+    label: 'Products',
+    code: 'PROD // CATALOG',
     num: '03',
-    description: 'Dynamic production rerouting, process line balancing, and automated lot redirection.',
+    description: 'Product catalog, batch genealogy, recipe tracking, and production yield management.',
   },
   {
     id: 'machines',

@@ -96,7 +96,7 @@ export const ReroutePolicyConfig: React.FC<ReroutePolicyConfigProps> = ({
                 </span>
               </div>
               <p className="preset-card-desc">
-                Disables automated routing dispatch. Cleanroom engineers must manually initiate transfers via the Rerouting tab.
+                Disables automated routing dispatch. Cleanroom engineers must manually initiate transfers via the v-Factory floor tab.
               </p>
             </div>
           </div>

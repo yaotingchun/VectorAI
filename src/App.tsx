@@ -4,7 +4,7 @@ import { AppLayout } from './components/layout/AppLayout';
 import { IntroScreen } from './components/intro/IntroScreen';
 import { DashboardPage } from './pages/DashboardPage';
 import { VFactoryPage } from './pages/VFactoryPage';
-import { ReroutingPage } from './pages/ReroutingPage';
+import { ProductsPage } from './pages/ProductsPage';
 import { MachinesPage } from './pages/MachinesPage';
 import { MaintenancePage } from './pages/MaintenancePage';
 import { ConfigurationPage } from './pages/ConfigurationPage';
@@ -78,8 +78,8 @@ export const App: React.FC = () => {
         return <DashboardPage onNavigate={handleNavigate} />;
       case 'vfactory':
         return <VFactoryPage onNavigateToMachine={(machineId) => handleNavigate('machines', machineId)} />;
-      case 'rerouting':
-        return <ReroutingPage />;
+      case 'products':
+        return <ProductsPage />;
       case 'machines':
         return (
           <MachinesPage
