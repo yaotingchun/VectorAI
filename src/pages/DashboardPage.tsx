@@ -10,6 +10,7 @@ import { MachineRiskByProcess } from '../components/dashboard/MachineRiskByProce
 import { PredictiveRiskOverview } from '../components/dashboard/PredictiveRiskOverview';
 import { MaintenanceOverviewSection } from '../components/dashboard/MaintenanceOverviewSection';
 import { DashboardRerouteExecutionSection } from '../components/dashboard/DashboardRerouteExecutionSection';
+import { ArrowRight, Bot } from 'lucide-react';
 import '../styles/dashboard.css';
 
 interface DashboardPageProps {
@@ -35,6 +36,60 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onNavigate }) => {
         factoryHealthScore={overview.factoryHealthScore}
         criticalRiskCount={overview.criticalMachines}
       />
+
+      {/* 0.1 AI Decision Alert Banner */}
+      <div
+        className="tech-card"
+        style={{
+          border: '1.5px solid var(--border-strong)',
+          backgroundColor: 'var(--bg-card)',
+          padding: '10px 16px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          flexWrap: 'wrap',
+          gap: '12px',
+          boxShadow: '2px 2px 0px rgba(18, 19, 21, 0.08)',
+        }}
+      >
+        <span className="corner-tl">+</span>
+        <span className="corner-tr">+</span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
+          <div
+            style={{
+              padding: '4px 8px',
+              backgroundColor: 'var(--bg-dark)',
+              color: 'var(--text-inverted)',
+              fontSize: '10px',
+              fontWeight: 800,
+              fontFamily: 'var(--font-mono)',
+              letterSpacing: '0.06em',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+            }}
+          >
+            <Bot size={12} />
+            <span>AI DECISION</span>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px', flexWrap: 'wrap' }}>
+            <span style={{ color: 'var(--accent-amber)', fontWeight: 700 }}>⚠ Product B Demand Surge</span>
+            <span style={{ color: 'var(--text-muted)' }}>•</span>
+            <span style={{ color: 'var(--accent-green)', fontWeight: 700 }}>✓ Rerouting Approved</span>
+            <span style={{ color: 'var(--text-muted)' }}>•</span>
+            <span style={{ fontFamily: 'var(--font-mono)', fontWeight: 600 }}>M-01 → Product B (30 units/hr)</span>
+          </div>
+        </div>
+
+        <button
+          onClick={() => onNavigate?.('aicontrol')}
+          className="tech-btn primary"
+          style={{ padding: '5px 12px', fontSize: '11px', gap: '6px' }}
+        >
+          <span>VIEW COMMAND CENTER</span>
+          <ArrowRight size={12} />
+        </button>
+      </div>
 
       {/* 1. Factory Overview Top 4 KPI Cards: Factory Health, OEE, Machine Status, Active Alerts */}
       <FactoryOverviewKpi
