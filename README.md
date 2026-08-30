@@ -11,8 +11,7 @@
 
 <p align="center">
   <b>🌐 <a href="https://vector-ai-661695302381.us-central1.run.app/">Live Web Platform</a></b> •
-  <b>🚀 <a href="https://youtu.be/AyJzMufqzEE">Live Demo Video</a></b> •
-  <b>🎥 <a href="https://youtu.be/exQmN5-FIZA">Watch our Pitching Video</a></b>
+  <b>🚀 <a href="https://youtu.be/AyJzMufqzEE">Live Demo Video</a></b>
 </p>
 
 ---
