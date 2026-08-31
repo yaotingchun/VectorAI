@@ -2,7 +2,7 @@
 
 <p align="center">
   <strong>Transforming reactive factories into intelligent, self-aware manufacturing environments.</strong><br/>
-  <em>A hardware-and-software platform combining a plug-and-play sensor kit with an interactive 2D digital twin, deterministic RUL prediction, AI-driven root cause diagnostics, and dynamic process rerouting.</em>
+  <em>A smart factory monitoring platform powered by an LLM orchestrator combining a physical sensor kit with a digital factory environment, where supervisors can instantly understand the overall condition of their production floor through an intuitive visual interface.</em>
 </p>
 
 <p align="center">
@@ -56,51 +56,15 @@
 
 ## 💡 Proposed Solution: Vector.ai
 
-**Vector.ai** is a unified hardware-and-software platform combining a **clip-on physical sensor kit** with a **digital factory environment**, enabling supervisors and reliability engineers to instantly understand the overall health and operational trajectory of their production floor through an intuitive visual interface.
+A **smart factory monitoring platform** powered by an **LLM orchestrator** combining a **physical sensor kit** with a **digital factory environment**, where supervisors can **instantly understand the overall condition of their production floor** through an **intuitive visual interface**.
 
 ### 🌟 Core Capabilities
-* **Plug-and-Play Sensor Kit**: Non-invasive clip-on IoT sensor node (Vibration, Temperature, Load) with instant NFC tag provisioning.
-* **2D Digital Twin of the Factory Floor**: Spatial drag-and-drop floorplan canvas mapping cleanroom zones (ISO 5–8), machine nodes, and dynamic conveyor flows.
-* **Real-Time Machine Monitoring**: Sub-second telemetry aggregation, parameter drift tracking, and anomaly detection with change-point analysis.
-* **AI-Driven Anomaly Detection & RAG Insights**: Multi-source diagnostic engine matching sensor anomalies to 11 OEM machine manuals and SOPs.
-* **Predictive Maintenance (RUL-Based)**: Mathematically explainable Remaining Useful Life calculations with parameter wear share breakdowns.
-* **Dynamic Process Rerouting**: Autonomous graph-based solver that reallocates MES lot queues, SECS/GEM interlocks, and AGV carriers to avoid bottleneck halts.
-
----
-
-## 🧠 AI Beyond a Chatbot: Real Sensors, Real-Time Intelligence, Human-Approved Action
-
-Vector.ai elevates industrial AI far beyond a passive chat interface into a closed-loop intelligence cockpit:
-
-```
-  TYPICAL SYSTEM                                VECTOR.AI COCKPIT
-┌──────────────────┐                         ┌──────────────────────────────┐
-│  Sensor Reading  │                         │ Sensor Reading (NFC IoT Kit) │
-└────────┬─────────┘                         └──────────────┬───────────────┘
-         │                                                  │
-         ▼                                                  ▼
-┌──────────────────┐                         ┌──────────────────────────────┐
-│ Dashboard Display│                         │   AI Detects & Predicts      │
-└────────┬─────────┘                         │  (Anomalies & RUL Forecast)  │
-         │                                   └──────────────┬───────────────┘
-         ▼                                                  │
-┌──────────────────┐                         ┌──────────────▼───────────────┐
-│ Engineer Decides │                         │  AI Explains & Recommends    │
-│ (Manual Guess)   │                         │  (Manual-Grounded RAG SOPs)  │
-└──────────────────┘                         └──────────────┬───────────────┘
-                                                            │
-                                             ┌──────────────▼───────────────┐
-                                             │    Human-Approved Action     │
-                                             │ (One-Click Reroute/WorkOrder)│
-                                             └──────────────────────────────┘
-```
-
-| Question | Traditional Systems | Vector.ai Intelligence System |
-| :--- | :--- | :--- |
-| **What is happening?** | Raw, fragmented sensor time-series | Unified 2D Digital Twin with real-time health score |
-| **Why is happening?** | Requires hours of manual manual-digging | RAG-grounded root cause analysis with SOP citation |
-| **What will happen next?** | Unknown until machine halts | Explainable Remaining Useful Life (RUL) prediction |
-| **What should be done now?** | Trial-and-error engineer troubleshooting | Auto-generated work order & dynamic lot reroute plan |
+* **Plug-and-Play Sensor Kit**: Clip-on, NFC-provisioned IoT sensor nodes for non-invasive machine telemetry.
+* **2D Digital Twin of the Factory Floor**: Interactive spatial layout mapping cleanroom zones, equipment nodes, and material flow lines.
+* **Real-Time Machine & Product Monitoring**: Continuous sub-second tracking of vibration, temperature, load, and product batches.
+* **AI-Driven Anomaly Detection & RAG Insights**: Multi-source diagnostic intelligence grounded in OEM equipment manuals and standard operating procedures (SOPs).
+* **Predictive Maintenance (RUL-based)**: Deterministic Remaining Useful Life forecasting with parameter wear breakdown.
+* **Dynamic Process Rerouting Decision Engine**: Autonomous graph-based decision solver that rebalances lot queues and operational interlocks to prevent downtime bottlenecks.
 
 ---
 
