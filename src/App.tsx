@@ -82,7 +82,7 @@ export const App: React.FC = () => {
       case 'vfactory':
         return <VFactoryPage onNavigateToMachine={(machineId) => handleNavigate('machines', machineId)} />;
       case 'products':
-        return <ProductsPage />;
+        return <ProductsPage onNavigate={handleNavigate} />;
       case 'machines':
         return (
           <MachinesPage
