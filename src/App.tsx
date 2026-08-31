@@ -3,6 +3,7 @@ import { TabId } from './types/navigation';
 import { AppLayout } from './components/layout/AppLayout';
 import { IntroScreen } from './components/intro/IntroScreen';
 import { DashboardPage } from './pages/DashboardPage';
+import { AIControlPage } from './pages/AIControl/AIControlPage';
 import { VFactoryPage } from './pages/VFactoryPage';
 import { ProductsPage } from './pages/ProductsPage';
 import { MachinesPage } from './pages/MachinesPage';
@@ -76,10 +77,12 @@ export const App: React.FC = () => {
     switch (activeTab) {
       case 'dashboard':
         return <DashboardPage onNavigate={handleNavigate} />;
+      case 'aicontrol':
+        return <AIControlPage onNavigate={handleNavigate} />;
       case 'vfactory':
         return <VFactoryPage onNavigateToMachine={(machineId) => handleNavigate('machines', machineId)} />;
       case 'products':
-        return <ProductsPage />;
+        return <ProductsPage onNavigate={handleNavigate} />;
       case 'machines':
         return (
           <MachinesPage
