@@ -77,10 +77,10 @@ export const App: React.FC = () => {
     switch (activeTab) {
       case 'dashboard':
         return <DashboardPage onNavigate={handleNavigate} />;
-      case 'aicontrol':
-        return <AIControlPage onNavigate={handleNavigate} />;
       case 'vfactory':
         return <VFactoryPage onNavigateToMachine={(machineId) => handleNavigate('machines', machineId)} />;
+      case 'aicontrol':
+        return <AIControlPage onNavigate={handleNavigate} />;
       case 'products':
         return <ProductsPage onNavigate={handleNavigate} />;
       case 'machines':

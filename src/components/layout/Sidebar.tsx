@@ -32,10 +32,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
     switch (id) {
       case 'dashboard':
         return <LayoutDashboard size={size} />;
-      case 'aicontrol':
-        return <Bot size={size} />;
       case 'vfactory':
         return <Factory size={size} />;
+      case 'aicontrol':
+        return <Bot size={size} />;
       case 'products':
         return <Package size={size} />;
       case 'machines':

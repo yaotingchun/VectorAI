@@ -1,7 +1,7 @@
 export type TabId =
   | 'dashboard'
-  | 'aicontrol'
   | 'vfactory'
+  | 'aicontrol'
   | 'products'
   | 'machines'
   | 'prediction'
@@ -26,19 +26,19 @@ export const NAV_ITEMS: NavItem[] = [
     description: 'Executive factory overview, health distribution, prediction and maintenance summaries.',
   },
   {
-    id: 'aicontrol',
-    label: 'Command Center',
-    code: 'AI // ORCH',
-    num: '02',
-    description: 'Multi-agent factory intelligence, autonomous collaboration, and operational rerouting.',
-    badge: 'LIVE',
-  },
-  {
     id: 'vfactory',
     label: 'v-Factory',
     code: 'TWIN // V-FACT',
-    num: '03',
+    num: '02',
     description: 'Digital twin simulation, spatial floor mapping, and multi-line visualizer.',
+  },
+  {
+    id: 'aicontrol',
+    label: 'Command Center',
+    code: 'AI // ORCH',
+    num: '03',
+    description: 'Multi-agent factory intelligence, autonomous collaboration, and operational rerouting.',
+    badge: 'LIVE',
   },
   {
     id: 'products',
