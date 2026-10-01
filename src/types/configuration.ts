@@ -174,7 +174,27 @@ export interface DispatchMatrixConfigData {
   escalateToPlantManagerAfterMin: number;
 }
 
-// ── 6. Security, Tokens & Audit Trail ───────────────────────────────────────
+// ── 6. MCP Tools & Automation Policies ────────────────────────────────────────
+
+export interface McpToolPolicy {
+  id: string;
+  name: string;
+  description: string;
+  enabled: boolean;
+  transportProtocol: 'Stdio' | 'HTTP' | 'WebSocket';
+  command: string;
+  arguments: string;
+  argumentsTemplate: string;
+  environmentVariables: string;
+  status: 'Connected & Ready' | 'Disconnected' | 'Error';
+  connectedTools: string[];
+}
+
+export interface McpToolsConfigData {
+  policies: McpToolPolicy[];
+}
+
+// ── 7. Security, Tokens & Audit Trail ───────────────────────────────────────
 
 export type UserRole = 'PLANT_ADMIN' | 'LEAD_PROCESS_ENGINEER' | 'MAINTENANCE_TECH' | 'AUDITOR';
 
@@ -225,6 +245,7 @@ export interface SystemConfiguration {
   genAi: GenAiRagConfigData;
   reroutePolicy: ReroutePolicyConfigData;
   dispatch: DispatchMatrixConfigData;
+  mcpTools: McpToolsConfigData;
   security: SecurityConfigData;
 }
 
@@ -458,6 +479,49 @@ export const DEFAULT_SYSTEM_CONFIG: SystemConfiguration = {
       },
     ],
     escalateToPlantManagerAfterMin: 20,
+  },
+  mcpTools: {
+    policies: [
+      {
+        id: 'mcp-tool-1',
+        name: 'Adjust Machine Load',
+        description: 'Allows AI to dynamically adjust spindle speed and load on factory machines to prevent failure.',
+        enabled: true,
+        transportProtocol: 'Stdio',
+        command: 'npx',
+        arguments: '-y @modelcontextprotocol/server-factory set-machine-load',
+        argumentsTemplate: '{"machine_id": "{{machineId}}", "load_pct": "{{loadPct}}"}',
+        environmentVariables: 'FACTORY_API_KEY=prod-secret\nNAMESPACE=prod',
+        status: 'Connected & Ready',
+        connectedTools: ['factory:set-load', 'factory:get-telemetry'],
+      },
+      {
+        id: 'mcp-tool-2',
+        name: 'Emergency Machine Shutdown',
+        description: 'Safely halts operations on a specific machine during a critical anomaly detection.',
+        enabled: false,
+        transportProtocol: 'HTTP',
+        command: 'https://api.vector.internal/v1/machines/halt',
+        arguments: '--verbose',
+        argumentsTemplate: '{\n  "machine_id": "{{machineId}}",\n  "reason": "{{reason}}"\n}',
+        environmentVariables: 'BEARER_TOKEN=xxx-yyy-zzz',
+        status: 'Disconnected',
+        connectedTools: ['factory:emergency-halt'],
+      },
+      {
+        id: 'mcp-tool-3',
+        name: 'Create Maintenance Ticket',
+        description: 'Creates a high-priority maintenance ticket in the factory ERP system (SAP).',
+        enabled: true,
+        transportProtocol: 'Stdio',
+        command: 'npx',
+        arguments: '-y @modelcontextprotocol/server-erp create-ticket',
+        argumentsTemplate: '{"equipment": "{{machineId}}", "priority": "HIGH", "description": "{{description}}"}',
+        environmentVariables: 'ERP_URL=https://sap.vector.internal',
+        status: 'Connected & Ready',
+        connectedTools: ['erp:create-ticket', 'erp:get-status'],
+      }
+    ]
   },
   security: {
     currentUserRole: 'PLANT_ADMIN',

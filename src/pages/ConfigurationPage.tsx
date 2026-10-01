@@ -11,6 +11,7 @@ import {
   ReroutePolicyConfig,
   DispatchChannelsConfig,
   SecurityAuditConfig,
+  McpToolsConfig,
 } from '../features/configuration';
 import { getGeminiApiKey, setGeminiApiKey } from '../features/machines/intelligence/llm/geminiDiagnosticService';
 import { CheckCircle2 } from 'lucide-react';
@@ -32,6 +33,10 @@ export const ConfigurationPage: React.FC = () => {
         if (currentGeminiKey && (!parsed.genAi || !parsed.genAi.apiKey)) {
           parsed.genAi = { ...parsed.genAi, apiKey: currentGeminiKey };
         }
+        
+        // Always refresh mcpTools from defaults to pick up newly added policies
+        parsed.mcpTools = DEFAULT_SYSTEM_CONFIG.mcpTools;
+
         return parsed;
       }
     } catch (e) {
@@ -94,6 +99,11 @@ export const ConfigurationPage: React.FC = () => {
 
   const handleUpdateSecurity = (security: typeof config.security) => {
     setConfig((prev) => ({ ...prev, security }));
+    setIsDirty(true);
+  };
+
+  const handleUpdateMcpTools = (mcpTools: typeof config.mcpTools) => {
+    setConfig((prev) => ({ ...prev, mcpTools }));
     setIsDirty(true);
   };
 
@@ -246,6 +256,13 @@ export const ConfigurationPage: React.FC = () => {
           dispatch={config.dispatch}
           onChange={handleUpdateDispatch}
           onSendTestNotification={handleSendTestNotification}
+        />
+      )}
+
+      {activeSubTab === 'mcpTools' && (
+        <McpToolsConfig
+          mcpTools={config.mcpTools}
+          onChange={handleUpdateMcpTools}
         />
       )}
 

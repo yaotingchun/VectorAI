@@ -102,6 +102,7 @@ export interface FactoryProductState {
 
 export interface DecisionHistoryItem {
   id: string;
+  scenarioId: string;
   date: string;
   time: string;
   scenarioTitle: string;

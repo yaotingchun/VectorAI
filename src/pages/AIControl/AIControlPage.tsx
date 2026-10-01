@@ -64,7 +64,12 @@ export const AIControlPage: React.FC<AIControlPageProps> = () => {
       </div>
 
       {/* 4. Bottom Section: Immutable Decision Audit Ledger */}
-      <DecisionHistory />
+      <DecisionHistory 
+        onHistoryClick={(scenarioId) => {
+          selectScenario(scenarioId);
+          setTimeout(() => runSimulation(true), 100); // Small delay to allow state to settle
+        }} 
+      />
     </div>
   );
 };

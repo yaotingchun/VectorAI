@@ -13,7 +13,7 @@ export interface UseScenarioSimulationReturn {
   orchestratorStatus: AgentStatus;
   decisionApproved: boolean;
   isRerouteActive: boolean;
-  runSimulation: () => void;
+  runSimulation: (instant?: boolean) => void;
   resetSimulation: () => void;
 }
 
@@ -75,14 +75,31 @@ export const useScenarioSimulation = (initialScenarioId = 'scenario-demand-surge
     [resetSimulation]
   );
 
-  // Run simulation sequentially
-  const runSimulation = useCallback(() => {
+  // Run simulation sequentially or instantly
+  const runSimulation = useCallback((instant?: boolean) => {
     resetSimulation();
     setSimulationStatus('running');
 
     const scenario = selectedScenario;
     const steps = scenario.steps;
     if (!steps || steps.length === 0) return;
+
+    if (instant === true) {
+      setVisibleSteps(steps);
+      const newAgentStatuses = { ...INITIAL_AGENT_STATUSES };
+      steps.forEach((step) => {
+        newAgentStatuses[step.agentId] = 'completed';
+      });
+      newAgentStatuses.orchestrator = 'completed';
+      setAgentStatuses(newAgentStatuses);
+      
+      setOrchestratorRevealed(true);
+      setOrchestratorStatus('completed');
+      setDecisionApproved(true);
+      setSimulationStatus('completed');
+      setIsRerouteActive(true);
+      return;
+    }
 
     // Immediately at 0ms: First agent starts analyzing
     const firstAgentId = steps[0].agentId;

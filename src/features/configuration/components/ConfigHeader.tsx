@@ -25,6 +25,7 @@ export type ConfigSubTab =
   | 'genAi'
   | 'reroutePolicy'
   | 'dispatch'
+  | 'mcpTools'
   | 'security';
 
 interface ConfigHeaderProps {
@@ -58,7 +59,8 @@ export const ConfigHeader: React.FC<ConfigHeaderProps> = ({
     { id: 'genAi' as ConfigSubTab, label: 'Gemini LLM & RAG', code: 'AI // GEMINI-RAG', num: '03', icon: <BrainCircuit size={14} /> },
     { id: 'reroutePolicy' as ConfigSubTab, label: 'Rerouting Policy', code: 'FLOW // REROUTE-POLICY', num: '04', icon: <Route size={14} /> },
     { id: 'dispatch' as ConfigSubTab, label: 'Dispatch Channels', code: 'DISPATCH // NOTIFY', num: '05', icon: <Bell size={14} /> },
-    { id: 'security' as ConfigSubTab, label: 'Security & Audit', code: 'SECURITY // AUDIT', num: '06', icon: <ShieldCheck size={14} /> },
+    { id: 'mcpTools' as ConfigSubTab, label: 'AI Automation (MCP)', code: 'MCP // TOOLS', num: '06', icon: <Server size={14} /> },
+    { id: 'security' as ConfigSubTab, label: 'Security & Audit', code: 'SECURITY // AUDIT', num: '07', icon: <ShieldCheck size={14} /> },
   ];
 
   const handleExportJson = () => {

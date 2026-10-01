@@ -2,7 +2,11 @@ import React from 'react';
 import { DECISION_HISTORY } from '../data/decisionHistory';
 import { Clock } from 'lucide-react';
 
-export const DecisionHistory: React.FC = () => {
+interface DecisionHistoryProps {
+  onHistoryClick?: (scenarioId: string) => void;
+}
+
+export const DecisionHistory: React.FC<DecisionHistoryProps> = ({ onHistoryClick }) => {
   return (
     <div className="decision-history-card tech-card">
       <span className="corner-tl">+</span>
@@ -22,7 +26,12 @@ export const DecisionHistory: React.FC = () => {
 
       <div className="history-list">
         {DECISION_HISTORY.map((item) => (
-          <div key={item.id} className="history-item">
+          <div 
+            key={item.id} 
+            className="history-item"
+            style={{ cursor: onHistoryClick ? 'pointer' : 'default' }}
+            onClick={() => onHistoryClick?.(item.scenarioId)}
+          >
             <div className="history-left">
               <span className="history-date">
                 {item.date} • {item.time} ({item.id})

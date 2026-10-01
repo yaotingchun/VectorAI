@@ -3,6 +3,7 @@ import { DecisionHistoryItem } from '../types';
 export const DECISION_HISTORY: DecisionHistoryItem[] = [
   {
     id: 'DEC-2026-0831-01',
+    scenarioId: 'scenario-demand-surge',
     date: '31 AUG 2026',
     time: '08:42:19',
     scenarioTitle: 'Product B Demand Surge',
@@ -17,6 +18,7 @@ export const DECISION_HISTORY: DecisionHistoryItem[] = [
   },
   {
     id: 'DEC-2026-0830-02',
+    scenarioId: 'scenario-failure-risk',
     date: '30 AUG 2026',
     time: '19:15:00',
     scenarioTitle: 'M-03 Capacity Warning',
@@ -31,6 +33,7 @@ export const DECISION_HISTORY: DecisionHistoryItem[] = [
   },
   {
     id: 'DEC-2026-0829-01',
+    scenarioId: 'scenario-maintenance-conflict',
     date: '29 AUG 2026',
     time: '11:20:45',
     scenarioTitle: 'Product A Batch Priority Shift',

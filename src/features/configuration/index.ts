@@ -7,3 +7,4 @@ export { GenAiRagConfig } from './components/GenAiRagConfig';
 export { ReroutePolicyConfig } from './components/ReroutePolicyConfig';
 export { DispatchChannelsConfig } from './components/DispatchChannelsConfig';
 export { SecurityAuditConfig } from './components/SecurityAuditConfig';
+export { McpToolsConfig } from './components/McpToolsConfig';
