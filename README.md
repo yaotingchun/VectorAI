@@ -10,7 +10,7 @@
 </p>
 
 <p align="center">
-  <b>🌐 <a href="https://vector-ai-661695302381.us-central1.run.app/">Live Web Platform</a></b> •
+  <b>🌐 <a href="https://vector-ai-919552673781.us-central1.run.app/">Live Web Platform</a></b> •
   <b>🚀 <a href="https://www.youtube.com/watch?v=z_qtuDkTUrI">Live Demo Video</a></b> •
   <b>🛠️ <a href="https://github.com/yaotingchun/VectorAI/blob/main/VectorAI%20Installation%20Guide.pdf">Installation Guide</a></b>
 </p>

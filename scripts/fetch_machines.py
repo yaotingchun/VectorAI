@@ -54,7 +54,7 @@ def main():
     
     headers = {"Authorization": f"Bearer {access_token}"}
     
-    firestore_url = "https://firestore.googleapis.com/v1/projects/vectorai-506214/databases/(default)/documents/machines"
+    firestore_url = "https://firestore.googleapis.com/v1/projects/vectorai-511109/databases/(default)/documents/machines"
     print("Querying Firestore...")
     res = requests.get(firestore_url, headers=headers)
     

@@ -4,9 +4,9 @@ import { getFirestore, Firestore } from 'firebase/firestore';
 // Client Firebase Configuration using the VectorAI project configuration
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY || 'AIzaSyDemoKeyVectorAIPlatform2026',
-  authDomain: 'vectorai-506214.firebaseapp.com',
-  projectId: 'vectorai-506214',
-  storageBucket: 'vectorai-506214.appspot.com',
+  authDomain: 'vectorai-511109.firebaseapp.com',
+  projectId: 'vectorai-511109',
+  storageBucket: 'vectorai-511109.appspot.com',
   messagingSenderId: '1095732803414',
   appId: '1:1095732803414:web:vectorai506214machine'
 };

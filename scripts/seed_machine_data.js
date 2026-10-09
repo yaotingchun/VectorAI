@@ -18,7 +18,7 @@ const serviceAccount = JSON.parse(readFileSync(credentialsPath, 'utf8'));
 
 initializeApp({
   credential: cert(serviceAccount),
-  projectId: serviceAccount.project_id || 'vectorai-506214'
+  projectId: serviceAccount.project_id || 'vectorai-511109'
 });
 
 const db = getFirestore();

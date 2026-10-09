@@ -125,7 +125,7 @@ function getProjectId() {
       if (creds.project_id) return creds.project_id;
     } catch (_) {}
   }
-  return 'vectorai-506214';
+  return 'vectorai-511109';
 }
 
 const server = http.createServer(async (req, res) => {
