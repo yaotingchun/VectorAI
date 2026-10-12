@@ -21,12 +21,12 @@ try {
   } else {
     app = getApps()[0];
   }
-  db = getFirestore(app);
+  db = getFirestore(app, 'vectorai');
 } catch (error) {
   console.warn('Firebase initialization note:', error);
   // Re-attempt fallback initialization
   app = initializeApp(firebaseConfig, 'vectorai-fallback');
-  db = getFirestore(app);
+  db = getFirestore(app, 'vectorai');
 }
 
 export { app, db };

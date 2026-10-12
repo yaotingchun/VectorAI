@@ -16,12 +16,12 @@ if (!existsSync(credentialsPath)) {
 
 const serviceAccount = JSON.parse(readFileSync(credentialsPath, 'utf8'));
 
-initializeApp({
+const app = initializeApp({
   credential: cert(serviceAccount),
   projectId: serviceAccount.project_id || 'vectorai-511109'
 });
 
-const db = getFirestore();
+const db = getFirestore(app, 'vectorai');
 
 const DATA_DIR = join(__dirname, '..', 'data', 'machines');
 

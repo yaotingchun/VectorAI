@@ -16,18 +16,15 @@ if (!existsSync(credentialsPath)) {
 
 const serviceAccount = JSON.parse(readFileSync(credentialsPath, 'utf8'));
 
-initializeApp({
+const app = initializeApp({
   credential: cert(serviceAccount),
   projectId: serviceAccount.project_id || 'vectorai-511109'
 });
 
-const db = getFirestore();
+const db = getFirestore(app, 'vectorai');
 
 async function seedAll() {
-  console.log(`[Seeder] Connecting to Firestore project: ${serviceAccount.project_id}...`);
-  
-  // Read unified machines from src/features/machines/data/seedMachines.ts or generate_machines.js
-  const genScriptPath = join(__dirname, '..', '..', '..', '.gemini', 'antigravity-ide', 'brain', '578f7563-a08b-4e2e-a6a6-88364d64834d', 'scratch', 'generate_machines.js');
+  console.log(`[Seeder] Connecting to Firestore project: ${serviceAccount.project_id} (database: vectorai)...`);
   
   // First clear old machines in firestore
   const machinesCollection = db.collection('machines');
